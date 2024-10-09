@@ -1,6 +1,7 @@
+import UserModel from "../model/User.js";
 
 export default class UserService {
-    test(){
-        return "ok";
+    static async test(){
+        return await UserModel.find();
     }
 }

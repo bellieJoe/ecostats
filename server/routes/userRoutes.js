@@ -39,7 +39,7 @@ router.patch('/:id/deactivate', async (req, res) => {
 });
 
 router.get("/test", async (req, res) => {
-    const test = UserService.test();
+    const test = await UserService.test();
     return res.status(200).send(test)
 });
 
