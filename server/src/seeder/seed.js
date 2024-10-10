@@ -1,6 +1,9 @@
 import mongoose from "mongoose"
 import SeedRoles from "./roleSeeder.js";
 import SeedUsers from "./userSeeder.js";
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const seedDatabase = async () => {
     try {

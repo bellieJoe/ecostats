@@ -1,7 +1,7 @@
 import { Layout } from "antd";
 import Navbar from "../../components/Home/Navbar/Navbar";
 import { Outlet } from "react-router-dom";
-import { Content, Footer } from "antd/es/layout/layout";
+import { Content } from "antd/es/layout/layout";
 
 
 const HomePage = () => {

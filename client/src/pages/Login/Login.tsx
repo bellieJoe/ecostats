@@ -1,13 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import 'boxicons/css/boxicons.min.css';
-import { Link, Button, Paper, TextField, Typography } from "@mui/material";
+import { Link, Button, Paper, TextField, Typography, Alert } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { login } from "../../services/api/userApi";
+import AuthToken from "../../types/AuthToken";
+import Cookies from "js-cookie";
+import { useAuthStore } from "../../stores/useAuthStore";
+import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
-
-
+    // styles
     const containerStyle : React.CSSProperties = {
         height: "100%",
         display: "flex",
@@ -44,7 +47,7 @@ const Login = () => {
         color: "#fff",
     };
     
-    const textFieldStyle : React.CSSProperties = {
+    const textFieldStyle  = {
         '& .MuiInputBase-root': {
             color: "#fff",
         },
@@ -82,19 +85,43 @@ const Login = () => {
         textDecoration: "none",
         marginTop: "1rem",
     };
+
+    // state
+    const navigate = useNavigate();
+    const { setTokens } = useAuthStore();
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [loginFailStatus, setLoginFailStatus] = useState(false)
     
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        const tokens : AuthToken|null = await login({email:email, password:password});
+        if(!tokens){
+            setLoginFailStatus(true);
+            return;
+        }
+        setLoginFailStatus(false);
+        Cookies.set("accessToken", tokens.accessToken, {expires: 7});
+        Cookies.set("refreshToken", tokens.refreshToken, {expires: 7});
+        setTokens(tokens);
+        navigate("/app")
+    }
+
     return (
         <div style={containerStyle}>
             <Grid>
                 <Paper style={paperStyle} sx={{ width: { xs: '80vw', sm: '50vw', md: '40vw', lg: '30vw', xl: '20vw' }, height: { lg: '50vh' } }}>
                     <Typography component="h1" variant="h5" style={heading}>Login</Typography>
-                    <form >
+                    <form onSubmit={handleLogin}>
                         <span style={row}>
-                            <TextField sx={textFieldStyle} label="Email" fullWidth variant="outlined" type="email" placeholder="Enter Email" name="email" onChange={(e) => setEmail(e.target.value)} />
+                            <TextField sx={textFieldStyle} label="Email" fullWidth variant="outlined" type="email" placeholder="Enter Email" name="email" onChange={(e) => setEmail(e.target.value)}  />
                         </span>
                         <span style={row}>
-                            <TextField sx={textFieldStyle} label="Password" fullWidth variant="outlined" type="password" placeholder="Enter Password" name="password" onChange={(e) => setPassword(e.target.value)} />
+                            <TextField sx={textFieldStyle} label="Password" fullWidth variant="outlined" type="password" placeholder="Enter Password" name="password" onChange={(e) => setPassword(e.target.value)}  />
                         </span>
+                        {
+                            loginFailStatus ? (<Alert severity="error">Invalid email and password</Alert>) : ''
+                        }
                         <Button style={btnStyle} variant="contained" type="submit">Login</Button>
                     </form>
                     <p style={linkStyle}>Don't have an account? <Link href="/signup" style={{ color: "#fff", textDecoration: "underline" }}>SignUp</Link></p>

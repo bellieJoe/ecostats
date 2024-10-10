@@ -1,12 +1,9 @@
 import express from "express"
 import mongoose from "mongoose"
 import cors from "cors"
-import bcrypt from "bcrypt"
 import dotenv from "dotenv";
 import session from "express-session"
 import MongoStore from "connect-mongo";
-
-// const UserModel = require("./model/User").default;
 
 import userRoutes from "./routes/userRoutes.js"
 

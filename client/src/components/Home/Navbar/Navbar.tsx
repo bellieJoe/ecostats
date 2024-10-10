@@ -24,13 +24,13 @@ const Navbar = () => {
                 EcoStats
             </div>
             <Flex gap="small">
-                <Link to="login">
+                <Link to="/login">
                     <Button variant="contained" style={button} >
                             Login 
                     </Button>
                 </Link>
 
-                <Link to="signup">
+                <Link to="/signup">
                     <Button variant="contained" style={button} >
                             Sign Up 
                     </Button>
