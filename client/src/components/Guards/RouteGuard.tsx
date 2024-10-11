@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { getTokensFromCookie, isAuthenticated } from "../../services/api/userApi";
-import { Navigate } from "react-router-dom";
+import { Navigate, redirect } from "react-router-dom";
 import { useAuthStore } from "../../stores/useAuthStore";
 
 interface Props {
     children : any
-    redirectTo : string
+    redirectTo? : string
 }
 
 const RouteGuard = (props : Props) => {
@@ -28,7 +28,12 @@ const RouteGuard = (props : Props) => {
 
     return (
         <>
-            {isAuth ? props.children  : (<Navigate to={props.redirectTo} />)}
+            {
+                isAuth && props.redirectTo ? props.children  : (<Navigate to={props.redirectTo!} />)
+            }
+            {
+                isAuth && !props.redirectTo && props.children 
+            }
         </>
     )
 }

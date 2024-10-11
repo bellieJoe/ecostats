@@ -5,17 +5,16 @@ import { useAuthStore } from "../../stores/useAuthStore";
 
 interface Props {
     children : any
-    redirectTo : string
+    redirectTo? : string
 }
 
 const GuestGuard = (props : Props) => {
-    const [isAuth, setIsAuth] = useState(true);
+    const [isAuth, setIsAuth] = useState(false);
     const {setTokens} = useAuthStore();
 
     useEffect(() => {
         const checkAuth = async () => {
             const isAuthenticatedStatus = await isAuthenticated();
-            console.log(isAuthenticatedStatus)  
             setIsAuth(isAuthenticatedStatus);
             if(isAuthenticatedStatus){
                 setTokens(getTokensFromCookie())
@@ -28,7 +27,8 @@ const GuestGuard = (props : Props) => {
 
     return (
         <>
-            {!isAuth ? props.children  : (<Navigate to={props.redirectTo} />)}
+            { !isAuth && props.redirectTo  ? props.children  : (<Navigate to={props.redirectTo!} />) }
+            { !isAuth && !props.redirectTo && props.children }
         </>
     )
 }

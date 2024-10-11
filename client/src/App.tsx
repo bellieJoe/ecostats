@@ -11,11 +11,28 @@ import { useEffect } from 'react'
 import { getRoles } from './services/api/roleApi'
 import { Role } from './types/Role'
 import { useRoleStore } from './stores/useRoleStore'
+import { getUserById, isAuthenticated } from './services/api/userApi'
+import { useAuthStore } from './stores/useAuthStore'
+import { jwtDecode } from 'jwt-decode'
+import Cookies from "js-cookie"
+import { ConfigProvider, message } from 'antd'
+import axios from 'axios'
+
+axios.defaults.withCredentials = true;
 
 function App() {
-  const {clearRoles, setRoles} = useRoleStore()
+  const {clearRoles, setRoles} = useRoleStore();
+  const {setUser, accessToken} = useAuthStore();
+
+
+  const configTheme = {
+    "token": {
+      "colorPrimary": "#41a61d",
+      "colorInfo": "#41a61d"
+    }
+  }
   
-  useEffect(() => {
+  const initRoles = () => {
     try {
       getRoles()
       .then((roles:Role[]) => {
@@ -25,27 +42,58 @@ function App() {
     } catch (error) {
       console.log(error)
     }
+  }
+
+  const initUser = () => {
+    try {
+      isAuthenticated().then(_isAuth => {
+        if(_isAuth){
+          // fetch user
+          const decoded = jwtDecode<any>(Cookies.get("accessToken"))
+          const id = decoded.id
+          getUserById(id).then(res => {
+            setUser(res.data)
+          });
+        }
+        else{
+          setUser(null);
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    initUser();
+  }, [accessToken])
+
+  useEffect(() => {
+    initRoles();
   }, [])
 
   return (
-    <BrowserRouter >
-      <Routes>
+    <ConfigProvider
+      theme={configTheme}>
+      <BrowserRouter >
+        <Routes >
 
-        <Route path='/' element={<HomePage />} >
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignUp />} />
-        </Route>
-
-          <Route path='/app' element={<MainPage />} >
-              <Route path='users' element={<Users />} />
-              <Route path='' element={<Dashboard />} />
+          <Route path='/' element={<HomePage />} >
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
           </Route>
 
-        {/* Error Pages */}
-        <Route path="/error/401" element={<ErrorPage code={401} message="Unauthorized Access" />} />
+            <Route path='/app' element={<MainPage />} >
+                <Route path='users' element={<Users />} />
+                <Route path='' element={<Dashboard />} />
+            </Route>
 
-      </Routes>
-    </BrowserRouter>
+          {/* Error Pages */}
+          <Route path="/error/401" element={<ErrorPage code={401} message="Unauthorized Access" />} />
+
+        </Routes>
+      </BrowserRouter>
+    </ConfigProvider>
   )
 }
 

@@ -1,11 +1,14 @@
-import { ConfigProvider, ConfigProviderProps, Layout, Menu, MenuProps, theme, ThemeConfig } from "antd";
+import { Avatar, Button, ConfigProvider, ConfigProviderProps, Grid, Layout, Menu, MenuProps, Space, theme, ThemeConfig } from "antd";
 import { Content, Header } from "antd/es/layout/layout";
 import Sider from "antd/es/layout/Sider";
 import Navbar from "../../components/Home/Navbar/Navbar";
-import { FolderOutlined, HomeOutlined, PlusSquareOutlined, PushpinOutlined, UserOutlined } from '@ant-design/icons';
-import React from "react";
+import { FolderOutlined, HomeOutlined, MenuFoldOutlined, MenuUnfoldOutlined, PlusSquareOutlined, PushpinOutlined, UserOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import RouteGuard from "../../components/Guards/RouteGuard";
+import SidebarUser from "../../components/MainPage/SidebarUser";
+import { refreshToken as _refreshToken } from "../../services/api/userApi";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -19,6 +22,34 @@ const MainPage = () => {
     const menuStyle2 : React.CSSProperties = {
         fontWeight: "normal"
     };
+
+    const [isIdle, setIsIdle] = useState(false)
+
+    const { refreshToken, setTokens, clearTokens } = useAuthStore();
+
+    const [collapsed, setCollapsed] = useState(false);
+    
+    const { useBreakpoint } = Grid;
+
+    const screens = useBreakpoint();
+
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if(!isIdle){
+                _refreshToken({refreshToken: refreshToken!})
+                .then(token => {
+                    setTokens(token!)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+            }
+        }, 10000);
+        // Clean up the interval on unmount
+        return () => clearInterval(interval);
+    }, [refreshToken, isIdle]);
+
     const items: MenuItem[] = [
         {
             key: "dashboard",
@@ -133,24 +164,45 @@ const MainPage = () => {
     return (
         <>
             <RouteGuard redirectTo="/error/401">
-                <Layout style={{height: "100vh"}}>
+                <Layout style={{height: "100vh"}} onClick={() => setIsIdle(false)}>
+                    
                     <Navbar />      
                     <Layout>
                         <ConfigProvider
                             theme={theme}
                             >
-                            <Sider theme="dark" width="300" style={{padding: "0.5rem"}}>
-                                <Menu
-                                    mode="inline"
-                                    defaultSelectedKeys={['1']}
-                                    defaultOpenKeys={['sub1']}
-                                    style={{ height: '100%', borderRight: 0 }}
-                                    items={items}
-                                />
+                            <Sider 
+                            theme="dark" 
+                            width="300" 
+                            className="overflow-y-scroll"
+                            collapsedWidth={0}
+                            collapsible
+                            collapsed={collapsed}
+                            trigger={null}>
+                                <div style={{padding: "0.5rem"}} >
+                                    <SidebarUser />
+                                    <Menu
+                                        mode="inline"
+                                        defaultSelectedKeys={['1']}
+                                        defaultOpenKeys={['sub1']}
+                                        style={{ borderRight: 0 }}
+                                        items={items}
+                                    />
+                                </div>
                             </Sider>
                         </ConfigProvider>
                         <Layout >
                             <Content style={{padding: "1rem", overflow: "scroll"}}>
+                            <Button
+                                    type="text"
+                                    size="small"
+                                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                                    onClick={() => setCollapsed(!collapsed)}
+                                    style={{
+                                        fontSize: '16px',
+                                        padding: "1rem"
+                                    }}
+                                />
                                 <Outlet />
                             </Content>
                         </Layout>

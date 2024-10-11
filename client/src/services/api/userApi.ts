@@ -87,3 +87,15 @@ export const getTokensFromCookie = () : AuthToken => {
 export const signup = async (data : {email : string, password : string, name : string, userRole : string}) : Promise<void> => {
     await axios.post(`${apiUrl}/users/signup`, data);
 }
+
+export const getUserById = async (id : string) : Promise<any> => {
+    return await axios.get(`${apiUrl}/users/get-by-id/${id}`);
+}
+
+export const activateUser = async (id : string) : Promise<any> => {
+    return await axios.post(`${apiUrl}/users/activate/${id}`);
+}
+
+export const deactivateUser = async (id : string) : Promise<any> => {
+    return await axios.post(`${apiUrl}/users/deactivate/${id}`);
+}
