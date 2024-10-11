@@ -2,12 +2,13 @@ import UserRoleModel from "../model/UserRole.js";
 import RoleModel from "../model/Role.js";
 
 
-export const getRoleByUserId = async (req, res) => {
+export const getRolesByUserId = async (req, res) => {
     try {
         const userId = req.params.id;
 
         const userRoles = await UserRoleModel.find({
-            user: userId
+            user: userId,
+            isDeleted: false
         })
         .populate("role");
 

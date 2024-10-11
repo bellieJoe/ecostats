@@ -4,9 +4,11 @@ import cors from "cors"
 import dotenv from "dotenv";
 import session from "express-session"
 import MongoStore from "connect-mongo";
+import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/userRoutes.js"
 import roleRoutes from "./routes/roleRoutes.js"
+
 
 dotenv.config(); // Load environment variables from .env file
 const app = express();
@@ -46,6 +48,8 @@ app.use(session({
 app.listen(process.env.PORT, () => {
     console.log(`Server is running on port ${process.env.PORT}`);
 });
+
+app.use(cookieParser());
 
 // Routes
 app.use("/users", userRoutes);

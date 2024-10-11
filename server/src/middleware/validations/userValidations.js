@@ -1,4 +1,4 @@
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import UserModel from "../../model/User.js";
 import RoleModel from "../../model/Role.js";
 
@@ -45,4 +45,12 @@ export const userSignupValidation = [
 
 export const refreshTokenValidation = [ 
     body("refreshToken").exists().notEmpty().isString()
+]
+
+export const getByIdValidation = [
+    param("id")
+    .exists()
+    .withMessage("Invalid data")
+    .notEmpty()
+    .withMessage("Id should not be empty")
 ]
