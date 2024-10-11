@@ -7,6 +7,7 @@ import AuthToken from "../../types/AuthToken";
 import Cookies from "js-cookie";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
+import GuestGuard from "../../components/Guards/GuestGuard";
 
 
 const Login = () => {
@@ -108,26 +109,28 @@ const Login = () => {
     }
 
     return (
-        <div style={containerStyle}>
-            <Grid>
-                <Paper style={paperStyle} sx={{ width: { xs: '80vw', sm: '50vw', md: '40vw', lg: '30vw', xl: '20vw' }, height: { lg: '50vh' } }}>
-                    <Typography component="h1" variant="h5" style={heading}>Login</Typography>
-                    <form onSubmit={handleLogin}>
-                        <span style={row}>
-                            <TextField sx={textFieldStyle} label="Email" fullWidth variant="outlined" type="email" placeholder="Enter Email" name="email" onChange={(e) => setEmail(e.target.value)}  />
-                        </span>
-                        <span style={row}>
-                            <TextField sx={textFieldStyle} label="Password" fullWidth variant="outlined" type="password" placeholder="Enter Password" name="password" onChange={(e) => setPassword(e.target.value)}  />
-                        </span>
-                        {
-                            loginFailStatus ? (<Alert severity="error">Invalid email and password</Alert>) : ''
-                        }
-                        <Button style={btnStyle} variant="contained" type="submit">Login</Button>
-                    </form>
-                    <p style={linkStyle}>Don't have an account? <Link href="/signup" style={{ color: "#fff", textDecoration: "underline" }}>SignUp</Link></p>
-                </Paper>
-            </Grid>
-        </div>
+        <GuestGuard redirectTo="/app">
+            <div style={containerStyle}>
+                <Grid>
+                    <Paper style={paperStyle} sx={{ width: { xs: '80vw', sm: '50vw', md: '40vw', lg: '30vw', xl: '20vw' }, height: { lg: '50vh' } }}>
+                        <Typography component="h1" variant="h5" style={heading}>Login</Typography>
+                        <form onSubmit={handleLogin}>
+                            <span style={row}>
+                                <TextField sx={textFieldStyle} label="Email" fullWidth variant="outlined" type="email" placeholder="Enter Email" name="email" onChange={(e) => setEmail(e.target.value)}  />
+                            </span>
+                            <span style={row}>
+                                <TextField sx={textFieldStyle} label="Password" fullWidth variant="outlined" type="password" placeholder="Enter Password" name="password" onChange={(e) => setPassword(e.target.value)}  />
+                            </span>
+                            {
+                                loginFailStatus ? (<Alert severity="error">Invalid email and password</Alert>) : ''
+                            }
+                            <Button style={btnStyle} variant="contained" type="submit">Login</Button>
+                        </form>
+                        <p style={linkStyle}>Don't have an account? <Link href="/signup" style={{ color: "#fff", textDecoration: "underline" }}>SignUp</Link></p>
+                    </Paper>
+                </Grid>
+            </div>
+        </GuestGuard>
     );
 }
 

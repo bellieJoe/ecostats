@@ -83,3 +83,7 @@ export const getTokensFromCookie = () : AuthToken => {
         refreshToken
     }
 }
+
+export const signup = async (data : {email : string, password : string, name : string, userRole : string}) : Promise<void> => {
+    await axios.post(`${apiUrl}/users/signup`, data);
+}

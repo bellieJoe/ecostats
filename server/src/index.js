@@ -6,6 +6,7 @@ import session from "express-session"
 import MongoStore from "connect-mongo";
 
 import userRoutes from "./routes/userRoutes.js"
+import roleRoutes from "./routes/roleRoutes.js"
 
 dotenv.config(); // Load environment variables from .env file
 const app = express();
@@ -47,7 +48,8 @@ app.listen(process.env.PORT, () => {
 });
 
 // Routes
-app.use("/users", userRoutes)
+app.use("/users", userRoutes);
+app.use("/roles", roleRoutes);
 
 /* 
 // Route for signing up new users

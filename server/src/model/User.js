@@ -18,14 +18,14 @@ const UserSchema = new Schema({
         type: Boolean, 
         required: true,
     },
-    createdAt : {
-        type: Date,
-        default : Date.now
-    },
     refreshToken : {
         type: String
     }
+}, {
+    timestamps : true,
 })
+
+
 
 const UserModel = model("users", UserSchema);
 export default UserModel;

@@ -132,7 +132,7 @@ const MainPage = () => {
 
     return (
         <>
-            <RouteGuard>
+            <RouteGuard redirectTo="/error/401">
                 <Layout style={{height: "100vh"}}>
                     <Navbar />      
                     <Layout>

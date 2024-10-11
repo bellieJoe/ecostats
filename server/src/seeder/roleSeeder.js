@@ -10,28 +10,20 @@ export default async function SeedRoles(){
             value : "admin"
         },
         {
-            name : "PENRO",
-            value : "penro"
+            name : "Supervisor",
+            value : "supervisor"
         },
         {
-            name : "Division Head",
-            value : "division head"
+            name : "Land Focal",
+            value : "land focal"
         },
         {
-            name : "Unit Head",
-            value : "unit head"
+            name : "Bio-Wildlife Focal",
+            value : "bio-wildlife focal"
         },
         {
-            name : "Land Inspection Manager",
-            value : "LIP"
-        },
-        {
-            name : "PA Caretaker",
-            value : "pa caretaker"
-        },
-        {
-            name : "Ordinary",
-            value : "ordinary"
+            name : "Forestry Focal",
+            value : "forestry focal"
         }
     ]);
     console.log("Roles seeded successfuly")

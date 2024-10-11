@@ -1,6 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import 'boxicons/css/boxicons.min.css';
-import { Link, Button, Paper, TextField, Typography, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
+import { Link, Button, Paper, TextField, Typography, MenuItem, Select, FormControl, InputLabel, Alert } from "@mui/material";
+import { useRoleStore } from "../../stores/useRoleStore";
+import { signup } from "../../services/api/userApi";
+import { AxiosResponse } from "axios";
+import { ValidationError } from "../../types/ApiValidationError";
+import FieldError from "../../components/FieldError";
+import { useNavigate } from "react-router-dom";
+import GuestGuard from "../../components/Guards/GuestGuard";
 
 
 function SignUp() {
@@ -34,7 +41,7 @@ function SignUp() {
     };
 
     const textFieldStyle  = {
-        marginBottom: "1rem",
+        marginBottom: "0rem",
         '& .MuiInputBase-root': {
             color: "#fff",
         },
@@ -73,67 +80,137 @@ function SignUp() {
         marginTop: "1rem",
     };
 
+    const navigate = useNavigate();
+
+    const { roles } = useRoleStore();
+
+    const [ errors , setErrors ] = useState<ValidationError[]>([])
+
+    const [ signupFormData, setSignupFormData ] = useState({
+        name: '',
+        email : '',
+        password : '',
+        passwordConfirmation : '',
+        userRole : ''
+    });
+
+    const handleFormControlChange = (e) => {
+        const { name, value } = e.target;
+        setSignupFormData({ ...signupFormData, [name]: value });
+    };
+
+    const handleSignupSubmit = async (e) => {
+        e.preventDefault();
+        setErrors([])
+        try {
+            const { email, password, name, userRole } = signupFormData;
+            if(signupFormData.password != signupFormData.passwordConfirmation){
+                setErrors([{path: "passwordConfirmation", location: "", msg : "Pasword doesnt match.", type: ""}])
+                return;
+            }
+            const res = await signup({ email, password, name, userRole });
+            navigate("/login")
+        } catch (error : any) {
+            if(error.response.status = 422){
+                console.log(error.response.data.errors)
+                setErrors([...error.response.data.errors])
+            }
+        }
+    }
+
     return (
-        <div style={containerStyle}>
-            <Paper style={glassEffectStyle}>
-                <Typography component="h1" variant="h5" style={headingStyle}>Register</Typography>
-                <form > {/* Updated handler */}
-                    <TextField
-                        sx={textFieldStyle}
-                        label="Username"
-                        fullWidth
-                        variant="outlined"
-                        type="text"
-                        placeholder="Enter Username"
-                        name="username"
-                    />
-                    <TextField
-                        sx={textFieldStyle}
-                        label="Email"
-                        fullWidth
-                        variant="outlined"
-                        type="email"
-                        placeholder="Enter Email"
-                        name="email"
-                    />
-                    <TextField
-                        sx={textFieldStyle}
-                        label="Password"
-                        fullWidth
-                        variant="outlined"
-                        type="password"
-                        placeholder="Enter Password"
-                        name="password"
-                    />
-                    <TextField
-                        sx={textFieldStyle}
-                        label="Confirm Password"
-                        fullWidth
-                        variant="outlined"
-                        type="password"
-                        placeholder="Confirm Password"
-                        name="confirmPassword"
-                    />
-                    <FormControl fullWidth sx={{  ...textFieldStyle }}>
-                        <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>User Role</InputLabel>
-                        <Select
-                            label="User Role"
-                            sx={{ color: "#fff" }}
-                        >
-                            <MenuItem value="Admin">Admin</MenuItem>
-                            <MenuItem value="Supervisor">Supervisor</MenuItem>
-                            <MenuItem value="Land Focal">Land Focal</MenuItem>
-                            <MenuItem value="Bio-Wildlife Focal">Bio-Wildlife Focal</MenuItem>
-                            <MenuItem value="Forestry Focal">Forestry Focal</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <Button style={btnStyle} variant="contained" type="submit">Register</Button>
-                </form>
-                <Typography style={linkStyle}>
-                    Already have an account? <Link href="/login" style={{ color: "#fff", textDecoration: "underline" }}>Login</Link>
-                </Typography>
-            </Paper>
-        </div>
+        <GuestGuard redirectTo="/app">
+            <div style={containerStyle}>
+                <Paper style={glassEffectStyle}>
+                    <Typography component="h1" variant="h5" style={headingStyle}>Register</Typography>
+                    {/* <Alert severity="error" style={{marginBottom: "1rem", textAlign: "initial"}}></Alert> */}
+                    <form onSubmit={handleSignupSubmit}> {/* Updated handler */}
+                        <div className="mb-5">
+                            <TextField
+                                sx={textFieldStyle}
+                                label="Name"
+                                fullWidth
+                                variant="outlined"
+                                placeholder="Enter Name"
+                                name="name"
+                                value={signupFormData.name}
+                                onChange={handleFormControlChange}
+                            />
+                            <FieldError errors={errors} name="name" />
+                        </div>
+
+                        <div className="mb-5">
+                            <TextField
+                                sx={textFieldStyle}
+                                label="Email"
+                                fullWidth
+                                variant="outlined"
+                                type="email"
+                                placeholder="Enter Email"
+                                name="email"
+                                value={signupFormData.email}
+                                onChange={handleFormControlChange}
+                            />
+                            <FieldError errors={errors} name="email" />
+                        </div>
+
+                        <div className="mb-5">
+                            <TextField
+                                sx={textFieldStyle}
+                                label="Password"
+                                fullWidth
+                                variant="outlined"
+                                type="password"
+                                placeholder="Enter Password"
+                                name="password"
+                                value={signupFormData.password}
+                                onChange={handleFormControlChange}
+                            />
+                            <FieldError errors={errors} name="password" />
+                        </div>
+
+                        <div className="mb-5">
+                            <TextField
+                                sx={textFieldStyle}
+                                label="Confirm Password"
+                                fullWidth
+                                variant="outlined"
+                                type="password"
+                                placeholder="Confirm Password"
+                                name="passwordConfirmation"
+                                value={signupFormData.passwordConfirmation}
+                                onChange={handleFormControlChange}
+                            />
+                            <FieldError errors={errors} name="passwordConfirmation" />    
+                        </div>
+    
+                        <div className="mb-5">
+                            <FormControl fullWidth sx={{  ...textFieldStyle }}>
+                                <InputLabel sx={{ color: "rgba(255, 255, 255, 0.7)" }}>User Role</InputLabel>
+                                <Select
+                                    label="User Role"
+                                    sx={{ color: "#fff" }}
+                                    value={signupFormData.userRole}
+                                    name="userRole"
+                                    onChange={handleFormControlChange}
+                                >
+                                    {
+                                        roles.map(role => {
+                                            return (<MenuItem value={role.value} key={role.value}>{role.name}</MenuItem>)
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                            <FieldError errors={errors} name="userRole" />
+                        </div>
+                        <Button style={btnStyle} variant="contained" type="submit">Register</Button>
+                    </form>
+                    <Typography style={linkStyle}>
+                        Already have an account? <Link href="/login" style={{ color: "#fff", textDecoration: "underline" }}>Login</Link>
+                    </Typography>
+                </Paper>
+            </div>
+        </GuestGuard>
     );
 }
 

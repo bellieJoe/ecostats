@@ -1,12 +1,12 @@
 import { Schema, model } from "mongoose";
 
 const UserRoleSchema = new Schema({ 
-    roleId : {
+    role : {
         type : Schema.Types.ObjectId,
         ref : 'roles',
         required : true
     },
-    userId : {
+    user : {
         type : Schema.Types.ObjectId,
         ref : "users",
         required : true

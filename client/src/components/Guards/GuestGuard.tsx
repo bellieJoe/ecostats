@@ -8,7 +8,7 @@ interface Props {
     redirectTo : string
 }
 
-const RouteGuard = (props : Props) => {
+const GuestGuard = (props : Props) => {
     const [isAuth, setIsAuth] = useState(true);
     const {setTokens} = useAuthStore();
 
@@ -28,9 +28,9 @@ const RouteGuard = (props : Props) => {
 
     return (
         <>
-            {isAuth ? props.children  : (<Navigate to={props.redirectTo} />)}
+            {!isAuth ? props.children  : (<Navigate to={props.redirectTo} />)}
         </>
     )
 }
 
-export default RouteGuard;
+export default GuestGuard;

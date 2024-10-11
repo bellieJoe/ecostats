@@ -22,8 +22,8 @@ export default async function SeedUsers(){
     })
     await admin.save();
     await new UserRoleModel({
-        userId: admin._id,
-        roleId: roles.filter(role => role.value == "admin")[0]._id
+        user: admin,
+        role: roles.filter(role => role.value == "admin")[0]
     })
     .save();
     console.log("User seeded successfuly")
@@ -38,8 +38,8 @@ export default async function SeedUsers(){
         })
         await _admin.save();
         await new UserRoleModel({
-            userId: _admin._id,
-            roleId: roles.filter(role => role.value == "admin")[0]._id
+            user: _admin,
+            role: roles.filter(role => role.value == "admin")[0]
         })
         .save();
         console.log("User seeded successfuly")
