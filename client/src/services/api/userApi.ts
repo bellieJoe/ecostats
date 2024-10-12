@@ -21,9 +21,13 @@ export const login = async (data : {email : string, password : string}) : Promis
     }
 }
 
-export const getAllUsers = async (page:number, limit:number) : Promise<any> => {
+export const getAllUsers = async (page:number, limit:number, name?:string|null) : Promise<any> => {
     try {
-        const res = await axios.get(`${apiUrl}/users?page=${page}&limit=${limit}`);
+        let query = `page=${page}&limit=${limit}`;
+        if(name){
+            query += `&name=${name}`;
+        }
+        const res = await axios.get(`${apiUrl}/users?${query}`);
         return res.data;
     } catch (error) {
         console.log(error)

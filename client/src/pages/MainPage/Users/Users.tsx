@@ -7,6 +7,7 @@ import Title from "antd/es/typography/Title";
 import { getRolesByUserId } from "../../../services/api/roleApi";
 import EditUserRole from "../../../components/MainPage/EditUserRole";
 import { useEditRoleStore } from "../../../stores/useRoleStore";
+import Search from "antd/es/input/Search";
 
 interface DataSource {
     key: string
@@ -23,6 +24,8 @@ const Users = () => {
     const [messageApi, contextHolder] = message.useMessage()
     const [dataSource, setDataSource] = useState<DataSource[]>([]);
     const  { setUserId } = useEditRoleStore();
+    const [ isSearching, setIsSearching ] = useState(false);
+    const [ searchKeyword, setSearchKeyword ] = useState("")
 
 
     const handleActivateUser = (id:string, toActivate : boolean) => {
@@ -57,6 +60,15 @@ const Users = () => {
         
     }
 
+    const handleUserSearch = () => {
+        setIsSearching(true)
+        getAllUsers(page, limit, searchKeyword)
+        .then(data => {
+            setUsers(data.users)
+            setTotal(data.total)
+        })
+        .finally(() => setIsSearching(false))
+    }
 
     const columns = [
         {
@@ -103,11 +115,13 @@ const Users = () => {
     ];
 
     useEffect(() => {
+        
         getAllUsers(page, limit)
         .then(data => {
             setUsers(data.users)
             setTotal(data.total)
         })
+        
     }, [page]);
 
     useEffect(() => {
@@ -127,6 +141,17 @@ const Users = () => {
             {contextHolder}
 
             <Title level={3} >User Accounts</Title>
+
+            <div className="mb-2 max-w-96">
+                <Search 
+                addonBefore="Name" 
+                placeholder="Search by name" 
+                enterButton 
+                loading={isSearching} 
+                onChange={(e) => setSearchKeyword(e.target.value)} 
+                onSearch={handleUserSearch}
+                value={searchKeyword} />
+            </div>
 
             <Table 
             dataSource={dataSource} 

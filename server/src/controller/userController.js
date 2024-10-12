@@ -125,12 +125,15 @@ export const all = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1; 
         const limit = parseInt(req.query.limit) || 10; 
+        const name = req.query.name; 
 
         const skip = (page - 1) * limit;
 
         const total = await UserModel.countDocuments();
 
-        const users = await UserModel.find()
+        const q = name ? { name : { $regex : name, $options: "i" }} : {}
+
+        const users = await UserModel.find(q)
                             .skip(skip)
                             .limit(limit)
                             .select("_id name email isActive createdAt ");
