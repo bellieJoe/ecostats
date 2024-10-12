@@ -17,6 +17,7 @@ import { jwtDecode } from 'jwt-decode'
 import Cookies from "js-cookie"
 import { ConfigProvider, message } from 'antd'
 import axios from 'axios'
+import Programs from './pages/MainPage/Programs/Programs'
 
 axios.defaults.withCredentials = true;
 
@@ -84,8 +85,9 @@ function App() {
           </Route>
 
             <Route path='/app' element={<MainPage />} >
-                <Route path='users' element={<Users />} />
                 <Route path='' element={<Dashboard />} />
+                <Route path='users' element={<Users />} />
+                <Route path='programs' element={<Programs />} />
             </Route>
 
           {/* Error Pages */}

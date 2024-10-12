@@ -10,7 +10,7 @@ import FieldError from "../FieldError";
 const EditUserDetails = () => {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false)
-    const {userId, user, setUserId, clear, setUser} = useEditUserStore()
+    const {userId, user, clear, setUser} = useEditUserStore()
     const [messageApi, contextHolder] = message.useMessage();
     const [isSaving, setIsSaving] = useState(false)
     const [formData, setFormData] = useState({
@@ -81,7 +81,6 @@ const EditUserDetails = () => {
 
     useEffect(() => {
         if(user){
-            console.log(user)
             setFormData({
                 name: user!.name,
                 email: user!.email

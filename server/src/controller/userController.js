@@ -155,6 +155,25 @@ export const all = async (req, res) => {
     }
 }
 
+export const searchByName = async (req, res) => {
+    try {
+        const name = req.params.name; 
+
+        const users = await UserModel.find({ name : { $regex : name, $options: "i" }})
+            .select("_id name email isActive createdAt ");
+
+        return res.json(users)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
 export const test =  async  (req, res) => {
     try {
         const i = await RoleModel.findById("6708b427fadb06d0251a8066")

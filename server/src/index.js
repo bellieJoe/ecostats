@@ -8,6 +8,7 @@ import cookieParser from "cookie-parser";
 
 import userRoutes from "./routes/userRoutes.js"
 import roleRoutes from "./routes/roleRoutes.js"
+import programRoutes from "./routes/programRoutes.js"
 
 
 dotenv.config(); // Load environment variables from .env file
@@ -54,6 +55,7 @@ app.use(cookieParser());
 // Routes
 app.use("/users", userRoutes);
 app.use("/roles", roleRoutes);
+app.use("/programs", programRoutes);
 
 /* 
 // Route for signing up new users

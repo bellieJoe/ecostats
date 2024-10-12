@@ -16,7 +16,8 @@ import {
     getUserById ,
     activate,
     deactivate,
-    update
+    update,
+    searchByName
 } from "../controller/userController.js";
 
 router.post('/login', userLoginValidation, login);
@@ -32,6 +33,8 @@ router.post('/deactivate/:id', deactivate);
 router.post('/refresh-token', refreshTokenValidation, refreshToken);
 
 router.get('', all);
+
+router.get('/search/:name', searchByName);
 
 router.get('/get-by-id/:id', getUserById);
 
