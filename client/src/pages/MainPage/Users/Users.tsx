@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { activateUser, deactivateUser, getAllUsers } from "../../../services/api/userApi";
-import { Button, Drawer, Layout, message, Popconfirm, Space, Switch, Table, Tooltip, Typography } from "antd";
-import { User } from "../../../types/User";
-import { Header } from "antd/es/layout/layout";
+import { Button, message, Popconfirm, Space, Switch, Table, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
-import { getRolesByUserId } from "../../../services/api/roleApi";
 import EditUserRole from "../../../components/MainPage/EditUserRole";
 import { useEditRoleStore } from "../../../stores/useRoleStore";
 import Search from "antd/es/input/Search";
+import { useEditUserStore, useViewUsersStore } from "../../../stores/useUserStore";
+import EditUserDetails from "../../../components/MainPage/EditUserDetails";
 
 interface DataSource {
     key: string
@@ -20,12 +19,14 @@ const Users = () => {
     const [ page, setPage ] = useState(1);
     const [ limit, setLimit ] = useState(10);
     const [ total, setTotal ] = useState(0);
-    const [ users, setUsers ] = useState<User[]>([]);
+    const viewUsersStore = useViewUsersStore();
     const [messageApi, contextHolder] = message.useMessage()
     const [dataSource, setDataSource] = useState<DataSource[]>([]);
     const  { setUserId } = useEditRoleStore();
     const [ isSearching, setIsSearching ] = useState(false);
-    const [ searchKeyword, setSearchKeyword ] = useState("")
+    const [ isUsersLoading, setIsUsersLoading ] = useState(false);
+    const [ searchKeyword, setSearchKeyword ] = useState("");
+    const editUserStore = useEditUserStore()
 
 
     const handleActivateUser = (id:string, toActivate : boolean) => {
@@ -62,12 +63,16 @@ const Users = () => {
 
     const handleUserSearch = () => {
         setIsSearching(true)
+        setIsUsersLoading(true)
         getAllUsers(page, limit, searchKeyword)
         .then(data => {
-            setUsers(data.users)
+            viewUsersStore.setUsers(data.users)
             setTotal(data.total)
         })
-        .finally(() => setIsSearching(false))
+        .finally(() => { 
+            setIsSearching(false)
+            setIsUsersLoading(false)
+        })
     }
 
     const columns = [
@@ -87,7 +92,7 @@ const Users = () => {
             render : (record : DataSource) => {
                 return (
                     <Space>
-                        <Button size="small">Update</Button>
+                        <Button size="small" onClick={() => editUserStore.setUserId(record.key)}>Update</Button>
                         <Button size="small" onClick={() => setUserId(record.key)}>Roles</Button>
                     </Space>
                 )
@@ -115,17 +120,20 @@ const Users = () => {
     ];
 
     useEffect(() => {
-        
+        setIsUsersLoading(true)
         getAllUsers(page, limit)
         .then(data => {
-            setUsers(data.users)
+            viewUsersStore.setUsers(data.users)
             setTotal(data.total)
+        })
+        .finally(() => {
+            setIsUsersLoading(false)
         })
         
     }, [page]);
 
     useEffect(() => {
-        const d : any[]  = users.map((val, i) => {
+        const d : any[]  = viewUsersStore.users.map((val, i) => {
             return  {
                 key: val._id,
                 name: val.name,
@@ -134,7 +142,7 @@ const Users = () => {
             }
         })
         setDataSource(d);
-    }, [users])
+    }, [viewUsersStore.users])
 
     return (
         <>
@@ -154,6 +162,7 @@ const Users = () => {
             </div>
 
             <Table 
+            loading={isUsersLoading}
             dataSource={dataSource} 
             columns={columns} 
             pagination={{
@@ -164,6 +173,7 @@ const Users = () => {
             }} />
 
             <EditUserRole />
+            <EditUserDetails />
         </>
     )
 }

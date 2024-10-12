@@ -283,6 +283,34 @@ export const deactivate = async (req, res)  => {
     }
 }
 
+export const update = async (req, res)  => {
+    try {
+        const errors = validationResult(req);
+        if(!errors.isEmpty())
+            return res.status(422).json({errors: errors.array()})
+        
+        const id = req.params.id;
+        const name = req.body.name;
+        const email = req.body.email;
+
+        const user = await UserModel.findById(id)
+        user.email = email;
+        user.name = name;
+        await user.save()
+
+        return res.json(user);
+        
+    } catch (error) {
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error,
+                msg: "Unexpected Error occured"
+            }   
+        );
+    }
+}
+
 // helpers
 async function validatePassword(password, passwordHash ){
     return bcrypt.compare(password, passwordHash);

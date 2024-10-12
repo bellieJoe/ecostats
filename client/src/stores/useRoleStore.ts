@@ -33,7 +33,7 @@ export const useEditRoleStore = create<EditRoleState>((set) => ({
     setUserId : (id:string) => {
         set({userId:id})
     },
-    setRoles : (roles: Role[]) => {
+    setRoles : (roles: Role[]) => {     
         set({roles: roles})
     },
     removeRole : (userId:string, roleId:string) => {

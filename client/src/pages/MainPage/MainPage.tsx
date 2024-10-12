@@ -27,12 +27,21 @@ const MainPage = () => {
 
     const { refreshToken, setTokens, clearTokens } = useAuthStore();
 
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
     
     const { useBreakpoint } = Grid;
 
     const screens = useBreakpoint();
 
+    useEffect(() => {
+        if(screens.lg){
+            console.log("collapse")
+            setCollapsed(false)
+        }
+        else{
+            setCollapsed(true)
+        }
+    }, [screens])
 
     useEffect(() => {
         const interval = setInterval(() => {

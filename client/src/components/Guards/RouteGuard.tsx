@@ -15,12 +15,10 @@ const RouteGuard = (props : Props) => {
     useEffect(() => {
         const checkAuth = async () => {
             const isAuthenticatedStatus = await isAuthenticated();
-            console.log(isAuthenticatedStatus)  
             setIsAuth(isAuthenticatedStatus);
             if(isAuthenticatedStatus){
                 setTokens(getTokensFromCookie())
             }
-            console.log(isAuth)
         };
 
         checkAuth();

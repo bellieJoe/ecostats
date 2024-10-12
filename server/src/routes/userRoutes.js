@@ -4,7 +4,8 @@ import {
     refreshTokenValidation, 
     userLoginValidation, 
     userSignupValidation, 
-    getByIdValidation 
+    getByIdValidation ,
+    updateuserValidation
 } from "../middleware/validations/userValidations.js";
 import { 
     all, 
@@ -14,12 +15,15 @@ import {
     test, 
     getUserById ,
     activate,
-    deactivate
+    deactivate,
+    update
 } from "../controller/userController.js";
 
 router.post('/login', userLoginValidation, login);
 
 router.post('/signup', userSignupValidation, signup);
+
+router.put('/update/:id', updateuserValidation, update);
 
 router.post('/activate/:id', activate);
 

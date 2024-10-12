@@ -103,3 +103,7 @@ export const activateUser = async (id : string) : Promise<any> => {
 export const deactivateUser = async (id : string) : Promise<any> => {
     return await axios.post(`${apiUrl}/users/deactivate/${id}`);
 }
+
+export const updateUser = async (id : string, name : string, email : string) : Promise<any> => {
+    return await axios.put(`${apiUrl}/users/update/${id}`, { name, email });
+}

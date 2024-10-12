@@ -19,7 +19,6 @@ const GuestGuard = (props : Props) => {
             if(isAuthenticatedStatus){
                 setTokens(getTokensFromCookie())
             }
-            console.log(isAuth)
         };
 
         checkAuth();
