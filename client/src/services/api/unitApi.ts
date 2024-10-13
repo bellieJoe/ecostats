@@ -11,3 +11,8 @@ export const searchUnitByName = async (name : string) : Promise<any> => {
     const res = await axios.get(`${apiUrl}/units/search/${name}`);
     return res;
 }
+
+export const countUnits = async () : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/units/count`);
+    return res;
+}

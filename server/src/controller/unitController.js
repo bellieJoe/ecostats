@@ -65,3 +65,20 @@ export const searchUnitByName = async (req, res) => {
         ); 
     }
 }
+
+export const countUnits = async (req, res) => {
+    try {
+
+        const units = await UnitModel.countDocuments({deletedAt:null})
+
+        return res.json(units)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}

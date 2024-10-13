@@ -78,3 +78,17 @@ export const createUnitValidation = [
         }
     }),
 ]
+
+export const getProgramHeadsValidation = [
+    param("programId")
+    .custom(async (value) => {
+        if(!mongoose.Types.ObjectId.isValid(value)){
+            throw new Error("Program is invalid")
+        }
+        const program = await ProgramModel.findById(value);
+        if(!program){
+            throw new Error("Program does not exist.")
+        }
+        return true;
+    })
+]

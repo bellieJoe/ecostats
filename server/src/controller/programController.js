@@ -61,3 +61,106 @@ export const searchProgramByName = async (req, res) => {
         ); 
     }
 }
+
+export const countPrograms = async (req, res) => {
+    try {
+
+        const programs = await ProgramModel.countDocuments({
+            deletedAt: null
+        })
+        return res.json(programs)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
+export const all = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 10; 
+        const name = req.query.name; 
+
+        const skip = (page - 1) * limit;
+
+        const total = await ProgramModel.countDocuments();
+
+        const q = name ? { name : { $regex : name, $options: "i" }, deletedAt : null } : {deletedAt  : null}
+
+        const programs = await ProgramModel.find(q)
+                            .skip(skip)
+                            .limit(limit)
+                            .select("_id name email isActive createdAt ");
+
+        return res.json({
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+            programs: programs,
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
+export const getProgramHeads = async (req, res) => {
+    try {
+        const programId = req.params.programId;
+
+        const programHeads = await ProgramHeadModel.find({
+            programId: programId,
+            deletedAt : null
+        })
+        .populate({
+            path: "userId",
+            select: "_id name email createdAt"
+        });
+
+        return res.json(programHeads.map(p => p.userId))
+       
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
+export const removeHead = async (req, res) => {
+    try {
+        const userId = req.query.userId;
+        const programId = req.query.programId;
+
+        const programHead = await ProgramHeadModel.findOne({
+            userId, programId, deletedAt : null
+        });
+        programHead.deletedAt = Date.now()
+        await programHead.save();
+
+        return res.status(200).send()
+       
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
