@@ -1,7 +1,12 @@
 import { body, param } from "express-validator";
 import UserModel from "../../model/User.js";
 import RoleModel from "../../model/Role.js";
+import UnitModel from "../../model/Unit.js";
+import ProgramModel from "../../model/Program.js";
 import { getUserIdFromToken } from "../../controller/userController.js";
+import ProgramHeadModel from "../../model/ProgramHead.js";
+import UnitHeadModel from "../../model/UnitHead.js";
+import mongoose from "mongoose";
 
 export const userLoginValidation = [
     body("email").exists().notEmpty().isString().isEmail(),
@@ -85,6 +90,66 @@ export const updateuserValidation = [
         const isExist = await UserModel.exists({email: value});
         if(isExist && user.email != value){
             throw new Error('Email is already registered.');
+        }
+        return true;
+    }),
+]
+
+
+export const assignToUntOrPrgrmValidation = [
+    body("userId")
+    .exists().withMessage("User Id is required.")
+    .notEmpty().withMessage("User should not be empty")
+    .custom(async (value) => {
+        if(!value){
+            return
+        }
+        if(!mongoose.Types.ObjectId.isValid(value)){
+            throw new Error("User should be an existing user.")
+        }
+        const exist = await UserModel.findById(value);
+        if(!exist){
+            throw new Error("User should be an existing user.")
+        }
+        return true;
+    }),
+
+    body("programId")
+    .custom(async (value, {req}) => {
+        if(!value){
+            return
+        }
+        if(!mongoose.Types.ObjectId.isValid(value)){
+            throw new Error("Program should be an existing program.")
+        }
+        const exist = await ProgramModel.findOne({_id: value, deletedAt : null});
+        if(!exist){
+            throw new Error("Program should be an existing program.")
+        }
+        const head = await ProgramHeadModel.findOne({programId : value, userId: req.body.userId, deletedAt : null})
+        if(head) {
+            throw new Error("Program is already assigned to the user.")
+
+        }
+        return true;
+    }),
+
+    body("unitId")
+    .custom(async (value, {req}) => {
+        if(!value){
+            return
+        }
+        if(!mongoose.Types.ObjectId.isValid(value)){
+            throw new Error("Unit should be an existing program.")
+        }
+        const exist = await UnitModel.findOne({_id : value, deletedAt : null});
+        if(!exist){
+            throw new Error("Unit does not exist")
+        }
+        const head = await UnitHeadModel.findOne({userId: req.body.userId, deletedAt : null, unitId : value})
+        if(head) {
+            throw new Error("Unit is already assigned to the user.")
+
         }
         return true;
     }),

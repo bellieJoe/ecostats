@@ -10,7 +10,8 @@ const ProgramSchema = new Schema({
         type : String
     },  
     deletedAt : {
-        type : Date
+        type : Date,
+        default: null
     }
 },
 {

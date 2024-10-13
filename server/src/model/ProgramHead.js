@@ -1,18 +1,19 @@
 import { Mongoose, Schema, model } from "mongoose";
 
 const ProgramHeadSchema = new Schema({
-    program : {
+    programId : {
         type : Schema.Types.ObjectId,
         required : true,
         ref: "programs"
     },
-    user : {
+    userId : {
         type : Schema.Types.ObjectId,
         required : true,
         ref : "users"
     },
     deletedAt : {
-        type : Date
+        type : Date,
+        default : null
     }
 });
 

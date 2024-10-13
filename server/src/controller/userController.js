@@ -5,7 +5,10 @@ import dotenv from "dotenv"
 import { validationResult } from "express-validator";
 import UserRoleModel from "../model/UserRole.js";
 import RoleModel from "../model/Role.js";
+import UnitModel from "../model/Unit.js";
 import mongoose from "mongoose";
+import ProgramHeadModel from "../model/ProgramHead.js";
+import UnitHeadModel from "../model/UnitHead.js";
 
 dotenv.config()
 
@@ -66,12 +69,12 @@ export const signup = async (req, res)  => {
             isActive: true
         })
         const role = await RoleModel.findOne({value: userRole})
-        await user.save();
+        await user.save({session});
         const _userRole = new UserRoleModel({
             user,
             role
         })
-        await _userRole.save();
+        await _userRole.save({session});
 
         await session.commitTransaction();
 
@@ -329,6 +332,51 @@ export const update = async (req, res)  => {
         );
     }
 }
+
+export const assignUserToUnitOrProgram = async (req, res)  => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const errors = validationResult(req);
+        if(!errors.isEmpty())
+            return res.status(422).json({errors: errors.array()})
+
+        const userId = req.body.userId;
+        const programId = req.body.programId;
+        const unitId = req.body.unitId;
+   
+        if(programId) {
+            const pHead =  new ProgramHeadModel({
+                programId : programId,
+                userId : userId
+            })
+            await pHead.save({session})
+        }
+   
+        if(unitId) {
+            const uHead = new UnitHeadModel({
+                unitId : unitId,
+                userId : userId
+            })
+            await uHead.save({session})
+        }
+
+        await session.commitTransaction()
+        return res.status(200).send("Ok")
+
+    } catch (error) {
+        await session.abortTransaction();
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        );
+    } finally {
+        session.endSession();
+    }
+}
+
 
 // helpers
 async function validatePassword(password, passwordHash ){

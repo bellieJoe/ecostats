@@ -5,7 +5,8 @@ import {
     userLoginValidation, 
     userSignupValidation, 
     getByIdValidation ,
-    updateuserValidation
+    updateuserValidation,
+    assignToUntOrPrgrmValidation
 } from "../middleware/validations/userValidations.js";
 import { 
     all, 
@@ -17,7 +18,8 @@ import {
     activate,
     deactivate,
     update,
-    searchByName
+    searchByName,
+    assignUserToUnitOrProgram
 } from "../controller/userController.js";
 
 router.post('/login', userLoginValidation, login);
@@ -39,6 +41,8 @@ router.get('/search/:name', searchByName);
 router.get('/get-by-id/:id', getUserById);
 
 router.get('/test', test);
+
+router.post('/assign-to', assignToUntOrPrgrmValidation, assignUserToUnitOrProgram);
 
 
 

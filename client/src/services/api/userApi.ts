@@ -111,3 +111,9 @@ export const updateUser = async (id : string, name : string, email : string) : P
 export const searchUserByName = async (name : string) : Promise<any> => {
     return await axios.get(`${apiUrl}/users/search/${name}`,);
 }
+
+export const assignTo = async (userId : string, programId : string|null, unitId : string|null) : Promise<any> => {
+    return await axios.post(`${apiUrl}/users/assign-to`, {
+        userId, programId, unitId
+    });
+}

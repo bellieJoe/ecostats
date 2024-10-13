@@ -1,6 +1,7 @@
 import express from "express"
 import { 
-    create 
+    create ,
+    searchProgramByName
 } from "../controller/programController.js";
 import {
     createProgramValidation
@@ -9,5 +10,7 @@ import {
 const router = express.Router()
 
 router.post("/create", createProgramValidation, create);
+
+router.get("/search/:name", searchProgramByName);
 
 export default router;

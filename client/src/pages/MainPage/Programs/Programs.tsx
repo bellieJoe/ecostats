@@ -1,6 +1,8 @@
-import { Button, Card, Flex, Input, Layout, Select, Space, Statistic } from "antd";
+import { Button, Card, Col, Flex, Grid, Input, Layout, Row, Select, Space, Statistic } from "antd";
 import Title from "antd/es/typography/Title";
 import CreateProgram from "../../../components/MainPage/CreateProgram";
+import CreateUnit from "../../../components/MainPage/CreateUnit";
+import AssignHeads from "../../../components/MainPage/AssignHeads";
 
 
 const Programs = () => {
@@ -35,45 +37,11 @@ const Programs = () => {
                     </Layout>
                     <br />
                     <Layout>
-                        <Flex wrap align="start" gap={12} justify="space-evenly">
-                            <CreateProgram />
-                            <Card title="Create Units under Division" bordered={false}>
-                                <Title level={5}>Select Division</Title>
-                                <Select className="w-full" placeholder="Select Division" />
-
-                                <br /><br />
-
-                                <Title level={5}>Unit Name</Title>
-                                <Input placeholder="Assign Unit Name" />
-
-                                <br /><br />
-
-                                <Title level={5}>Select Unit Head</Title>
-                                <Select className="w-full" placeholder="Select Unit Head" />
-
-                                <br /><br />
-
-                                <Button className="w-full" type="primary">Create Unit</Button>
-                            </Card>
-                            <Card title="Assign Heads upon User Account Registration" bordered={false}>
-                                <Title level={5}>User Account</Title>
-                                <Select className="w-full" placeholder="Select Account" />
-
-                                <br /><br />
-
-                                <Title level={5}>Assign to Division</Title>
-                                <Select className="w-full" placeholder="Select Division" />
-
-                                <br /><br />
-
-                                <Title level={5}>Assign to Unit </Title>
-                                <Select className="w-full" placeholder="Select Unit" />
-
-                                <br /><br />
-
-                                <Button className="w-full" type="primary">Assign User</Button>
-                            </Card>
-                        </Flex>
+                        <Row gutter={[16,16]} >
+                            <Col lg={8} md={12} xs={24}><CreateProgram /></Col>
+                            <Col lg={8} md={12} xs={24}><CreateUnit /></Col>
+                            <Col lg={8} md={12} xs={24}><AssignHeads /></Col>
+                        </Row>
                     </Layout>
                 </Layout>
             </div>

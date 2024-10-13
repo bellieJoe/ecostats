@@ -4,6 +4,7 @@ const UnitSchema = new Schema({
     name : {
         type : String,
         required : true,
+        unique : true
     },
     programId : {
         type : Schema.Types.ObjectId,
@@ -11,11 +12,11 @@ const UnitSchema = new Schema({
         ref : "programs"
     },
     description : {
-        type : String,
-        required : true
+        type : String
     },  
     deletedAt : {
-        type : Date
+        type : Date,
+        default : null
     }
 },
 {

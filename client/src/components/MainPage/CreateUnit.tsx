@@ -3,25 +3,29 @@ import Title from "antd/es/typography/Title";
 import { useCallback, useState } from "react";
 import { searchUserByName } from "../../services/api/userApi";
 import debounce from 'lodash.debounce';
-import { createProgram } from "../../services/api/programApi";
+import { createProgram, searchProgramByName } from "../../services/api/programApi";
 import { ValidationError } from "../../types/ApiValidationError";
 import FieldError from "../FieldError";
+import { createUnit } from "../../services/api/unitApi";
 
 
 
-const CreateProgram = () => {
+const CreateUnit = () => {
     const [userOptions, setUserOptions] = useState([]);
+    const [programOptions, setProgramOptions] = useState([]);
     const [selectUserloading, setSelectUserloading] = useState(false);
+    const [selectProgramloading, setSelectProgramloading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-    const [formData, setFormData] = useState<{name:string, userId:string|null}>({
+    const [formData, setFormData] = useState<{name:string, userId:string|null, programId:string|null}>({
         userId: null,
-        name : ""
+        name : "",
+        programId: null
     });
     const [validationErrors , setValidationErrors] = useState<ValidationError[]>([]);
     
 
-    const debouncedSearch = useCallback(
+    const debouncedUserSearch = useCallback(
         debounce((value) => {
             setSelectUserloading(true)
             searchUserByName(value)
@@ -41,19 +45,46 @@ const CreateProgram = () => {
             .finally(()=>{
                 setSelectUserloading(false)
             })
-        }, 500),[]);
+        }, 500)
+    ,[]);
+
+    const debouncedProgramSearch = useCallback(
+        debounce((value) => {
+            setSelectUserloading(true)
+            searchProgramByName(value)
+            .then(res => {
+                const options = res.data.map(val => {
+                    return {
+                        value : val._id,
+                        label : val.name
+                    }
+                });
+                setProgramOptions(options)
+            })
+            .catch(err => {
+                messageApi.error("Unexpected Error occured")
+            })
+            .finally(()=>{
+                setSelectUserloading(false)
+            })
+        }, 500)
+    ,[]);
 
     const searchUser = (e) => {
-        debouncedSearch(e)
+        debouncedUserSearch(e)
+    }
+
+    const searchProgram = (e) => {
+        debouncedProgramSearch(e)
     }
 
     const onSave = () => {
         setIsSaving(true)
         setValidationErrors([])
-        createProgram(formData.userId!, formData.name)
+        createUnit(formData.userId!, formData.name, formData.programId!)
         .then(res => {
-            setFormData({userId: null, name : ""})
-            messageApi.success("Program successfully created.")
+            setFormData({userId: null, name : "", programId: null})
+            messageApi.success("Unit successfully created.")
         })
         .catch(err => {
             console.log(err)
@@ -81,14 +112,35 @@ const CreateProgram = () => {
             {contextHolder}
             <Card >
                 <Title level={4}>Register Program/Division</Title>
+
                 <div className="mb-2">
-                    <Title level={5}>Program/Division Name</Title>
-                    <Input placeholder="Enter Division Name" onChange={(e)=>setFormData({...formData, name:e.target.value})} value={formData.name} />
+                    <Title level={5}>Select Division</Title>
+                    <Select 
+                    showSearch
+                    allowClear
+                    value={formData.programId}
+                    onSelect={(e)=>setFormData({...formData, programId:e})}
+                    loading={selectProgramloading}
+                    className="w-full" 
+                    placeholder="Search Program"
+                    filterOption={false}
+                    onSearch={searchProgram} 
+                    onClear={()=>{
+                        setProgramOptions([])
+                        setFormData({...formData, programId:null})
+                    }}  
+                    options={programOptions.map(opt => opt)} />
+                    <FieldError errors={validationErrors} name={"programId"} />
+                </div>
+
+                <div className="mb-2">
+                    <Title level={5}>Unit Name</Title>
+                    <Input placeholder="Enter Unit Name" onChange={(e)=>setFormData({...formData, name:e.target.value})} value={formData.name} />
                     <FieldError errors={validationErrors} name={"name"} />
                 </div>
 
                 <div className="mb-2">
-                    <Title level={5}>Assign Division Head</Title>
+                    <Title level={5}>Assign Unit Head</Title>
                     <Select 
                     showSearch
                     allowClear
@@ -109,10 +161,10 @@ const CreateProgram = () => {
                 </div>
 
                 <br />
-                <Button className="w-full" type="primary" onClick={onSave} loading={isSaving}>Register Division</Button>
+                <Button className="w-full" type="primary" onClick={onSave} loading={isSaving}>Register Unit</Button>
             </Card>
         </>
     )
 }
 
-export default CreateProgram;
+export default CreateUnit;

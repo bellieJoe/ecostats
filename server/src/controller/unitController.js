@@ -1,8 +1,10 @@
 import { validationResult } from "express-validator";
 import UserModel from "../model/User.js";
 import ProgramModel from "../model/Program.js";
-import ProgramHeadModel from "../model/ProgramHead.js";
+import UnitModel from "../model/Unit.js";
+import UnitHead from "../model/UnitHead.js";
 import mongoose from "mongoose";
+
 
 export const create = async (req, res) => {
     const session = await mongoose.startSession();
@@ -14,17 +16,19 @@ export const create = async (req, res) => {
 
         const userId = req.body.userId;
         const name = req.body.name;
+        const programId = req.body.programId;
 
         const user = await UserModel.findById(userId);
-        const program = new ProgramModel({
-            name: name
+        const unit = new  UnitModel({
+            name: name,
+            programId : programId
         });
-        await program.save({session});
-        const programHead = new ProgramHeadModel({
+        await unit.save();
+        const unitHead = new UnitHead({
             userId : user,
-            programId : program
+            unitId : unit
         });
-        await programHead.save({session});
+        await unitHead.save();
 
         await session.commitTransaction();
 
@@ -43,14 +47,14 @@ export const create = async (req, res) => {
     }
 }
 
-export const searchProgramByName = async (req, res) => {
+export const searchUnitByName = async (req, res) => {
     try {
         const name = req.params.name; 
 
-        const programs = await ProgramModel.find({ name : { $regex : name, $options: "i" }, deletedAt : null})
+        const units = await UnitModel.find({ name : { $regex : name, $options: "i" }, deletedAt : null})
             .select("_id name createdAt");
 
-        return res.json(programs)
+        return res.json(units)
     } catch (error) {
         console.log(error)
         return res.status(500).json(
