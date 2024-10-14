@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Alert, Button, Drawer, Flex, message, Popconfirm, Space, Table  } from "antd";
 import Title from "antd/es/typography/Title";
 import { deleteProgram, getAllPrograms } from "../../../services/api/programApi";
-import { useProgramHeadStore, useProgramsStore } from "../../../stores/useProgramStore";
+import { useProgramHeadStore, useProgramsStore, useUpdateProgramStore } from "../../../stores/useProgramStore";
 import ProgramHeadList from "./ProgramHeadList";
 import { useViewUnitsStore } from "../../../stores/useUnitStore";
 import CreateUnit from "./CreateUnit";
@@ -10,6 +10,7 @@ import { parseResError } from "../../../services/errorHandler";
 import { ReloadOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate, faPlus } from '@fortawesome/free-solid-svg-icons';
+import UpdateProgram from "./UpdateProgram";
 
 interface DataSource {
     key: string
@@ -30,6 +31,7 @@ const ProgramLists = () => {
         value : string,
         label : string
     } | null>(null);
+    const updateProgramStore = useUpdateProgramStore();
     const columns = [
         {
             title: 'Name',
@@ -63,7 +65,7 @@ const ProgramLists = () => {
             render : (record : DataSource) => {
                 return (
                     <Space>
-                        <Button size="small" variant="solid" color="primary">Update</Button>
+                        <Button size="small" variant="solid" color="primary" onClick={() => updateProgramStore.settProgramId(record.key)}>Update</Button>
                         <Popconfirm 
                         title="Delete Program" 
                         onConfirm={() => handleDeleteProgram(record.key)}
@@ -124,7 +126,7 @@ const ProgramLists = () => {
             {contextHolder}
             <Title level={5} >Programs</Title>
             <Flex justify="right" className="mb-2">
-                <Button variant="link" color="default" size="small" icon={<FontAwesomeIcon icon={faArrowsRotate} />} onClick={() => setRefresh(!refresh)}>Refresh</Button>
+                <Button variant="link" color="primary" size="small" icon={<FontAwesomeIcon icon={faArrowsRotate} />} onClick={() => setRefresh(!refresh)}>Refresh</Button>
             </Flex>
             <Table 
             sticky
@@ -143,6 +145,8 @@ const ProgramLists = () => {
             <Drawer open={!!program} onClose={() => setProgram(null)}>
                 <CreateUnit program={program!} />
             </Drawer>
+
+            <UpdateProgram onUpdated={(res) => setRefresh(!refresh)} />
         </>
     )
 }

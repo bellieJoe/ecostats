@@ -4,13 +4,16 @@ import {
     countPrograms,
     create ,
     deleteProgram,
+    getProgramById,
     getProgramHeads,
     removeHead,
-    searchProgramByName
+    searchProgramByName,
+    updateProgram
 } from "../controller/programController.js";
 import {
     createProgramValidation,
-    getProgramHeadsValidation
+    getProgramHeadsValidation,
+    updateProgramValidation
 } from "../middleware/validations/programValidations.js";
 
 const router = express.Router()
@@ -28,5 +31,9 @@ router.get('/heads/:programId', getProgramHeadsValidation, getProgramHeads)
 router.delete('/remove-head', removeHead)
 
 router.delete('/delete/:programId', deleteProgram)
+
+router.get('/get-by-id/:programId', getProgramById)
+
+router.put('/update', updateProgramValidation, updateProgram)
 
 export default router;

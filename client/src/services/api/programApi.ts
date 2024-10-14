@@ -42,4 +42,15 @@ export const removeProgramHead = async (programId:string, userId:string) : Promi
     });
     return res;
 }
+    
 
+export const getProgramById = async (programId:string) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/programs/get-by-id/${programId}`);
+    return res;
+}
+    
+export const updateProgram = async (id :string, name : string) : Promise<any> => {
+    const res = await axios.put(`${apiUrl}/programs/update`, {id, name});
+    return res;
+}
+    

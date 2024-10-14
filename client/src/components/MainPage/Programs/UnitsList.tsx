@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Flex, message, Popconfirm, Space, Switch, Table, Tooltip } from "antd";
-import { useViewUnitsStore } from "../../../stores/useUnitStore";
+import { useUpdateUnitStore, useViewUnitsStore } from "../../../stores/useUnitStore";
 import { deleteUnit, getByProgram } from "../../../services/api/unitApi";
 import Title from "antd/es/typography/Title";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { parseResError } from "../../../services/errorHandler";
+import UpdateUnit from "./UpdateUnit";
 
 interface DataSource {
     key: string
@@ -18,6 +19,7 @@ const UnitsList = () => {
     const [ isUnitsLoading, setIsUnitsLoading ] = useState(false);
     const [refresh, setRefresh] = useState(false)
     const viewUnitStore = useViewUnitsStore();
+    const updateUnitStore = useUpdateUnitStore();
 
     const columns = [
         {
@@ -38,7 +40,7 @@ const UnitsList = () => {
             render : (record : DataSource) => {
                 return (
                     <Space>
-                        <Button size="small" variant="solid" color="primary">Update</Button>
+                        <Button size="small" variant="solid" color="primary" onClick={() => updateUnitStore.setUnitId(record.key)}>Update</Button>
                         <Popconfirm title="Delete Unit" description="Are you sure you want to delete this unit?" onConfirm={() => handleDeleteUnit(record.key)}>
                             <Button size="small" variant="filled" color="danger">Delete</Button>
                         </Popconfirm>
@@ -100,7 +102,7 @@ const UnitsList = () => {
                 viewUnitStore.programId && <div className="mb-2"><span className="font-semibold">Program :</span> {viewUnitStore.programName}</div> 
             }
             <Flex justify="right" className="mb-2">
-                <Button variant="text" color="default" type="text" size="small" icon={<FontAwesomeIcon icon={faArrowsRotate} />} onClick={() => setRefresh(!refresh)}>Refresh</Button>
+                <Button variant="text" color="primary" type="text" size="small" icon={<FontAwesomeIcon icon={faArrowsRotate} />} onClick={() => setRefresh(!refresh)}>Refresh</Button>
             </Flex>
             <Table 
             id="unitsTable"
@@ -117,6 +119,8 @@ const UnitsList = () => {
                 total: viewUnitStore.total,
                 onChange: (page) => viewUnitStore.setPage(page)
             }} />
+
+            <UpdateUnit onUpdated={() => setRefresh(!refresh)} />
 
         </>
     )

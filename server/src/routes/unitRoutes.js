@@ -4,10 +4,13 @@ import {
     create, 
     deleteUnit, 
     getByProgram, 
-    searchUnitByName
+    getUnitById, 
+    searchUnitByName,
+    updateUnit
 } from "../controller/unitController.js";
 import {
-    createUnitValidation
+    createUnitValidation,
+    updateUnitValidation
 } from "../middleware/validations/programValidations.js";
 import { deleteProgram } from "../controller/programController.js";
 
@@ -22,6 +25,10 @@ router.get("/count", countUnits);
 router.get("/all", getByProgram);
 
 router.delete("/delete/:unitId", deleteUnit);
+
+router.put("/update",updateUnitValidation, updateUnit);
+
+router.get('/get-by-id/:unitId', getUnitById)
 
 
 export default router;

@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { Program } from "../types/Program";
 import { User } from "../types/User";
+import { ValidationError } from "../types/ApiValidationError";
 
 interface ProgramsStore { 
     programs : Program[] ,
@@ -51,4 +52,63 @@ export const useProgramHeadStore = create<ProgramHeadState>((set) => ({
             programId : null
         })
     }
-}))
+}));
+
+
+interface UpdateProgramState {
+    program : Program|null
+    programId : string | null
+    errors : ValidationError[],
+    formData : {
+        id : string
+        name : string
+    }
+
+    setFormData : (name:string, val:string) => void
+    clear : () => void
+    setProgram : (program : Program) => void
+    settProgramId : (id : string) => void
+    setErrors : (errors : ValidationError[]) => void
+}
+
+
+export const useUpdateProgramStore = create<UpdateProgramState>((set) => ({
+    program: null,
+    programId: null,
+    errors: [],
+    formData : {
+        name : "",
+        id : ""
+    },
+    
+    setFormData : (name, val) => {
+
+    },
+    setProgram: function (program: Program): void {
+        set({
+            program : program,
+            formData : {
+                name : program.name,
+                id : program._id
+            }
+        })
+    },
+    settProgramId: function (id: string): void {
+        set({
+            programId : id,
+        })
+    },
+    setErrors: function (errors: ValidationError[]): void {
+        set({
+            errors : errors
+        })
+    },
+    clear: () => {
+        set({
+            program : null,
+            programId : null,
+            errors : []
+        })
+    }
+}
+))

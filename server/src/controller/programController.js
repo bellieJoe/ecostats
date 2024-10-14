@@ -3,6 +3,8 @@ import UserModel from "../model/User.js";
 import ProgramModel from "../model/Program.js";
 import ProgramHeadModel from "../model/ProgramHead.js";
 import mongoose from "mongoose";
+import UnitModel from "../model/Unit.js";
+import UnitHeadModel from "../model/UnitHead.js";
 
 export const create = async (req, res) => {
     const session = await mongoose.startSession();
@@ -165,16 +167,74 @@ export const removeHead = async (req, res) => {
 }
 
 export const deleteProgram = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
       const programId = req.params.programId
        
+      // delete programs
       await ProgramModel.findOneAndUpdate({
         _id : programId
       }, {
         deletedAt : Date.now()
-      });
+      })
+      .session(session);
+
+      await ProgramHeadModel.updateMany({
+        programId : programId,
+        deletedAt : null
+      }, {
+        deletedAt : Date.now()
+      })
+      .session(session);
+
+      await UnitModel.updateMany({
+        programId : programId,
+        deletedAt : null
+      } , {
+        deletedAt : Date.now()
+      })
+      .session(session);
+
+      const unitIds = (await UnitModel.find({
+        programId : programId
+      })
+      .session(session)).map(p => p._id);
+
+      await UnitHeadModel.updateMany({
+        unitId: {
+            $in : unitIds
+        },
+        deletedAt : null
+      }, {
+        deletedAt : Date.now()
+      })
+      .session(session);
       
+      await session.commitTransaction();
       res.send();
+    } catch (error) {
+        console.log(error)
+        await session.abortTransaction()
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    } finally {
+        await session.endSession()
+    }
+}
+
+export const getProgramById = async (req, res) => {
+    try {
+        const programId = req.params.programId;
+
+        const program = await ProgramModel.findById(programId).select("_id name");
+
+        return res.status(200).json(program)
+       
     } catch (error) {
         console.log(error)
         return res.status(500).json(
@@ -185,4 +245,29 @@ export const deleteProgram = async (req, res) => {
         ); 
     }
 }
+
+export const updateProgram = async (req, res) => {
+    try {
+        const programId = req.body.id;
+        const name = req.body.name;
+
+        const program = await ProgramModel.findOneAndUpdate({
+            _id : programId
+        }, {
+            name : name
+        });
+
+        return res.status(200).json(await ProgramModel.findById(program._id))
+       
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
 

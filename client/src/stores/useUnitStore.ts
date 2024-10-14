@@ -1,6 +1,7 @@
 import { VoidFunctionComponent } from "react";
 import { Unit } from "../types/Unit";
 import { create } from "zustand";
+import { ValidationError } from "../types/ApiValidationError";
 
 interface ViewUnits {
     units : Unit[],
@@ -40,4 +41,63 @@ export const useViewUnitsStore = create<ViewUnits>(set => ({
     setTotal : (total) => {
         set({total : total})
     }
-}))
+}));
+
+
+interface UpdateUnitState {
+    unit : Unit|null
+    unitId : string | null
+    errors : ValidationError[],
+    formData : {
+        id : string
+        name : string
+    }
+
+    setFormData : (name:string, val:string) => void
+    clear : () => void
+    setUnit : (unit : Unit) => void
+    setUnitId : (id : string) => void
+    setErrors : (errors : ValidationError[]) => void
+}
+
+
+export const useUpdateUnitStore = create<UpdateUnitState>((set) => ({
+    unit: null,
+    unitId: null,
+    errors: [],
+    formData : {
+        name : "",
+        id : ""
+    },
+    
+    setFormData : (name, val) => {
+
+    },
+    setUnit: function (unit: Unit): void {
+        set({
+            unit : unit,
+            formData : {
+                name : unit.name,
+                id : unit._id
+            }
+        })
+    },
+    setUnitId: function (id: string): void {
+        set({
+            unitId : id,
+        })
+    },
+    setErrors: function (errors: ValidationError[]): void {
+        set({
+            errors : errors
+        })
+    },
+    clear: () => {
+        set({
+            unit : null,
+            unitId : null,
+            errors : []
+        })
+    }
+}
+))

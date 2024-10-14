@@ -3,7 +3,8 @@ import UserModel from "../model/User.js";
 import ProgramModel from "../model/Program.js";
 import UnitModel from "../model/Unit.js";
 import UnitHead from "../model/UnitHead.js";
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
+import UnitHeadModel from "../model/UnitHead.js";
 
 
 export const create = async (req, res) => {
@@ -92,7 +93,10 @@ export const getByProgram = async (req, res) => {
 
         const skip = (page - 1) * limit;
 
-        const total = await UnitModel.countDocuments();
+        const total = await UnitModel.countDocuments({
+            deletedAt : null,
+            programId : programId
+        });
 
         const q = name ? { 
             name : { 
@@ -132,6 +136,8 @@ export const getByProgram = async (req, res) => {
 
 
 export const deleteUnit = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
     try {
       const unitId = req.params.unitId;
       
@@ -139,9 +145,46 @@ export const deleteUnit = async (req, res) => {
         _id : unitId
       }, {
         deletedAt : Date.now()
-      });
+      })
+      .session(session);
+
+      await UnitHeadModel.updateMany({
+        unitId : unitId,
+        deletedAt : null
+      }, {
+        deletedAt : Date.now()
+      })
+      .session(session);
       
+      await session.commitTransaction();
       res.send();
+    } catch (error) {
+        console.log(error);
+        await session.abortTransaction();
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    } finally {
+        await session.endSession();
+    }
+}
+
+export const updateUnit = async (req, res) => {
+    try {
+        const unitId = req.body.id;
+        const name = req.body.name;
+
+        const unit = await UnitModel.findOneAndUpdate({
+            _id : unitId
+        }, {
+            name : name
+        });
+
+        return res.status(200).json(await UnitModel.findById(unit._id))
+       
     } catch (error) {
         console.log(error)
         return res.status(500).json(
@@ -152,3 +195,23 @@ export const deleteUnit = async (req, res) => {
         ); 
     }
 }
+
+export const getUnitById = async (req, res) => {
+    try {
+        const unitId = req.params.unitId;
+
+        const unit = await UnitModel.findById(unitId).select("_id name");
+
+        return res.status(200).json(unit)
+       
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+

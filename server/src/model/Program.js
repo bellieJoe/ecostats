@@ -22,19 +22,6 @@ const ProgramSchema = new Schema({
 // Create a compound index to enforce unique name where deletedAt is null
 ProgramSchema.index({ name: 1, deletedAt: 1 }, { unique: true, partialFilterExpression: { deletedAt: null } });
 
-ProgramSchema.post("findOneAndUpdate", async function(doc) {
-    await ProgramHeadModel.updateMany({
-        programId : doc._id
-    }, {
-        deletedAt : Date.now()
-    });
-
-    await UnitModel.updateMany({
-        programId: doc._id
-    }, {
-        deletedAt : Date.now()
-    })
-});
 
 const ProgramModel = model("programs", ProgramSchema);
 export default ProgramModel;

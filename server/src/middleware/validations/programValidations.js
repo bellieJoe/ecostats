@@ -96,3 +96,60 @@ export const getProgramHeadsValidation = [
         return true;
     })
 ]
+
+
+export const updateProgramValidation = [
+    param("id")
+    .custom(async (value) => {
+        if(!mongoose.Types.ObjectId.isValid(value)){
+            throw new Error("Program is invalid")
+        }
+        const program = await ProgramModel.findById(value);
+        if(!program){
+            throw new Error("Program does not exist.")
+        }
+        return true;
+    }),
+
+    body("name")
+    .exists().withMessage("Name is required.")
+    .notEmpty().withMessage("Name should not be empty")
+    .custom(async (value) => {
+        if(!value){
+            return
+        }
+        const exist = await ProgramModel.findOne({name : value, deletedAt : null});
+        if(exist){
+            throw new Error("Duplicate name detected, this name is already used.");
+        }
+    }),
+]
+
+export const updateUnitValidation = [
+    param("id")
+    .custom(async (value) => {
+        if(!mongoose.Types.ObjectId.isValid(value)){
+            throw new Error("Unit is invalid")
+        }
+        const unit = await UnitModel.findById(value);
+        if(!unit){
+            throw new Error("Unit does not exist.")
+        }
+        return true;
+    }),
+
+    body("name")
+    .exists().withMessage("Name is required.")
+    .notEmpty().withMessage("Name should not be empty")
+    .custom(async (value, {req}) => {
+        if(!value || req.body.id){
+            return
+        }
+        const unit = await UnitModel.findOne(req.body.id);
+        const exist = await UnitModel.findOne({name : value, deletedAt : null, programId : unit.programId});
+        if(exist){
+            throw new Error("Duplicate name detected, this name is already used.");
+        }
+        return true;
+    }),
+]

@@ -34,3 +34,13 @@ export const deleteUnit = async (unitId : string) : Promise<any> => {
     const res = await axios.delete(`${apiUrl}/units/delete/${unitId}`);
     return res;
 }
+
+export const updateUnit = async (id :string, name : string) : Promise<any> => {
+    const res = await axios.put(`${apiUrl}/units/update`, {id, name});
+    return res;
+}
+
+export const getUnitById = async (unitId:string) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/units/get-by-id/${unitId}`);
+    return res;
+}
