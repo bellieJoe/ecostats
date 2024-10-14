@@ -19,6 +19,7 @@ export const login = async (req, res)  => {
             return res.status(422).json({errors: errors.array()})
         
         const user  = await UserModel.findOne({ email: req.body.email});
+
         if(!user)
             return res.status(404).json({
                 error: "Not Found",

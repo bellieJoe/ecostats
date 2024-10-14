@@ -2,12 +2,14 @@ import { useState } from "react";
 import 'boxicons/css/boxicons.min.css';
 import { Link, Button, Paper, TextField, Typography, Alert } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { login } from "../../services/api/userApi";
+import { login, loginV2 } from "../../services/api/userApi";
 import AuthToken from "../../types/AuthToken";
 import Cookies from "js-cookie";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import GuestGuard from "../../components/Guards/GuestGuard";
+import { message } from "antd";
+import { parseResError } from "../../services/errorHandler";
 
 
 const Login = () => {
@@ -93,23 +95,35 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loginFailStatus, setLoginFailStatus] = useState(false)
+    const [messageApi, contextHolder] = message.useMessage();
     
     const handleLogin = async (e) => {
         e.preventDefault();
-        const tokens : AuthToken|null = await login({email:email, password:password});
-        if(!tokens){
-            setLoginFailStatus(true);
-            return;
+        try {
+            const res = await loginV2({email:email, password:password});
+            const tokens : AuthToken|null = {
+                accessToken : res.data.accessToken,
+                refreshToken : res.data.refreshToken
+            };
+            if(!tokens){
+                setLoginFailStatus(true);
+                return;
+            }
+            setLoginFailStatus(false);
+            Cookies.set("accessToken", tokens.accessToken, {expires: 7});
+            Cookies.set("refreshToken", tokens.refreshToken, {expires: 7});
+            setTokens(tokens);
+            navigate("/app")
+        } catch (error) {
+            console.log(error)
+            messageApi.error(parseResError(error).msg)
         }
-        setLoginFailStatus(false);
-        Cookies.set("accessToken", tokens.accessToken, {expires: 7});
-        Cookies.set("refreshToken", tokens.refreshToken, {expires: 7});
-        setTokens(tokens);
-        navigate("/app")
+        
     }
 
     return (
         <GuestGuard redirectTo="/app">
+            {contextHolder}
             <div style={containerStyle}>
                 <Grid>
                     <Paper style={paperStyle} sx={{ width: { xs: '80vw', sm: '50vw', md: '40vw', lg: '30vw', xl: '20vw' }, height: { lg: '50vh' } }}>

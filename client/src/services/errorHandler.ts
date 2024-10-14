@@ -9,8 +9,8 @@ export const parseResError = (err) : Error => {
     console.log(err)
     if(err.response.data.msg && err.response.data.error){
         return {
-            error : err.response.data.msg,
-            msg : err.response.data.error
+            error : err.response.data.error,
+            msg : err.response.data.msg
         }
     }
     return {
