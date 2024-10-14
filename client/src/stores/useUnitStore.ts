@@ -2,6 +2,7 @@ import { VoidFunctionComponent } from "react";
 import { Unit } from "../types/Unit";
 import { create } from "zustand";
 import { ValidationError } from "../types/ApiValidationError";
+import { User } from "../types/User";
 
 interface ViewUnits {
     units : Unit[],
@@ -100,4 +101,35 @@ export const useUpdateUnitStore = create<UpdateUnitState>((set) => ({
         })
     }
 }
-))
+));
+
+
+interface UnitHeadState { 
+    heads : User[] 
+    unitId : string|null
+    name : string|null
+    setHeads : (users : User[]) => void
+    setUnit : (id:string, name : string) => void
+    clear : () => void
+}
+
+export const useUnitHeadStore = create<UnitHeadState>((set) => ({
+    heads: [],
+    unitId : null,
+    name : null,
+
+    setHeads : (users : User[]) => {
+        set({heads : users})
+    },
+
+    setUnit : (id:string, name:string) => {
+        set({unitId : id, name: name})
+    },
+
+    clear : () => {
+        set({
+            heads : [],
+            unitId : null
+        })
+    }
+}));

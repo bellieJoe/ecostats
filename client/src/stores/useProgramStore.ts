@@ -10,14 +10,7 @@ interface ProgramsStore {
     clear : () => void
 }
 
-interface ProgramHeadState { 
-    heads : User[] 
-    programId : string|null
-    name : string|null
-    setHeads : (users : User[]) => void
-    setProgram : (id:string, name : string) => void
-    clear : () => void
-}
+
 
 
 export const useProgramsStore = create<ProgramsStore>((set) => ({
@@ -32,6 +25,15 @@ export const useProgramsStore = create<ProgramsStore>((set) => ({
     })
 
 }));
+
+interface ProgramHeadState { 
+    heads : User[] 
+    programId : string|null
+    name : string|null
+    setHeads : (users : User[]) => void
+    setProgram : (id:string, name : string) => void
+    clear : () => void
+}
 
 export const useProgramHeadStore = create<ProgramHeadState>((set) => ({
     heads: [],

@@ -44,3 +44,15 @@ export const getUnitById = async (unitId:string) : Promise<any> => {
     const res = await axios.get(`${apiUrl}/units/get-by-id/${unitId}`);
     return res;
 }
+
+export const getUnitHeads = async (unitId : string) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/units/heads/${unitId}`);
+    return res;
+}
+
+export const removeUnitHead = async (unitId:string, userId:string) : Promise<any> => {
+    const res = await axios.delete(`${apiUrl}/units/remove-head`, {
+        params : { unitId: unitId, userId }
+    });
+    return res;
+}

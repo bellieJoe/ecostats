@@ -215,3 +215,53 @@ export const getUnitById = async (req, res) => {
     }
 }
 
+export const getUnitHeads = async (req, res) => {
+    try {
+        const unitId = req.params.unitId;
+
+        const unitHeads = await UnitHeadModel.find({
+            unitId: unitId,
+            deletedAt : null
+        })
+        .populate({
+            path: "userId",
+            select: "_id name email createdAt"
+        });
+
+        return res.json(unitHeads.map(p => p.userId))
+       
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
+export const removeHead = async (req, res) => {
+    try {
+        const userId = req.query.userId;
+        const unitId = req.query.unitId;
+
+        const unitHead = await UnitHeadModel.findOne({
+            userId, unitId: unitId, deletedAt : null
+        });
+        unitHead.deletedAt = Date.now()
+        await unitHead.save();
+
+        return res.status(200).send()
+       
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+

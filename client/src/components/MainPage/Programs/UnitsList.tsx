@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Button, Flex, message, Popconfirm, Space, Switch, Table, Tooltip } from "antd";
-import { useUpdateUnitStore, useViewUnitsStore } from "../../../stores/useUnitStore";
+import { useUnitHeadStore, useUpdateUnitStore, useViewUnitsStore } from "../../../stores/useUnitStore";
 import { deleteUnit, getByProgram } from "../../../services/api/unitApi";
 import Title from "antd/es/typography/Title";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { parseResError } from "../../../services/errorHandler";
 import UpdateUnit from "./UpdateUnit";
+import UnitHeadList from "./UnitHeadList";
 
 interface DataSource {
     key: string
@@ -20,6 +21,7 @@ const UnitsList = () => {
     const [refresh, setRefresh] = useState(false)
     const viewUnitStore = useViewUnitsStore();
     const updateUnitStore = useUpdateUnitStore();
+    const unitHeadStore = useUnitHeadStore();
 
     const columns = [
         {
@@ -31,7 +33,7 @@ const UnitsList = () => {
             title: 'Unit Head',
             key: 'progrmaHead',
             render : (record : DataSource) => {
-                return <Button size="small">Unit Head/s</Button>
+                return <Button size="small" onClick={() => unitHeadStore.setUnit(record.key, record.name)}>Unit Head/s</Button>
             }
         },
         {
@@ -122,6 +124,7 @@ const UnitsList = () => {
 
             <UpdateUnit onUpdated={() => setRefresh(!refresh)} />
 
+            <UnitHeadList />
         </>
     )
 }

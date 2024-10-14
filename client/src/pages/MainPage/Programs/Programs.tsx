@@ -45,6 +45,7 @@ const Programs = () => {
 
     return (
         <>
+            { contextHolder }
             <Title level={3} >Programs/Division</Title>
             <div className="">
                 <Layout>
@@ -56,9 +57,6 @@ const Programs = () => {
                                 value={count.programs}
                                 valueStyle={{ color: '#3f8600' }}
                                 />
-                                <Button style={{ marginTop: 16 }} variant="filled" >
-                                    View Programs
-                                </Button>
                             </Card>
                             <Card bordered={false}>
                                 <Statistic
@@ -66,9 +64,6 @@ const Programs = () => {
                                 value={count.units}
                                 valueStyle={{ color: '#3f8600' }}
                                 />
-                                <Button style={{ marginTop: 16 }} variant="filled" >
-                                    View Units
-                                </Button>
                             </Card>
                         </Space>
                     </Layout>
