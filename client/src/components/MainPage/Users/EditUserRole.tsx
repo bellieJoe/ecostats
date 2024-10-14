@@ -1,8 +1,8 @@
 import { Drawer, message, Space, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { useEditRoleStore } from "../../stores/useRoleStore";
+import { useEditRoleStore } from "../../../stores/useRoleStore";
 import Title from "antd/es/typography/Title";
-import { getRolesByUserId } from "../../services/api/roleApi";
+import { getRolesByUserId } from "../../../services/api/roleApi";
 
 
 const EditUserRole = () => {

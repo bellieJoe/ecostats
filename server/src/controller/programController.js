@@ -95,7 +95,7 @@ export const all = async (req, res) => {
         const programs = await ProgramModel.find(q)
                             .skip(skip)
                             .limit(limit)
-                            .select("_id name email isActive createdAt ");
+                            .select("_id name createdAt ");
 
         return res.json({
             total,
@@ -153,6 +153,28 @@ export const removeHead = async (req, res) => {
 
         return res.status(200).send()
        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
+export const deleteProgram = async (req, res) => {
+    try {
+      const programId = req.params.programId
+       
+      await ProgramModel.findOneAndUpdate({
+        _id : programId
+      }, {
+        deletedAt : Date.now()
+      });
+      
+      res.send();
     } catch (error) {
         console.log(error)
         return res.status(500).json(

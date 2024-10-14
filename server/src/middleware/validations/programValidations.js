@@ -68,11 +68,15 @@ export const createUnitValidation = [
     body("name")
     .exists().withMessage("Name is required.")
     .notEmpty().withMessage("Name should not be empty")
-    .custom(async (value) => {
-        if(!value){
+    .custom(async (value, { req }) => {
+        if(!value || !req.body.programId){
             return
         }
-        const exist = await UnitModel.findOne({name : value, deletedAt : null});
+        const exist = await UnitModel.findOne({
+            name : value, 
+            deletedAt : null,
+            programId : req.body.programId
+        });
         if(exist){
             throw new Error("Duplicate name detected, this name is already used.")
         }

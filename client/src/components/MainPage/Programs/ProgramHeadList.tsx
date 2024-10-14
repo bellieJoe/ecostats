@@ -1,9 +1,9 @@
 import { Button, Drawer, Flex, List, message } from "antd";
 import Title from "antd/es/typography/Title";
-import { useProgramHeadStore } from "../../stores/useProgramStore";
+import { useProgramHeadStore } from "../../../stores/useProgramStore";
 import { useEffect, useState } from "react";
-import { getProgramHeads, removeProgramHead } from "../../services/api/programApi";
-import { parseResError } from "../../services/errorHandler";
+import { getProgramHeads, removeProgramHead } from "../../../services/api/programApi";
+import { parseResError } from "../../../services/errorHandler";
 
 const ProgramHeadList = () => {
 

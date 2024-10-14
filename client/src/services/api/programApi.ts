@@ -31,6 +31,11 @@ export const getProgramHeads = async (programId : string) : Promise<any> => {
     return res;
 }
 
+export const deleteProgram = async (programId : string) : Promise<any> => {
+    const res = await axios.delete(`${apiUrl}/programs/delete/${programId}`);
+    return res;
+}
+
 export const removeProgramHead = async (programId:string, userId:string) : Promise<any> => {
     const res = await axios.delete(`${apiUrl}/programs/remove-head`, {
         params : { programId, userId }

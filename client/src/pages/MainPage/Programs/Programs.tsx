@@ -1,12 +1,13 @@
 import { Button, Card, Col, Drawer, Flex, Grid, Input, Layout, message, Row, Select, Space, Statistic } from "antd";
 import Title from "antd/es/typography/Title";
-import CreateProgram from "../../../components/MainPage/CreateProgram";
-import CreateUnit from "../../../components/MainPage/CreateUnit";
-import AssignHeads from "../../../components/MainPage/AssignHeads";
+import CreateProgram from "../../../components/MainPage/Programs/CreateProgram";
+import CreateUnit from "../../../components/MainPage/Programs/CreateUnit";
+import AssignHeads from "../../../components/MainPage/Programs/AssignHeads";
 import { useEffect, useState } from "react";
-import ProgramLists from "../../../components/MainPage/ProgramLists";
+import ProgramLists from "../../../components/MainPage/Programs/ProgramLists";
 import { countPrograms } from "../../../services/api/programApi";
 import { countUnits } from "../../../services/api/unitApi";
+import UnitsList from "../../../components/MainPage/Programs/UnitsList";
 
 
 const Programs = () => {
@@ -26,12 +27,20 @@ const Programs = () => {
     
 
     useEffect(() => {
-        countPrograms()
-        .then(res => {setCount({...count, programs: res.data})})
-        .catch(() => messageApi.error("Unexpected Error Occured"));
-        countUnits()
-        .then(res => {setCount({...count, units: res.data})})
-        .catch(() => messageApi.error("Unexpected Error Occured"))
+        (async () => {
+
+            try {
+                const program = (await countPrograms()).data
+                const unit = (await countUnits()).data
+                setCount({
+                        programs : program,
+                        units : unit
+                })
+            } catch (err) {
+                messageApi.error("Unexpected Error Occured")
+            } 
+
+        })()
     }, [])
 
     return (
@@ -70,8 +79,10 @@ const Programs = () => {
                             <Button type="primary" className="w-fit" onClick={() => setDraweStates({...drawerStates, newUnit:true})}>Create Unit</Button>
                             <Button className="w-fit" onClick={() => setDraweStates({...drawerStates, assignHead:true})}>Assign Head</Button>
                         </Space>
-                        <ProgramLists />
-                        <ProgramLists />
+                        <ProgramLists  />
+                        <div id="units">
+                            <UnitsList />
+                        </div>
                     </Layout>
                 </Layout>
             </div>

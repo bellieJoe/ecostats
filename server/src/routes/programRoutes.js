@@ -3,6 +3,7 @@ import {
     all,
     countPrograms,
     create ,
+    deleteProgram,
     getProgramHeads,
     removeHead,
     searchProgramByName
@@ -25,5 +26,7 @@ router.get('', all)
 router.get('/heads/:programId', getProgramHeadsValidation, getProgramHeads)
 
 router.delete('/remove-head', removeHead)
+
+router.delete('/delete/:programId', deleteProgram)
 
 export default router;

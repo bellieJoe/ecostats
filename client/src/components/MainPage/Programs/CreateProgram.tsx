@@ -1,11 +1,11 @@
 import { Button, Card, Input, message, Select, SelectProps } from "antd";
 import Title from "antd/es/typography/Title";
 import { useCallback, useState } from "react";
-import { searchUserByName } from "../../services/api/userApi";
+import { searchUserByName } from "../../../services/api/userApi";
 import debounce from 'lodash.debounce';
-import { createProgram } from "../../services/api/programApi";
-import { ValidationError } from "../../types/ApiValidationError";
-import FieldError from "../FieldError";
+import { createProgram } from "../../../services/api/programApi";
+import { ValidationError } from "../../../types/ApiValidationError";
+import FieldError from "../../FieldError";
 
 
 

@@ -1,10 +1,10 @@
 import { Button, Drawer, Input, message, Space, Tag } from "antd";
 import { useEffect, useState } from "react";
 import Title from "antd/es/typography/Title";
-import { useEditUserStore, useViewUsersStore } from "../../stores/useUserStore";
-import { getUserById, updateUser } from "../../services/api/userApi";
-import { ValidationError } from "../../types/ApiValidationError";
-import FieldError from "../FieldError";
+import { useEditUserStore, useViewUsersStore } from "../../../stores/useUserStore";
+import { getUserById, updateUser } from "../../../services/api/userApi";
+import { ValidationError } from "../../../types/ApiValidationError";
+import FieldError from "../../FieldError";
 
 
 const EditUserDetails = () => {

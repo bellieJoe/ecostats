@@ -1,25 +1,27 @@
 import { Button, Card, Input, message, Select, SelectProps } from "antd";
 import Title from "antd/es/typography/Title";
 import { useCallback, useState } from "react";
-import { searchUserByName } from "../../services/api/userApi";
+import { assignTo, searchUserByName } from "../../../services/api/userApi";
 import debounce from 'lodash.debounce';
-import { createProgram, searchProgramByName } from "../../services/api/programApi";
-import { ValidationError } from "../../types/ApiValidationError";
-import FieldError from "../FieldError";
-import { createUnit } from "../../services/api/unitApi";
+import { createProgram, searchProgramByName } from "../../../services/api/programApi";
+import { ValidationError } from "../../../types/ApiValidationError";
+import FieldError from "../../FieldError";
+import { createUnit, searchUnitByName } from "../../../services/api/unitApi";
 
 
 
-const CreateUnit = () => {
+const AssignHeads = () => {
     const [userOptions, setUserOptions] = useState([]);
+    const [unitOptions, setUnitOptions] = useState([]);
     const [programOptions, setProgramOptions] = useState([]);
     const [selectUserloading, setSelectUserloading] = useState(false);
+    const [selectUnitloading, setSelectUnitloading] = useState(false);
     const [selectProgramloading, setSelectProgramloading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-    const [formData, setFormData] = useState<{name:string, userId:string|null, programId:string|null}>({
+    const [formData, setFormData] = useState<{unitId:string|null, userId:string|null, programId:string|null}>({
         userId: null,
-        name : "",
+        unitId : null,
         programId: null
     });
     const [validationErrors , setValidationErrors] = useState<ValidationError[]>([]);
@@ -50,7 +52,7 @@ const CreateUnit = () => {
 
     const debouncedProgramSearch = useCallback(
         debounce((value) => {
-            setSelectUserloading(true)
+            setSelectProgramloading(true)
             searchProgramByName(value)
             .then(res => {
                 const options = res.data.map(val => {
@@ -65,7 +67,29 @@ const CreateUnit = () => {
                 messageApi.error("Unexpected Error occured")
             })
             .finally(()=>{
-                setSelectUserloading(false)
+                setSelectProgramloading(false)
+            })
+        }, 500)
+    ,[]);
+
+    const debouncedUnitSearch = useCallback(
+        debounce((value) => {
+            setSelectUnitloading(true)
+            searchUnitByName(value)
+            .then(res => {
+                const options = res.data.map(val => {
+                    return {
+                        value : val._id,
+                        label : val.name
+                    }
+                });
+                setUnitOptions(options)
+            })
+            .catch(err => {
+                messageApi.error("Unexpected Error occured")
+            })
+            .finally(()=>{
+                setSelectUnitloading(false)
             })
         }, 500)
     ,[]);
@@ -78,13 +102,17 @@ const CreateUnit = () => {
         debouncedProgramSearch(e)
     }
 
+    const searchUnit = (e) => {
+        debouncedUnitSearch(e)
+    }
+
     const onSave = () => {
         setIsSaving(true)
         setValidationErrors([])
-        createUnit(formData.userId!, formData.name, formData.programId!)
+        assignTo(formData.userId!, formData.programId, formData.unitId!)
         .then(res => {
-            setFormData({userId: null, name : "", programId: null})
-            messageApi.success("Unit successfully created.")
+            setFormData({userId: null, unitId : null, programId: null})
+            messageApi.success("User successfully assigned.")
         })
         .catch(err => {
             console.log(err)
@@ -111,36 +139,9 @@ const CreateUnit = () => {
         <>
             {contextHolder}
             <Card >
-                <Title level={4}>Create Units under Division</Title>
-
+                <Title level={4}>Assign Heads upon User Account RegistrationRegister Program/Division</Title>
                 <div className="mb-2">
-                    <Title level={5}>Select Division</Title>
-                    <Select 
-                    showSearch
-                    allowClear
-                    value={formData.programId}
-                    onSelect={(e)=>setFormData({...formData, programId:e})}
-                    loading={selectProgramloading}
-                    className="w-full" 
-                    placeholder="Search Program"
-                    filterOption={false}
-                    onSearch={searchProgram} 
-                    onClear={()=>{
-                        setProgramOptions([])
-                        setFormData({...formData, programId:null})
-                    }}  
-                    options={programOptions.map(opt => opt)} />
-                    <FieldError errors={validationErrors} name={"programId"} />
-                </div>
-
-                <div className="mb-2">
-                    <Title level={5}>Unit Name</Title>
-                    <Input placeholder="Enter Unit Name" onChange={(e)=>setFormData({...formData, name:e.target.value})} value={formData.name} />
-                    <FieldError errors={validationErrors} name={"name"} />
-                </div>
-
-                <div className="mb-2">
-                    <Title level={5}>Assign Unit Head</Title>
+                    <Title level={5}>User Account</Title>
                     <Select 
                     showSearch
                     allowClear
@@ -160,11 +161,52 @@ const CreateUnit = () => {
                     <FieldError errors={validationErrors} name={"userId"} />
                 </div>
 
+                <div className="mb-2">
+                    <Title level={5}>Assign to Division</Title>
+                    <Select 
+                    showSearch
+                    allowClear
+                    value={formData.programId}
+                    onSelect={(e)=>setFormData({...formData, programId:e})}
+                    loading={selectProgramloading}
+                    className="w-full" 
+                    placeholder="Search Program"
+                    filterOption={false}
+                    onSearch={searchProgram} 
+                    onClear={()=>{
+                        setProgramOptions([])
+                        setFormData({...formData, programId:null})
+                    }}  
+                    options={programOptions.map(opt => opt)} />
+                    <FieldError errors={validationErrors} name={"programId"} />
+                </div>
+
+                <div className="mb-2">
+                    <Title level={5}>Assign to Unit</Title>
+                    <Select 
+                    showSearch
+                    allowClear
+                    value={formData.unitId}
+                    onSelect={(e)=>setFormData({...formData, unitId:e})}
+                    loading={selectUnitloading}
+                    className="w-full" 
+                    placeholder="Search Unit"
+                    filterOption={false}
+                    onSearch={searchUnit} 
+                    onClear={()=>{
+                        setUnitOptions([])
+                        setFormData({...formData, unitId:null})
+                    }}  
+                    options={unitOptions.map(opt => opt)} />
+                    <FieldError errors={validationErrors} name={"unitId"} />
+                </div>
+
+                
                 <br />
-                <Button className="w-full" type="primary" onClick={onSave} loading={isSaving}>Register Unit</Button>
+                <Button className="w-full" type="primary" onClick={onSave} loading={isSaving}>Assign User</Button>
             </Card>
         </>
     )
 }
 
-export default CreateUnit;
+export default AssignHeads;

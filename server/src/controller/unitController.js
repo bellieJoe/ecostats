@@ -82,3 +82,73 @@ export const countUnits = async (req, res) => {
         ); 
     }
 }
+
+export const getByProgram = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1; 
+        const limit = parseInt(req.query.limit) || 10; 
+        const programId = req.query.programId;
+        const name = req.query.name; 
+
+        const skip = (page - 1) * limit;
+
+        const total = await UnitModel.countDocuments();
+
+        const q = name ? { 
+            name : { 
+                $regex : name, 
+                $options: "i" 
+            }, 
+            deletedAt : null 
+        } : {
+            deletedAt  : null
+        }
+
+        if(programId) {
+            q.programId = programId
+        }
+
+        const units = await UnitModel.find(q)
+                            .skip(skip)
+                            .limit(limit)
+                            .select("_id name  createdAt ");
+
+        return res.json({
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+            units: units,
+        })
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
+
+export const deleteUnit = async (req, res) => {
+    try {
+      const unitId = req.params.unitId;
+      
+      await UnitModel.findOneAndUpdate({
+        _id : unitId
+      }, {
+        deletedAt : Date.now()
+      });
+      
+      res.send();
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
