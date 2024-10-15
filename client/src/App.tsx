@@ -24,6 +24,7 @@ import Land_1 from './pages/MainPage/Forms/Land/Land_1'
 import 'ag-grid-community/styles/ag-grid.css'; // Mandatory CSS for the grid
 import 'ag-grid-community/styles/ag-theme-quartz.css'; // Optional theme
 import Land_2 from './pages/MainPage/Forms/Land/Land_2'
+import Land_3 from './pages/MainPage/Forms/Land/Land_3'
 
 axios.defaults.withCredentials = true;
 
@@ -99,6 +100,7 @@ function App() {
                   <Route path='toc' element={<LandTOC />} />
                   <Route path='land_1' element={<Land_1 />} />
                   <Route path='land_2' element={<Land_2 />} />
+                  <Route path='land_3' element={<Land_3 />} />
                 </Route>
             </Route>
 
