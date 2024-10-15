@@ -36,8 +36,8 @@ The server is build with js and users mongodb as database.
     1. Open your powershell or windows terminal and navigate to the repository's server folder.
     2. Run `npm i` to install necessary dependencies.
     3. Update the MONGO_URI from the servers .env file and seeder.js file
-    ![alt text](image.png)
-    ![alt text](image-1.png)
+![alt text](image.png)
+![alt text](image-1.png)
     4. Run `node src\seeder\seed.js` to populate your mongodb database. By default all users that are generated have "password" as password.
 
 #### Running Server Locally
