@@ -18,6 +18,12 @@ import Cookies from "js-cookie"
 import { ConfigProvider, message } from 'antd'
 import axios from 'axios'
 import Programs from './pages/MainPage/Programs/Programs'
+import ExcelDataGrid from './pages/Test'
+import LandTOC from './pages/MainPage/Forms/Land/LandTOC'
+import Land_1 from './pages/MainPage/Forms/Land/Land_1'
+import 'ag-grid-community/styles/ag-grid.css'; // Mandatory CSS for the grid
+import 'ag-grid-community/styles/ag-theme-quartz.css'; // Optional theme
+import Land_2 from './pages/MainPage/Forms/Land/Land_2'
 
 axios.defaults.withCredentials = true;
 
@@ -88,10 +94,19 @@ function App() {
                 <Route path='' element={<Dashboard />} />
                 <Route path='users' element={<Users />} />
                 <Route path='programs' element={<Programs />} />
+
+                <Route path="land" >
+                  <Route path='toc' element={<LandTOC />} />
+                  <Route path='land_1' element={<Land_1 />} />
+                  <Route path='land_2' element={<Land_2 />} />
+                </Route>
             </Route>
 
           {/* Error Pages */}
           <Route path="/error/401" element={<ErrorPage code={401} message="Unauthorized Access" />} />
+
+          {/* For testing */}
+          <Route path="/test" element={<ExcelDataGrid />} />
 
         </Routes>
       </BrowserRouter>

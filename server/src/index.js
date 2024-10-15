@@ -10,6 +10,7 @@ import userRoutes from "./routes/userRoutes.js"
 import roleRoutes from "./routes/roleRoutes.js"
 import programRoutes from "./routes/programRoutes.js"
 import unitRoutes from "./routes/unitRoutes.js"
+import landRoutes from "./routes/landRoutes.js"
 
 
 dotenv.config(); // Load environment variables from .env file
@@ -58,4 +59,5 @@ app.use("/users", userRoutes);
 app.use("/roles", roleRoutes);
 app.use("/programs", programRoutes);
 app.use("/units", unitRoutes);
+app.use("/land", landRoutes);
 

@@ -52,10 +52,11 @@ const Sidebar = ({open}) => {
             style: menuStyle1,
             children: [
                 {
-                    key: "create-program",
-                    label: "Create New",
+                    key: "land-toc",
+                    label: "Table Of Contents",
                     icon: <PlusSquareOutlined />,
-                    style: menuStyle2
+                    style: menuStyle2,
+                    onClick : () => navigate("land/toc")
                 }
             ]
         },
