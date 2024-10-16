@@ -87,6 +87,14 @@ const ReportsSidebar = ({open}) => {
                     onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_1}`)
                 },
                 {
+                    key : FormEnum.FORESTRY_2,
+                    label : "Table 2. Land Cover",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_2}`)
+                },
+
+
+                {
                     key : FormEnum.FORESTRY_24,
                     label : "Table 24. Issued Chainsaw Registration",
                     style  : menuStyle2,
