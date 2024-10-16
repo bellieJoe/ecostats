@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react";
-import { parseResError } from "../../../services/errorHandler";
-import { formCreate, formDelete, formGet, formUpdate } from "../../../services/api/formsApi";
-import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
-import { Button, Flex, Input, message, Pagination, Popconfirm } from "antd";
+import { parseResError } from "../../../../services/errorHandler";
+import { formCreate, formDelete, formGet, formUpdate } from "../../../../services/api/formsApi";
+import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
+import { Button, Flex, Input, message, Pagination, Popconfirm, Select } from "antd";
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import GenericFormDrawer from "../../GenericFormV2";
-import { GenericFormField } from "../../../types/forms/GenericFormTypes";
-const Land_Table_2  = () => {
+import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
+import GenericFormDrawer from "../../../GenericFormV3";
+import { generateYearOptions } from "../../../../services/helper";
+
+const Land_Table_5  = () => {
 
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
@@ -24,55 +26,55 @@ const Land_Table_2  = () => {
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
         { 
+            headerName: "CY", 
+            field: "calendar_year", 
+            editable : true, 
+            type: "numberColumn",
+        },
+        { 
             headerName: "Province", 
-            headerClass: "justify-center", 
             field: "province", 
             editable : true, 
             type: "textColumn",
         },
         { 
-            headerName: "Municipality", 
-            field: "municipality", 
+            headerName: "No of Transmitted to RoD", 
+            field: "no_of_transmitted_to_rod", 
             editable : true, 
-            type: "textColumn",
-            headerClass: "justify-center" 
-
+            type: "numberColumn",
         },
         { 
-            headerName: "No. of Lots", 
-            field: "no_of_lots", 
+            headerName: "Area (ha)", 
+            field: "area_ha", 
             editable : true, 
-            type: "textColumn",
-
+            type: "numberColumn",
         },
         { 
-            headerName: "Total Land Area", 
-            field: "total_land_area", 
-            editable : true, 
-            type: "textColumn",
-        },
-        {
-            headerName: "Income (Php)", 
+            headerName: "Number of Beneficiaries", 
             children : [
                 { 
-                    headerName: "Sale", 
-                    field: "sale", 
-                    editable : true, 
-                    type: "numberColumn" 
-        
+                    headerName: "Total Beneficiaries", 
+                    field: "total_beneficiaries", 
+                    editable : false, 
+                    type: "numberColumn",
                 },
                 { 
-                    headerName: "Lease", 
-                    field: "lease", 
+                    headerName: "Female", 
+                    field: "female_beneficiaries", 
                     editable : true, 
-                    type: "numberColumn" 
-        
+                    type: "numberColumn",
+                },
+                { 
+                    headerName: "Male", 
+                    field: "male_beneficiaries", 
+                    editable : true, 
+                    type: "numberColumn",
                 },
             ]
         },
+        
         {
             headerName: "Actions",
-            headerClass: "justify-center",
             cellRenderer: (params) => {
                 return (
                     <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this row?" onConfirm={() => handleDelete(params.data._id)}>
@@ -83,54 +85,66 @@ const Land_Table_2  = () => {
         }
     ]);
 
-    const genericFormFields : GenericFormField[] = [
+    const genericFormFields : GenericFormFieldV3[] = [
+        {
+            name : "calendar_year",
+            label : "Calendar Year", 
+            input : (
+                <Select 
+                showSearch 
+                options={generateYearOptions(2000, new Date().getFullYear())}
+                />
+            ),
+            type : "input"
+        },
         {
             name : "province",
             label : "Province", 
-            input : <Input type="text" />
+            input : <Input type="text" />,
+            type : "input"
         },
         {
-            name : "municipality",
-            label : "City/Municipality",
-            input : <Input type="text" />
+            name : "no_of_transmitted_to_rod",
+            label : "No of Transmitted to RoD", 
+            input : <Input type="number" />,
+            type : "input"
         },
         {
-            name : "no_of_lots",
-            label : "No. of Lots",
-            input : <Input type="number" />
+            name : "area_ha",
+            label : "Area (ha)", 
+            input : <Input type="number" />,
+            type : "input"
         },
         {
-            name : "total_land_area",
-            label : "Total Land Area",
-            input : <Input type="number" />
+            name : "male_beneficiaries",
+            label : "Male Beneficiaries", 
+            input : <Input type="number" />,
+            type : "input"
         },
         {
-            name : "sale",
-            label : "Sale",
-            input : <Input type="number" />
+            name : "female_beneficiaries",
+            label : "Female Beneficiaries", 
+            input : <Input type="number" />,
+            type : "input"
         },
-        {
-            name : "lease",
-            label : "Lease",
-            input : <Input type="number" />
-        },
-    ]
+    ];
 
     const handleOnRowValueChanged = (d) => {
-        formUpdate(d.data, FormEnum.LAND_2, Sector.LAND)
+        d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
+        console.log(d)
+        formUpdate(d.data, FormEnum.LAND_5, Sector.LAND)
         .then(res => {
             messageApi.success("Data successfully updated.");
         })
         .catch(err => {
-            console.log(err)
-            setRefresh(!refresh)
+            console.log(err) 
             messageApi.error(parseResError(err).msg)
         })
-        .finally();
+        .finally(() => setRefresh(!refresh));
     }
 
     const handleDelete = (id) => {
-        formDelete(id, FormEnum.LAND_2, Sector.LAND)
+        formDelete(id, FormEnum.LAND_5, Sector.LAND)
         .then(res => {
             messageApi.success("Data successfully deleted.");
         })
@@ -152,7 +166,8 @@ const Land_Table_2  = () => {
     const handleSubmit = async (d) => {
         console.log(d)
         try {
-            await formCreate(d, FormEnum.LAND_2, Sector.LAND)
+            d.total_beneficiaries = parseInt(d.male_beneficiaries) + parseInt(d.female_beneficiaries);
+            await formCreate(d, FormEnum.LAND_5, Sector.LAND)
             messageApi.success("Data successfully inserted.");
         } catch (err) {
             messageApi.error(parseResError(err).msg)
@@ -163,7 +178,7 @@ const Land_Table_2  = () => {
     
     useEffect(() => {
         setLoading(true)
-        formGet(FormEnum.LAND_2, Sector.LAND, limit, page)
+        formGet(FormEnum.LAND_5, Sector.LAND, limit, page)
         .then(res => {
             console.log(res.data)
             setTotal(res.data.total)
@@ -192,7 +207,13 @@ const Land_Table_2  = () => {
                     <Button onClick={() => setAddRecord(true)} color="primary" variant="solid">Add Data</Button>
                     <Button onClick={() => setRefresh(!refresh)} variant="text" color="primary"><FontAwesomeIcon icon={faArrowsRotate} /></Button>
                 </Flex>
+
                 <AgGridReact
+                    gridOptions={{
+                        defaultColDef: {
+                            headerClass: "justify-center align-center text-center"
+                        }
+                    }}
                     loading={loading}
                     editType={'fullRow'}
                     rowData={rowData}
@@ -221,4 +242,4 @@ const Land_Table_2  = () => {
 }
 
 
-export default Land_Table_2;
+export default Land_Table_5;

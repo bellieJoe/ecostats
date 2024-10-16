@@ -5,6 +5,8 @@ import { FolderOutlined, HomeOutlined, PlusSquareOutlined, PushpinOutlined, User
 import { useNavigate } from "react-router-dom";
 import SidebarUser from "../SidebarUser";
 import { FormEnum, Sector } from "../../types/forms/formNameEnum";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faList } from "@fortawesome/free-solid-svg-icons";
 
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -25,54 +27,82 @@ const ReportsSidebar = ({open}) => {
         {
             key: Sector.LAND,
             label: "Land Managenent",
-            icon: <UserOutlined />,
+            icon: <FontAwesomeIcon icon={faList} />,
             style: menuStyle1,
             children : [
                 {
                     key : FormEnum.LAND_1,
-                    label : "Table 1",
+                    label : "Table 1. Land Area",
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_1}`)
                 },
                 {
                     key : FormEnum.LAND_2,
-                    label : "Table 2",
+                    label : "Table 2. Patrimonial Properties as of CY 2023",
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_2}`)
                 },
                 {
                     key : FormEnum.LAND_3,
-                    label : "Table 3",
+                    label : "Table 3. Residential Free Patent Issued",
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_3}`)
                 },
                 {
                     key : FormEnum.LAND_4,
-                    label : "Table 4",
+                    label : "Table 4. Agricultural Free Patent Issued",
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_4}`)
                 },
                 {
                     key : FormEnum.LAND_5,
-                    label : "Table 5",
+                    label : "Table 5. Homestead",
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_5}`)
                 },
                 {
                     key : FormEnum.LAND_6,
-                    label : "Table 6",
+                    label : "Table 6. List of Special Patent of LGUs and NGAs",
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_6}`)
                 },
                 {
                     key : FormEnum.LAND_7,
-                    label : "Table 7",
+                    label : "Table 7. Management of Foreshore Areas",
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_7}`)
                 },
             ]
         },
-
+        {
+            key: Sector.FORESTRY,
+            label: "Forestry Management",
+            icon: <FontAwesomeIcon icon={faList} />,
+            style: menuStyle1,
+            children: [
+                {
+                    key : FormEnum.FORESTRY_1,
+                    label : "Table 1. Land Classification",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_1}`)
+                },
+                {
+                    key : FormEnum.FORESTRY_24,
+                    label : "Table 24. Issued Chainsaw Registration",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_24}`)
+                },
+            ]
+        },
+        {
+            key: Sector.BIODIVERSITY,
+            label: "Biodiversity Management",
+            icon: <FontAwesomeIcon icon={faList} />,
+            style: menuStyle1,
+            children: [
+                
+            ]
+        },
     ];
 
     const theme : ThemeConfig = {

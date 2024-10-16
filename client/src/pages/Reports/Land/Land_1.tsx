@@ -1,6 +1,6 @@
 
 import { Tabs, TabsProps } from "antd";
-import Land_Table_1 from "../../../components/Reports/Forms/Land_Table_1";
+import Land_Table_1 from "../../../components/Reports/Forms/Land/Land_Table_1";
 import Title from "antd/es/typography/Title";
 
 
@@ -10,11 +10,6 @@ const Land_1 = () => {
             key: '1',
             label: 'Form',
             children: <Land_Table_1 />,
-        },
-        {
-            key: '2',
-            label: 'Reports',
-            children: 'Content of Tab Pane 2',
         },
         {
             key: '3',

@@ -29,6 +29,10 @@ import Land_7 from './pages/Reports/Land/Land_7'
 import Admin from './pages/Admin/Admin'
 import Navbar from './components/Navbar/Navbar'
 import Reports from './pages/Reports/Reports'
+import LandingPage from './pages/Home/LandingPage'
+import { FormEnum, Sector } from './types/forms/formNameEnum'
+import Forestry_24 from './pages/Reports/Forestry/Forestry_24'
+import Forestry_1 from './pages/Reports/Forestry/Forestry_1'
 
 axios.defaults.withCredentials = true;
 
@@ -93,6 +97,7 @@ function App() {
             <Layout className="h-full">
               <Routes >
                 <Route path='/' element={<HomePage />} >
+                  <Route path="" element={<LandingPage />} />
                   <Route path="login" element={<Login />} />
                   <Route path="signup" element={<SignUp />} />
                 </Route>
@@ -104,7 +109,7 @@ function App() {
                 </Route>
 
                 <Route path='reports' element={<Reports />}>
-                    <Route path="land" >
+                    <Route path={Sector.LAND} >
                       <Route path='toc' element={<LandTOC />} />
                       <Route path='land_1' element={<Land_1 />} />
                       <Route path='land_2' element={<Land_2 />} />
@@ -113,6 +118,11 @@ function App() {
                       <Route path='land_5' element={<Land_5 />} />
                       <Route path='land_6' element={<Land_6 />} />
                       <Route path='land_7' element={<Land_7 />} />
+                    </Route>
+                    
+                    <Route path={Sector.FORESTRY} >
+                      <Route path={FormEnum.FORESTRY_24} element={<Forestry_24 />} />
+                      <Route path={FormEnum.FORESTRY_1} element={<Forestry_1 />} />
                     </Route>
                 </Route>
 

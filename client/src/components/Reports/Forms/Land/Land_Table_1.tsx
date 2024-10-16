@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
-import { parseResError } from "../../../services/errorHandler";
-import { formCreate, formDelete, formGet, formUpdate } from "../../../services/api/formsApi";
-import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
-import { Button, Flex, Input, message, Pagination, Popconfirm, Select } from "antd";
+import { parseResError } from "../../../../services/errorHandler";
+import { formCreate, formDelete, formGet, formUpdate } from "../../../../services/api/formsApi";
+import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
+import { Button, Checkbox, DatePicker, Flex, Input, message, Pagination, Popconfirm } from "antd";
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import { GenericFormField, GenericFormFieldV3 } from "../../../types/forms/GenericFormTypes";
-import GenericFormDrawer from "../../GenericFormV3";
-import { generateYearOptions } from "../../../services/helper";
+import GenericFormDrawer from "../../../GenericFormV2";
+import { GenericFormField } from "../../../../types/forms/GenericFormTypes";
 
-const Land_Table_5  = () => {
+const Land_Table_1  = () => {
 
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
@@ -26,55 +25,50 @@ const Land_Table_5  = () => {
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
         { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
             headerName: "Province", 
+            headerClass: "justify-center", 
             field: "province", 
             editable : true, 
             type: "textColumn",
         },
         { 
-            headerName: "No of Transmitted to RoD", 
-            field: "no_of_transmitted_to_rod", 
+            headerName: "Municipality", 
+            field: "municipality", 
             editable : true, 
-            type: "numberColumn",
+            type: "textColumn",
+            headerClass: "justify-center" 
+
         },
         { 
-            headerName: "Area (ha)", 
-            field: "area_ha", 
+            headerName: "Reference Map", 
+            field: "reference_map", 
             editable : true, 
-            type: "numberColumn",
+            type: "textColumn",
+
         },
         { 
-            headerName: "Number of Beneficiaries", 
-            children : [
-                { 
-                    headerName: "Total Beneficiaries", 
-                    field: "total_beneficiaries", 
-                    editable : false, 
-                    type: "numberColumn",
-                },
-                { 
-                    headerName: "Female", 
-                    field: "female_beneficiaries", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                { 
-                    headerName: "Male", 
-                    field: "male_beneficiaries", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-            ]
+            headerName: "Project No", 
+            field: "project_no", 
+            editable : true, 
+            type: "textColumn",
         },
-        
+        { 
+            headerName: "Contested Area (ha)", 
+            field: "uncontested_area", 
+            editable : true, 
+            type: "numberColumn" 
+
+        },
+        { 
+            headerName: " Uncontested Area (ha)", 
+            field: "contested_area", 
+            editable : true, 
+            type: "numberColumn" 
+
+        },
         {
             headerName: "Actions",
+            headerClass: "justify-center",
             cellRenderer: (params) => {
                 return (
                     <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this row?" onConfirm={() => handleDelete(params.data._id)}>
@@ -85,72 +79,59 @@ const Land_Table_5  = () => {
         }
     ]);
 
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
+    const genericFormFields : GenericFormField[] = [
         {
             name : "province",
             label : "Province", 
-            input : <Input type="text" />,
-            type : "input"
+            input : <Input type="text" />
         },
         {
-            name : "no_of_transmitted_to_rod",
-            label : "No of Transmitted to RoD", 
-            input : <Input type="number" />,
-            type : "input"
+            name : "municipality",
+            label : "City/Municipality",
+            input : <Input type="text" />
         },
         {
-            name : "area_ha",
-            label : "Area (ha)", 
-            input : <Input type="number" />,
-            type : "input"
+            name : "reference_map",
+            label : "Reference Map",
+            input : <Input type="text" />
         },
         {
-            name : "male_beneficiaries",
-            label : "Male Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
+            name : "project_no",
+            label : "Project No.",
+            input : <Input type="text" />
         },
         {
-            name : "female_beneficiaries",
-            label : "Female Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
+            name : "contested_area",
+            label : "Contested Area {(ha)",
+            input : <Input type="number" />
         },
-    ];
+        {
+            name : "uncontested_area",
+            label : "Unontested Area {(ha)",
+            input : <Input type="number" />
+        },
+    ]
 
     const handleOnRowValueChanged = (d) => {
-        d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
-        console.log(d)
-        formUpdate(d.data, FormEnum.LAND_5, Sector.LAND)
+        formUpdate(d.data, FormEnum.LAND_1, Sector.LAND)
         .then(res => {
             messageApi.success("Data successfully updated.");
         })
         .catch(err => {
-            console.log(err) 
-            messageApi.error(parseResError(err).msg)
+            console.log(err)
+            setRefresh(!refresh)
         })
-        .finally(() => setRefresh(!refresh));
+        .finally();
     }
 
     const handleDelete = (id) => {
-        formDelete(id, FormEnum.LAND_5, Sector.LAND)
+        formDelete(id, FormEnum.LAND_1, Sector.LAND)
         .then(res => {
             messageApi.success("Data successfully deleted.");
         })
         .catch(err => {
             console.log(err)
-            messageApi.error(parseResError(err).msg)
+            
         })
         .finally(() => setRefresh(!refresh));
     }
@@ -164,13 +145,11 @@ const Land_Table_5  = () => {
     };
 
     const handleSubmit = async (d) => {
-        console.log(d)
         try {
-            d.total_beneficiaries = parseInt(d.male_beneficiaries) + parseInt(d.female_beneficiaries);
-            await formCreate(d, FormEnum.LAND_5, Sector.LAND)
+            await formCreate(d, FormEnum.LAND_1, Sector.LAND)
             messageApi.success("Data successfully inserted.");
         } catch (err) {
-            messageApi.error(parseResError(err).msg)
+            console.log(err)
         }
         setRefresh(!refresh)
 
@@ -178,9 +157,9 @@ const Land_Table_5  = () => {
     
     useEffect(() => {
         setLoading(true)
-        formGet(FormEnum.LAND_5, Sector.LAND, limit, page)
+        formGet(FormEnum.LAND_1, Sector.LAND, limit, page)
         .then(res => {
-            console.log(res.data)
+            console.log(res)
             setTotal(res.data.total)
             setRowData(res.data.models);
         })
@@ -189,12 +168,11 @@ const Land_Table_5  = () => {
             messageApi.error(parseResError(err).msg);
         })
         .finally(() => setLoading(false));
-    }, [page, limit, refresh]);
+    }, [page, refresh, limit]);
 
     useEffect(() => {
         setPage(1)
     }, [refresh]);
-
 
     return (
         <>
@@ -207,13 +185,7 @@ const Land_Table_5  = () => {
                     <Button onClick={() => setAddRecord(true)} color="primary" variant="solid">Add Data</Button>
                     <Button onClick={() => setRefresh(!refresh)} variant="text" color="primary"><FontAwesomeIcon icon={faArrowsRotate} /></Button>
                 </Flex>
-
                 <AgGridReact
-                    gridOptions={{
-                        defaultColDef: {
-                            headerClass: "justify-center align-center text-center"
-                        }
-                    }}
                     loading={loading}
                     editType={'fullRow'}
                     rowData={rowData}
@@ -232,7 +204,7 @@ const Land_Table_5  = () => {
                 </Flex>
             </div>
 
-            <GenericFormDrawer
+            <GenericFormDrawer 
             visible={addRecord} 
             fields={genericFormFields} 
             onClose={() => setAddRecord(false)} 
@@ -242,4 +214,28 @@ const Land_Table_5  = () => {
 }
 
 
-export default Land_Table_5;
+export default Land_Table_1;
+
+
+const data  = [
+    {
+        name : "name",
+        label : "Name",
+        input : <Input type="string" />
+    },
+    {
+        name : "age",
+        label : "Age",
+        input : <Input type="number" />,
+    },
+    {
+        name : "is_active",
+        label : "Active",
+        input : <Checkbox />,
+    },
+    {
+        age : "date",
+        label : "Date",
+        input : <DatePicker />,
+    }
+]

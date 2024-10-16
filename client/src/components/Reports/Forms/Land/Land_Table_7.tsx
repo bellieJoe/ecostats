@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { parseResError } from "../../../services/errorHandler";
-import { formCreate, formDelete, formGet, formUpdate } from "../../../services/api/formsApi";
-import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
+import { parseResError } from "../../../../services/errorHandler";
+import { formCreate, formDelete, formGet, formUpdate } from "../../../../services/api/formsApi";
+import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
 import { Button, Flex, Input, message, Pagination, Popconfirm, Select } from "antd";
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import { GenericFormField, GenericFormFieldV3 } from "../../../types/forms/GenericFormTypes";
-import GenericFormDrawer from "../../GenericFormV3";
-import { generateYearOptions } from "../../../services/helper";
+import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
+import GenericFormDrawer from "../../../GenericFormV3";
+import { generateYearOptions } from "../../../../services/helper";
 
 const Land_Table_7  = () => {
 

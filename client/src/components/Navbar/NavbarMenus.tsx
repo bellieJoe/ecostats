@@ -26,7 +26,8 @@ const NavbarMenus = () => {
     const items  = [
         {
             key : "1",
-            label : "Home"
+            label : "Home",
+            onClick: () => navigate("/")
         },
         {
             key : "2",

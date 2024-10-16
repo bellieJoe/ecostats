@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { parseResError } from "../../../services/errorHandler";
-import { formCreate, formDelete, formGet, formUpdate } from "../../../services/api/formsApi";
-import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
-import { Button, Checkbox, DatePicker, Flex, Input, message, Pagination, Popconfirm } from "antd";
+import { parseResError } from "../../../../services/errorHandler";
+import { formCreate, formDelete, formGet, formUpdate } from "../../../../services/api/formsApi";
+import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
+import { Button, Flex, Input, message, Pagination, Popconfirm, Select } from "antd";
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import GenericFormDrawer from "../../GenericFormV2";
-import { GenericFormField } from "../../../types/forms/GenericFormTypes";
+import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
+import GenericFormDrawer from "../../../GenericFormV3";
+import { generateYearOptions } from "../../../../services/helper";
 
-const Land_Table_1  = () => {
+const Forestry_Table_24  = () => {
 
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
@@ -25,113 +26,140 @@ const Land_Table_1  = () => {
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
         { 
+            headerName: "CY", 
+            field: "calendar_year", 
+            editable : true, 
+            type: "numberColumn",
+        },
+        { 
             headerName: "Province", 
-            headerClass: "justify-center", 
             field: "province", 
             editable : true, 
             type: "textColumn",
         },
         { 
-            headerName: "Municipality", 
-            field: "municipality", 
+            headerName: "Number of Chainsaw Registered", 
+            field: "number_of_chainsaw_registered", 
             editable : true, 
-            type: "textColumn",
-            headerClass: "justify-center" 
-
+            type: "numberColumn",
         },
         { 
-            headerName: "Reference Map", 
-            field: "reference_map", 
-            editable : true, 
-            type: "textColumn",
-
+            headerName: "Area of Operation", 
+            children: [
+                { 
+                    headerName: "Province", 
+                    field: "area_of_operation.province", 
+                    editable : true, 
+                    type: "textColumn",
+                },
+                { 
+                    headerName: "Municipality/City", 
+                    field: "area_of_operation.municipality_or_city", 
+                    editable : true, 
+                    type: "textColumn",
+                },
+            ]
         },
         { 
-            headerName: "Project No", 
-            field: "project_no", 
+            headerName: "Number of Chainsaw Operator", 
+            field: "number_of_chainsaw_operator", 
             editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Contested Area (ha)", 
-            field: "uncontested_area", 
-            editable : true, 
-            type: "numberColumn" 
-
-        },
-        { 
-            headerName: " Uncontested Area (ha)", 
-            field: "contested_area", 
-            editable : true, 
-            type: "numberColumn" 
-
+            type: "numberColumn",
         },
         {
             headerName: "Actions",
-            headerClass: "justify-center",
             cellRenderer: (params) => {
                 return (
                     <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this row?" onConfirm={() => handleDelete(params.data._id)}>
                         <Button color="danger" variant="filled">Delete</Button>
                     </Popconfirm>
-                )
+                );
             }
         }
     ]);
 
-    const genericFormFields : GenericFormField[] = [
+    const genericFormFields : GenericFormFieldV3[] = [
+        {
+            name : "calendar_year",
+            label : "Calendar Year", 
+            input : (
+                <Select 
+                showSearch 
+                options={generateYearOptions(2000, new Date().getFullYear())}
+                />
+            ),
+            type : "input"
+        },
         {
             name : "province",
             label : "Province", 
-            input : <Input type="text" />
+            input : (
+                <Input type="text"  />
+            ),
+            type : "input"
         },
         {
-            name : "municipality",
-            label : "City/Municipality",
-            input : <Input type="text" />
+            name : "number_of_chainsaw_registered",
+            label : "No. of Chainsaw Registered", 
+            input : (
+                <Input type="number"  />
+            ),
+            type : "input"
         },
         {
-            name : "reference_map",
-            label : "Reference Map",
-            input : <Input type="text" />
+            name : "Area of Operation",
+            label : "Area of Operation", 
+            type : "title"
         },
         {
-            name : "project_no",
-            label : "Project No.",
-            input : <Input type="text" />
+            name : "area_of_operation.province",
+            label : "Province", 
+            input : (
+                <Input type="text"  />
+            ),
+            type : "input"
         },
         {
-            name : "contested_area",
-            label : "Contested Area {(ha)",
-            input : <Input type="number" />
+            name : "area_of_operation.municipality_or_city",
+            label : "City or Municipality", 
+            input : (
+                <Input type="text"  />
+            ),
+            type : "input"
         },
         {
-            name : "uncontested_area",
-            label : "Unontested Area {(ha)",
-            input : <Input type="number" />
+            name : "number_of_chainsaw_operator",
+            label : "Number of Chainsaw Operator", 
+            input : (
+                <Input type="number"  />
+            ),
+            type : "input"
         },
-    ]
+        
+    ];
 
     const handleOnRowValueChanged = (d) => {
-        formUpdate(d.data, FormEnum.LAND_1, Sector.LAND)
+        d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
+        console.log(d)
+        formUpdate(d.data, FormEnum.FORESTRY_24, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully updated.");
         })
         .catch(err => {
-            console.log(err)
-            setRefresh(!refresh)
+            console.log(err) 
+            messageApi.error(parseResError(err).msg)
         })
-        .finally();
+        .finally(() => setRefresh(!refresh));
     }
 
     const handleDelete = (id) => {
-        formDelete(id, FormEnum.LAND_1, Sector.LAND)
+        formDelete(id, FormEnum.FORESTRY_24, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully deleted.");
         })
         .catch(err => {
             console.log(err)
-            
+            messageApi.error(parseResError(err).msg)
         })
         .finally(() => setRefresh(!refresh));
     }
@@ -145,11 +173,13 @@ const Land_Table_1  = () => {
     };
 
     const handleSubmit = async (d) => {
+        console.log(d)
         try {
-            await formCreate(d, FormEnum.LAND_1, Sector.LAND)
+            d.total_beneficiaries = parseInt(d.male_beneficiaries) + parseInt(d.female_beneficiaries);
+            await formCreate(d, FormEnum.FORESTRY_24, Sector.FORESTRY)
             messageApi.success("Data successfully inserted.");
         } catch (err) {
-            console.log(err)
+            messageApi.error(parseResError(err).msg)
         }
         setRefresh(!refresh)
 
@@ -157,9 +187,9 @@ const Land_Table_1  = () => {
     
     useEffect(() => {
         setLoading(true)
-        formGet(FormEnum.LAND_1, Sector.LAND, limit, page)
+        formGet(FormEnum.FORESTRY_24, Sector.FORESTRY, limit, page)
         .then(res => {
-            console.log(res)
+            console.log(res.data)
             setTotal(res.data.total)
             setRowData(res.data.models);
         })
@@ -168,11 +198,12 @@ const Land_Table_1  = () => {
             messageApi.error(parseResError(err).msg);
         })
         .finally(() => setLoading(false));
-    }, [page, refresh, limit]);
+    }, [page, limit, refresh]);
 
     useEffect(() => {
         setPage(1)
     }, [refresh]);
+
 
     return (
         <>
@@ -185,7 +216,13 @@ const Land_Table_1  = () => {
                     <Button onClick={() => setAddRecord(true)} color="primary" variant="solid">Add Data</Button>
                     <Button onClick={() => setRefresh(!refresh)} variant="text" color="primary"><FontAwesomeIcon icon={faArrowsRotate} /></Button>
                 </Flex>
+
                 <AgGridReact
+                    gridOptions={{
+                        defaultColDef: {
+                            headerClass: "justify-center align-center text-center"
+                        }
+                    }}
                     loading={loading}
                     editType={'fullRow'}
                     rowData={rowData}
@@ -204,7 +241,7 @@ const Land_Table_1  = () => {
                 </Flex>
             </div>
 
-            <GenericFormDrawer 
+            <GenericFormDrawer
             visible={addRecord} 
             fields={genericFormFields} 
             onClose={() => setAddRecord(false)} 
@@ -214,28 +251,4 @@ const Land_Table_1  = () => {
 }
 
 
-export default Land_Table_1;
-
-
-const data  = [
-    {
-        name : "name",
-        label : "Name",
-        input : <Input type="string" />
-    },
-    {
-        name : "age",
-        label : "Age",
-        input : <Input type="number" />,
-    },
-    {
-        name : "is_active",
-        label : "Active",
-        input : <Checkbox />,
-    },
-    {
-        age : "date",
-        label : "Date",
-        input : <DatePicker />,
-    }
-]
+export default Forestry_Table_24;
