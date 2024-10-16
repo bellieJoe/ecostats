@@ -1,4 +1,4 @@
-import TableOfContents from "../../../../components/Forms/TableOfContents";
+import TableOfContents from "../../../components/Forms/TableOfContents";
 
 
 const LandTOC = () => {

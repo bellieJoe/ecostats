@@ -1,16 +1,15 @@
 
 import { Tabs, TabsProps } from "antd";
-import Land_Table_1 from "../../../../components/Forms/Tables/Land_Table_1";
-import Land_Table_2 from "../../../../components/Forms/Tables/Land_Table_2";
 import Title from "antd/es/typography/Title";
+import Land_Table_3 from "../../../components/Reports/Forms/Land_Table_3";
 
 
-const Land_2 = () => {
+const Land_3 = () => {
     const items : TabsProps['items'] = [
         {
             key: '1',
             label: 'Form',
-            children: <Land_Table_2 />,
+            children: <Land_Table_3 />,
         },
         {
             key: '2',
@@ -25,10 +24,10 @@ const Land_2 = () => {
     ]
     return (
         <>
-            <Title level={4} >Patrimonial Properties as of CY 2023</Title>
+            <Title level={4} >Residential Free Patent Issued</Title>
             <Tabs items={items} defaultActiveKey="1" />
         </>
     )
 }
 
-export default Land_2;
+export default Land_3;

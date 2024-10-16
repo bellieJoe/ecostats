@@ -2,14 +2,14 @@ import { useState } from "react";
 import 'boxicons/css/boxicons.min.css';
 import { Link, Button, Paper, TextField, Typography, Alert } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { login, loginV2 } from "../../services/api/userApi";
-import AuthToken from "../../types/AuthToken";
+import { login, loginV2 } from "../../../services/api/userApi";
+import AuthToken from "../../../types/AuthToken";
 import Cookies from "js-cookie";
-import { useAuthStore } from "../../stores/useAuthStore";
+import { useAuthStore } from "../../../stores/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import GuestGuard from "../../components/Guards/GuestGuard";
+import GuestGuard from "../../../components/Guards/GuestGuard";
 import { message } from "antd";
-import { parseResError } from "../../services/errorHandler";
+import { parseResError } from "../../../services/errorHandler";
 
 
 const Login = () => {

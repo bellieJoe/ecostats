@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import 'boxicons/css/boxicons.min.css';
 import { Link, Button, Paper, TextField, Typography, MenuItem, Select, FormControl, InputLabel, Alert } from "@mui/material";
-import { useRoleStore } from "../../stores/useRoleStore";
-import { signup } from "../../services/api/userApi";
+import { useRoleStore } from "../../../stores/useRoleStore";
+import { signup } from "../../../services/api/userApi";
 import { AxiosResponse } from "axios";
-import { ValidationError } from "../../types/ApiValidationError";
-import FieldError from "../../components/FieldError";
+import { ValidationError } from "../../../types/ApiValidationError";
+import FieldError from "../../../components/FieldError";
 import { useNavigate } from "react-router-dom";
-import GuestGuard from "../../components/Guards/GuestGuard";
+import GuestGuard from "../../../components/Guards/GuestGuard";
 
 
 function SignUp() {

@@ -93,7 +93,7 @@ const UnitsList = () => {
             }
         })
         setDataSource(d);
-        location.href = "/app/programs#unitsTable"
+        location.href = "/admin/programs#unitsTable"
     }, [viewUnitStore.units])
 
     return (

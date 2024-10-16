@@ -1,12 +1,13 @@
 import { Button } from "@mui/material";
 import "./Navbar.css"
-import {  Avatar, Dropdown, Flex, Layout, MenuProps, Space, Button as AntButton } from 'antd';
+import {  Avatar, Dropdown, Flex, Layout, MenuProps, Space, Button as AntButton, Menu } from 'antd';
 import { Link, useNavigate } from "react-router-dom";
-import GuestGuard from "../../Guards/GuestGuard";
-import { useAuthStore } from "../../../stores/useAuthStore";
-import RouteGuard from "../../Guards/RouteGuard";
+import GuestGuard from "../Guards/GuestGuard";
+import { useAuthStore } from "../../stores/useAuthStore";
+import RouteGuard from "../Guards/RouteGuard";
 import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import Cookies from "js-cookie"
+import NavbarMenus from "./NavbarMenus";
 
 const { Header } = Layout;
 
@@ -50,11 +51,14 @@ const Navbar = () => {
       ];
 
     return (
-        <Header className="navbar" style={{ display: 'flex', alignItems: 'center' }}>
+        <Header className="navbar flex align-center px-6" >
             <div className="logo" style={{ color: 'white', fontSize: '24px' }}>
                 <img src="/logo.png" alt="" />
                 EcoStats
             </div>
+            
+            <NavbarMenus />
+
             <Flex gap="small">
                 <GuestGuard>
                     <Link to="/login">
@@ -73,12 +77,11 @@ const Navbar = () => {
                     {/* <Button variant="contained" style={button} >
                             Logout 
                     </Button> */}
-                    <Dropdown.Button  menu={{ items }} trigger={['click']}>
+                    <Dropdown  menu={{ items }} trigger={['click']}>
                         <Space>
-                            <img style={{width:"1rem"}} src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.name}`} />
-                            {user?.name}
+                            <Avatar className="cursor-pointer hover:scale-110" src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.name}`} /> 
                         </Space>
-                    </Dropdown.Button>
+                    </Dropdown>
                 </RouteGuard>
             </Flex>
         </Header>

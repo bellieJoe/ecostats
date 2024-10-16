@@ -1,5 +1,5 @@
 import { Avatar, Space } from "antd";
-import { useAuthStore } from "../../stores/useAuthStore";
+import { useAuthStore } from "../stores/useAuthStore";
 
 
 const SidebarUser = () => {

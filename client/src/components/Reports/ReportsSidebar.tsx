@@ -1,14 +1,15 @@
 import { ConfigProvider, Menu, MenuProps, ThemeConfig } from "antd";
 import Sider from "antd/es/layout/Sider";
-import SidebarUser from "./SidebarUser";
 import { useEffect, useState } from "react";
 import { FolderOutlined, HomeOutlined, PlusSquareOutlined, PushpinOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
+import SidebarUser from "../SidebarUser";
+import { FormEnum, Sector } from "../../types/forms/formNameEnum";
 
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const Sidebar = ({open}) => {
+const ReportsSidebar = ({open}) => {
     const navigate = useNavigate();
 
     const [collapsed, setCollapsed] = useState(true);
@@ -22,71 +23,56 @@ const Sidebar = ({open}) => {
 
     const items: MenuItem[] = [
         {
-            key: "dashboard",
-            label: "Dashboard",
-            icon: <HomeOutlined />,
-            style: menuStyle1,
-            onClick: () => navigate("")
-        },
-        {
-            key: "users",
-            label: "Users",
+            key: Sector.LAND,
+            label: "Land Managenent",
             icon: <UserOutlined />,
             style: menuStyle1,
-            onClick: () => navigate("users")
-        },
-        {
-            key: "programs",
-            label: "Programs",
-            icon: <FolderOutlined />,
-            style: menuStyle1,
-            onClick: () => navigate("programs")
-        },
-        {
-            type: "divider"
-        },
-        {
-            key: "land-management",
-            label: "Land Management",
-            icon: <PushpinOutlined />,
-            style: menuStyle1,
-            children: [
+            children : [
                 {
-                    key: "land-toc",
-                    label: "Table Of Contents",
-                    icon: <PlusSquareOutlined />,
-                    style: menuStyle2,
-                    onClick : () => navigate("land/toc")
-                }
+                    key : FormEnum.LAND_1,
+                    label : "Table 1",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_1}`)
+                },
+                {
+                    key : FormEnum.LAND_2,
+                    label : "Table 2",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_2}`)
+                },
+                {
+                    key : FormEnum.LAND_3,
+                    label : "Table 3",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_3}`)
+                },
+                {
+                    key : FormEnum.LAND_4,
+                    label : "Table 4",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_4}`)
+                },
+                {
+                    key : FormEnum.LAND_5,
+                    label : "Table 5",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_5}`)
+                },
+                {
+                    key : FormEnum.LAND_6,
+                    label : "Table 6",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_6}`)
+                },
+                {
+                    key : FormEnum.LAND_7,
+                    label : "Table 7",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_7}`)
+                },
             ]
         },
-        {
-            key: "forestry-management",
-            label: "Forestry Management",
-            icon: <PushpinOutlined />,
-            style: menuStyle1,
-            children: [
-                {
-                    key: "create-program",
-                    label: "Create New",
-                    icon: <PlusSquareOutlined />
-                }
-            ]
-        },
-        {
-            key: "biodivesity-management",
-            label: "Biodoversity Management",
-            icon: <PushpinOutlined />,
-            style: menuStyle1,
-            children: [
-                {
-                    key: "create",
-                    label: "Create New",
-                    icon: <PlusSquareOutlined />,
-                    style: menuStyle2
-                }
-            ]
-        }
+
     ];
 
     const theme : ThemeConfig = {
@@ -145,4 +131,4 @@ const Sidebar = ({open}) => {
     )
 }
 
-export default Sidebar;
+export default ReportsSidebar;

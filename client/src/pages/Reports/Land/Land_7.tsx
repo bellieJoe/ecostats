@@ -1,7 +1,7 @@
 
 import { Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
-import Land_Table_7 from "../../../../components/Forms/Tables/Land_Table_7";
+import Land_Table_7 from "../../../components/Reports/Forms/Land_Table_7";
 
 
 const Land_5 = () => {

@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { User } from "../types/User";
-import Users from "../pages/MainPage/Users/Users";
+import Users from "../pages/Admin/Users/Users";
 
 interface EditUserState { 
     user : User | null,

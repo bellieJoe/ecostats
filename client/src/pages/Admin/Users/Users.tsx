@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { activateUser, deactivateUser, getAllUsers } from "../../../services/api/userApi";
 import { Button, message, Popconfirm, Space, Switch, Table, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
-import EditUserRole from "../../../components/MainPage/Users/EditUserRole";
+import EditUserRole from "../../../components/Admin/Users/EditUserRole";
 import { useEditRoleStore } from "../../../stores/useRoleStore";
 import Search from "antd/es/input/Search";
 import { useEditUserStore, useViewUsersStore } from "../../../stores/useUserStore";
-import EditUserDetails from "../../../components/MainPage/Users/EditUserDetails";
+import EditUserDetails from "../../../components/Admin/Users/EditUserDetails";
 
 interface DataSource {
     key: string

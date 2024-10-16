@@ -1,13 +1,13 @@
 import { Button, Card, Col, Drawer, Flex, Grid, Input, Layout, message, Row, Select, Space, Statistic } from "antd";
 import Title from "antd/es/typography/Title";
-import CreateProgram from "../../../components/MainPage/Programs/CreateProgram";
-import CreateUnit from "../../../components/MainPage/Programs/CreateUnit";
-import AssignHeads from "../../../components/MainPage/Programs/AssignHeads";
+import CreateProgram from "../../../components/Admin/Programs/CreateProgram";
+import CreateUnit from "../../../components/Admin/Programs/CreateUnit";
+import AssignHeads from "../../../components/Admin/Programs/AssignHeads";
 import { useEffect, useState } from "react";
-import ProgramLists from "../../../components/MainPage/Programs/ProgramLists";
+import ProgramLists from "../../../components/Admin/Programs/ProgramLists";
 import { countPrograms } from "../../../services/api/programApi";
 import { countUnits } from "../../../services/api/unitApi";
-import UnitsList from "../../../components/MainPage/Programs/UnitsList";
+import UnitsList from "../../../components/Admin/Programs/UnitsList";
 
 
 const Programs = () => {
