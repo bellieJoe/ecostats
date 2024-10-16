@@ -56,8 +56,9 @@ const TableOfContents = (props : Props) => {
 
     return (
         <>
-            <Title level={4} >Table of Contents</Title>
+            <Title level={4} >Reports</Title>
             <Table
+            pagination={false}
             dataSource={dataSource}
             columns={columns} /> 
         </>

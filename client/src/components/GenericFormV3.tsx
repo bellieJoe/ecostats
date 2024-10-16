@@ -1,6 +1,87 @@
-import { Drawer, Form, Button, Divider, Typography } from 'antd';
-import { GenericFormFieldV3 } from '../types/forms/GenericFormTypes';
+// import { Drawer, Form, Button, Divider, Typography } from 'antd';
+// import { GenericFormFieldV3 } from '../types/forms/GenericFormTypes';
 
+
+// /**
+//  * GenericFormDrawer component.
+//  * Renders a Drawer with a form that dynamically creates input fields based on the given array of field configurations.
+//  *
+//  * @param {Object} props - The props for the component.
+//  * @param {boolean} props.visible - Whether the drawer is visible.
+//  * @param {Field[]} props.fields - The array containing field configurations.
+//  * @param {Function} props.onClose - The function to call when closing the drawer.
+//  * @param {Function} props.onSubmit - The function to call when submitting the form.
+//  */
+// const GenericFormDrawer: React.FC<{
+//   visible: boolean;
+//   fields: GenericFormFieldV3[];
+//   onClose: () => void;
+//   onSubmit: (values: Record<string, any>) => void; // Use Record<string, any> for generic form values
+// }> = ({ visible, fields, onClose, onSubmit }) => {
+//   const [form] = Form.useForm();
+
+//   // Handle form submission
+//   const handleFinish = (values: Record<string, any>) => {
+//     onSubmit(values);
+//     form.resetFields();
+//   };
+
+//   return (
+//     <Drawer
+//       title="Generic Form"
+//       width={400}
+//       onClose={onClose}
+//       open={visible}
+//       footer={
+//         <div style={{ textAlign: 'right' }}>
+//           <Button onClick={onClose} style={{ marginRight: 8 }}>
+//             Cancel
+//           </Button>
+//           <Button onClick={() => form.submit()} type="primary">
+//             Submit
+//           </Button>
+//         </div>
+//       }
+//     >
+//       <Form form={form} layout="vertical" onFinish={handleFinish}>
+//         {fields.map(({ name, label, input, type }) => {
+//           if (type === 'input') {
+//             return (
+//               <Form.Item
+//                 key={name}
+//                 label={label}
+//                 name={name}
+//                 rules={[{ required: true, message: `Please input your ${label}!` }]}
+//               >
+//                 {input}
+//               </Form.Item>
+//             );
+//           }
+//           if (type === 'title') {
+//             return (
+//               <Typography.Title level={5} key={name}>
+//                 {label}
+//               </Typography.Title>
+//             );
+//           }
+//           if (type === 'divider') {
+//             return (
+//               <Divider key={name} />
+//             );
+//           }
+//           return null; // Fallback case
+//         })}
+//       </Form>
+//     </Drawer>
+//   );
+// };
+
+// export default GenericFormDrawer;
+
+
+
+import { Drawer, Form, Button, Divider, Typography, Checkbox } from 'antd';
+import { GenericFormFieldV3 } from '../types/forms/GenericFormTypes';
 
 /**
  * GenericFormDrawer component.
@@ -57,6 +138,19 @@ const GenericFormDrawer: React.FC<{
               </Form.Item>
             );
           }
+          if (type === 'checkbox') {
+            return (
+              <Form.Item
+                key={name}
+                label={label}
+                name={name}
+                valuePropName="checked" // Use checked for checkbox
+                rules={[{ required: true, message: `Please check the ${label}!` }]} // Optional, remove if you don't want to require it
+              >
+                <Checkbox>{input}</Checkbox>
+              </Form.Item>
+            );
+          }
           if (type === 'title') {
             return (
               <Typography.Title level={5} key={name}>
@@ -65,9 +159,7 @@ const GenericFormDrawer: React.FC<{
             );
           }
           if (type === 'divider') {
-            return (
-              <Divider key={name} />
-            );
+            return <Divider key={name} />;
           }
           return null; // Fallback case
         })}

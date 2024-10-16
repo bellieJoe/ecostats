@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Drawer, Flex, message, Popconfirm, Space, Table  } from "antd";
+import { Alert, Button, Drawer, Flex, message, Popconfirm, Select, Space, Table  } from "antd";
 import Title from "antd/es/typography/Title";
 import { deleteProgram, getAllPrograms } from "../../../services/api/programApi";
 import { useProgramHeadStore, useProgramsStore, useUpdateProgramStore } from "../../../stores/useProgramStore";
@@ -11,6 +11,7 @@ import { ReloadOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate, faPlus } from '@fortawesome/free-solid-svg-icons';
 import UpdateProgram from "./UpdateProgram";
+import { Sector } from "../../../types/forms/formNameEnum";
 
 interface DataSource {
     key: string
@@ -43,6 +44,18 @@ const ProgramLists = () => {
             key: 'progrmaHead',
             render : (record : DataSource) => {
                 return <Button size="small" onClick={() => programHeadStore.setProgram(record.key, record.name)}>Program Head/s</Button>
+            }
+        },
+        {
+            title: 'Access Management',
+            key: 'managementAccess',
+            render : (record : DataSource) => {
+                return (
+                    <Select className="w-full" options={[
+                        { value: Sector.LAND, label: "Land Management" },
+                        { value: Sector.FORESTRY, label: "Forestry Management" },
+                    ]} />
+                )
             }
         },
         {
@@ -95,6 +108,10 @@ const ProgramLists = () => {
             messageApi.error(parseResError(err).msg)
         })
         .finally();
+    }
+
+    const changeAccessManagement = () => {
+        
     }
 
     useEffect(() => {

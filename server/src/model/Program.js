@@ -10,6 +10,9 @@ const ProgramSchema = new Schema({
     description : {
         type : String
     },  
+    management : {
+        type : String
+    },
     deletedAt : {
         type : Date,
         default: null

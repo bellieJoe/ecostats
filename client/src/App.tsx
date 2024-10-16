@@ -18,13 +18,16 @@ import Cookies from "js-cookie"
 import { ConfigProvider, message } from 'antd'
 import axios from 'axios'
 import Programs from './pages/MainPage/Programs/Programs'
-import ExcelDataGrid from './pages/Test'
 import LandTOC from './pages/MainPage/Forms/Land/LandTOC'
 import Land_1 from './pages/MainPage/Forms/Land/Land_1'
 import 'ag-grid-community/styles/ag-grid.css'; // Mandatory CSS for the grid
 import 'ag-grid-community/styles/ag-theme-quartz.css'; // Optional theme
 import Land_2 from './pages/MainPage/Forms/Land/Land_2'
 import Land_3 from './pages/MainPage/Forms/Land/Land_3'
+import Land_4 from './pages/MainPage/Forms/Land/Land_4'
+import Land_6 from './pages/MainPage/Forms/Land/Land_6'
+import Land_5 from './pages/MainPage/Forms/Land/Land_5'
+import Land_7 from './pages/MainPage/Forms/Land/Land_7'
 
 axios.defaults.withCredentials = true;
 
@@ -101,14 +104,17 @@ function App() {
                   <Route path='land_1' element={<Land_1 />} />
                   <Route path='land_2' element={<Land_2 />} />
                   <Route path='land_3' element={<Land_3 />} />
+                  <Route path='land_4' element={<Land_4 />} />
+                  <Route path='land_5' element={<Land_5 />} />
+                  <Route path='land_6' element={<Land_6 />} />
+                  <Route path='land_7' element={<Land_7 />} />
                 </Route>
             </Route>
 
           {/* Error Pages */}
           <Route path="/error/401" element={<ErrorPage code={401} message="Unauthorized Access" />} />
 
-          {/* For testing */}
-          <Route path="/test" element={<ExcelDataGrid />} />
+
 
         </Routes>
       </BrowserRouter>
