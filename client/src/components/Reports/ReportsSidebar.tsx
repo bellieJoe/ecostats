@@ -98,6 +98,18 @@ const ReportsSidebar = ({open}) => {
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_3}`)
                 },
+                {
+                    key : FormEnum.FORESTRY_4,
+                    label : "Table 4. Proclaimed Watershed Forest Reserve",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_4}`)
+                },
+                {
+                    key : FormEnum.FORESTRY_5,
+                    label : "Table 5. Priority Critical Watershed Supporting National Irrigation System",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_5}`)
+                },
 
 
                 {
@@ -114,7 +126,54 @@ const ReportsSidebar = ({open}) => {
             icon: <FontAwesomeIcon icon={faList} />,
             style: menuStyle1,
             children: [
-                
+                {
+                    key : FormEnum.BIODIVERSITY_2,
+                    label : "Table 2. Area Distribution of Coastal Resources",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_2}`)
+                },
+                {
+                    key : FormEnum.BIODIVERSITY_3,
+                    label : "Table 3. Inventory of Coral Reef",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_3}`)
+                },
+                {
+                    key : FormEnum.BIODIVERSITY_4,
+                    label : "Table 4. Inventory of Seagrass",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_4}`)
+                },
+                {
+                    key : FormEnum.BIODIVERSITY_5,
+                    label : "Table 5. Mangrove Assessment",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_5}`)
+                },
+                {
+                    key : FormEnum.BIODIVERSITY_6,
+                    label : "Table 6. Mangrove Area Rehabilitated",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_6}`)
+                },
+                {
+                    key : FormEnum.BIODIVERSITY_7,
+                    label : "Table 7. Livelihood Projects Implemented in Coastal Areas",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_7}`)
+                },
+                {
+                    key : FormEnum.BIODIVERSITY_8,
+                    label : "Table 8. Inland Wetland in the Region",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_8}`)
+                },
+                {
+                    key : FormEnum.BIODIVERSITY_9,
+                    label : "Table 9. Classified Caves",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_9}`)
+                },
             ]
         },
     ];
