@@ -34,6 +34,7 @@ import { FormEnum, Sector } from './types/forms/formNameEnum'
 import Forestry_24 from './pages/Reports/Forestry/Forestry_24'
 import Forestry_1 from './pages/Reports/Forestry/Forestry_1'
 import Forestry_2 from './pages/Reports/Forestry/Forestry_2'
+import Forestry_3 from './pages/Reports/Forestry/Forestry_3'
 
 axios.defaults.withCredentials = true;
 
@@ -124,6 +125,7 @@ function App() {
                     <Route path={Sector.FORESTRY} >
                       <Route path={FormEnum.FORESTRY_1} element={<Forestry_1 />} />
                       <Route path={FormEnum.FORESTRY_2} element={<Forestry_2 />} />
+                      <Route path={FormEnum.FORESTRY_3} element={<Forestry_3 />} />
                       
                       <Route path={FormEnum.FORESTRY_24} element={<Forestry_24 />} />
                     </Route>

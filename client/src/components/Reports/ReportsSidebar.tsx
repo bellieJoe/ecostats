@@ -92,6 +92,12 @@ const ReportsSidebar = ({open}) => {
                     style  : menuStyle2,
                     onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_2}`)
                 },
+                {
+                    key : FormEnum.FORESTRY_3,
+                    label : "Table 3. Production and Protection Forest (Hectares)",
+                    style  : menuStyle2,
+                    onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_3}`)
+                },
 
 
                 {
