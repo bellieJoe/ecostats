@@ -22,6 +22,7 @@ router.get("/land_1", land_1_controller.getAll);
 router.post("/land_1", land_1_controller.create);
 router.put("/land_1", land_1_controller.update);
 router.delete("/land_1/:id", land_1_controller.delete);
+router.post("/land_1/save-many", land_1_controller.saveMany);
 
 router.get("/land_2", land_2_controller.getAll);
 router.post("/land_2", land_2_controller.create);

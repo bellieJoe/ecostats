@@ -25,30 +25,16 @@ const Land_Table_1  = () => {
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
         { 
+            headerName: "Calendar year", 
+            headerClass: "justify-center", 
+            field: "calendar_year", 
+            editable : true, 
+            type: "numberColumn",
+        },
+        { 
             headerName: "Province", 
             headerClass: "justify-center", 
             field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-            headerClass: "justify-center" 
-
-        },
-        { 
-            headerName: "Reference Map", 
-            field: "reference_map", 
-            editable : true, 
-            type: "textColumn",
-
-        },
-        { 
-            headerName: "Project No", 
-            field: "project_no", 
             editable : true, 
             type: "textColumn",
         },
@@ -81,23 +67,13 @@ const Land_Table_1  = () => {
 
     const genericFormFields : GenericFormField[] = [
         {
+            name : "calendar_year",
+            label : "Calendar Year", 
+            input : <Input type="Number" />
+        },
+        {
             name : "province",
             label : "Province", 
-            input : <Input type="text" />
-        },
-        {
-            name : "municipality",
-            label : "City/Municipality",
-            input : <Input type="text" />
-        },
-        {
-            name : "reference_map",
-            label : "Reference Map",
-            input : <Input type="text" />
-        },
-        {
-            name : "project_no",
-            label : "Project No.",
             input : <Input type="text" />
         },
         {

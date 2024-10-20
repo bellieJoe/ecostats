@@ -1,19 +1,11 @@
 import { Schema, model } from "mongoose";
 
 const Land_1_Schema = new Schema({
+    calendar_year : {
+        type : Number,
+        required : true,
+    },
     province : {
-        type : String,
-        required : true,
-    },
-    municipality : {
-        type : String,
-        required : true,
-    },
-    reference_map : {
-        type : String,
-        required : true,
-    },
-    project_no : {
         type : String,
         required : true,
     },

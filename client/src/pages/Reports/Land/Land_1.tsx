@@ -1,10 +1,35 @@
 
-import { Tabs, TabsProps } from "antd";
+import { message, Tabs, TabsProps } from "antd";
 import Land_Table_1 from "../../../components/Reports/Forms/Land/Land_Table_1";
 import Title from "antd/es/typography/Title";
+import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../components/DataMigrator";
+import { formSaveMany } from "../../../services/api/formsApi";
+import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
+import { parseResError } from "../../../services/errorHandler";
 
 
 const Land_1 = () => {
+    const [messageApi, contextHandler] = message.useMessage();
+
+    const columns : DataMigratorCol[] = [
+        { headerName: 'calendar_year', field: 'calendar_year', type: DataMigratorColTypes.number },
+        { headerName: 'province', field: 'province', type: DataMigratorColTypes.string },
+        { headerName: 'contested_area', field: 'contested_area', type: DataMigratorColTypes.number },
+        { headerName: 'uncontested_area', field: 'uncontested_area', type: DataMigratorColTypes.number },
+    ];
+
+    const handleSave = (data) => {
+        formSaveMany(data, FormEnum.LAND_1, Sector.LAND)
+        .then(res => {
+            messageApi.success("Data successfully updated.");
+        })
+        .catch(err => {
+            messageApi.error(parseResError(err).msg);
+            console.log(err)
+        })
+        .finally();
+    };
+
     const items : TabsProps['items'] = [
         {
             key: '1',
@@ -14,11 +39,16 @@ const Land_1 = () => {
         {
             key: '3',
             label: 'Migration',
-            children: 'Migration',
+            children: <DataMigrator onSave={handleSave} columns={columns} />,
         }
-    ]
+    ];
+
+    
+
+
     return (
         <>
+            {contextHandler}
             <Title level={4} >Land Area</Title>
             <Tabs items={items} defaultActiveKey="1" />
         </>

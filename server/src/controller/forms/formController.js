@@ -1,4 +1,3 @@
-
 import mongoose from "mongoose";
 
 // Higher-order function to create a generic controller for any Mongoose model
@@ -91,7 +90,52 @@ export const createCRUDController = (Model) => {
                     details: error 
                 }); 
             }
+        },
+
+        // Function to save multiple documents at once
+        saveMany: async (req, res) => {
+            try {
+                const models = req.body.models;
+
+                if (!Array.isArray(models)) {
+                    return res.status(400).json({
+                        error: "Invalid Parameters",
+                        msg: "The input data should be an array of models."
+                    });
+                }
+
+                const validationErrors = [];
+                const documentsToSave = [];
+
+                // Validate each model before saving
+                models.forEach((model, index) => {
+                    const document = new Model(model);
+                    const error = document.validateSync();
+                    if (error) {
+                        validationErrors.push({ index, error });
+                    } else {
+                        documentsToSave.push(document);
+                    }
+                });
+
+                // If there are validation errors, return them
+                if (validationErrors.length > 0) {
+                    return res.status(422).json({
+                        error: "Validation Error",
+                        details: validationErrors
+                    });
+                }
+
+                // Save all valid documents
+                const savedDocuments = await Model.insertMany(documentsToSave);
+                return res.json(savedDocuments);
+            } catch (error) {
+                console.error(error);
+                return res.status(500).json({ 
+                    error: 'Server error.',
+                    details: error 
+                }); 
+            }
         }
     };
 };
-
