@@ -6,6 +6,7 @@ import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../co
 import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
 import { formSaveMany } from "../../../services/api/formsApi";
 import { parseResError } from "../../../services/errorHandler";
+import { useErrorLogStore } from "../../../stores/useErrorLogStore";
 
 
 const Forestry_4 = () => {
@@ -20,6 +21,7 @@ const Forestry_4 = () => {
         { headerName: 'presidential_proclamation_no', field: 'presidential_proclamation_no', type: DataMigratorColTypes.string },
         { headerName: 'proclamation_date', field: 'proclamation_date', type: DataMigratorColTypes.date },
     ];
+    const errorLogStore = useErrorLogStore();
 
     const handleSave = (data) => {
         formSaveMany(data, FormEnum.FORESTRY_4, Sector.FORESTRY)
@@ -27,6 +29,9 @@ const Forestry_4 = () => {
             messageApi.success("Data successfully updated.");
         })
         .catch(err => {
+            if(err.response.status == 422){
+                errorLogStore.setError(err.response.data)
+            }
             messageApi.error(parseResError(err).msg);
             console.log(err)
         })

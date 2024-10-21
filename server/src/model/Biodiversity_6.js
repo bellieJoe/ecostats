@@ -11,7 +11,6 @@ const Biodiversity_6_Schema = new mongoose.Schema({
     },
     municipality: {
         type: String,
-        required: true
     },
     rehabilitated_area: {
         type: Number, // Area in hectares
@@ -30,7 +29,7 @@ const Biodiversity_6_Schema = new mongoose.Schema({
     },
     fund_source: {
         type: String,
-        required: true
+        // required: true
     }
 }, { timestamps: true });
 

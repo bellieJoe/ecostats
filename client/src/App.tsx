@@ -45,12 +45,15 @@ import Biodiversity_6 from './pages/Reports/Biodoversity/Biodiversity_6'
 import Biodiversity_7 from './pages/Reports/Biodoversity/Biodiversity_7'
 import Biodiversity_8 from './pages/Reports/Biodoversity/Biodiversity_8'
 import Biodiversity_9 from './pages/Reports/Biodoversity/Biodiversity_9'
+import ErrorLog from './components/ErrorLog'
+import { useErrorLogStore } from './stores/useErrorLogStore'
 
 axios.defaults.withCredentials = true;
 
 function App() {
   const {clearRoles, setRoles} = useRoleStore();
   const {setUser, accessToken} = useAuthStore();
+  const errorStore = useErrorLogStore();
 
 
   const configTheme = {
@@ -160,6 +163,9 @@ function App() {
               </Routes>
             </Layout>
         </Layout>
+
+        <ErrorLog  />
+        
       </BrowserRouter>
     </ConfigProvider>
   )

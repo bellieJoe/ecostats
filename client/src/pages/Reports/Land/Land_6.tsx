@@ -6,9 +6,12 @@ import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../co
 import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
 import { formSaveMany } from "../../../services/api/formsApi";
 import { parseResError } from "../../../services/errorHandler";
+import { useErrorLogStore } from "../../../stores/useErrorLogStore";
 
 
 const Land_6 = () => {
+    const errorLogStore = useErrorLogStore();
+    
     const [messageApi, contextHandler] = message.useMessage();
     
     const columns : DataMigratorCol[] = [
@@ -28,6 +31,9 @@ const Land_6 = () => {
             messageApi.success("Data successfully updated.");
         })
         .catch(err => {
+            if(err.response.status == 422){
+                errorLogStore.setError(err.response.data)
+            }
             messageApi.error(parseResError(err).msg);
             console.log(err)
         })

@@ -11,7 +11,7 @@ const Biodiversity_8_Schema = new mongoose.Schema({
     },
     municipality: {
         type: String,
-        required: true
+        // required: true
     },
     name_of_wetland: {
         type: String,
