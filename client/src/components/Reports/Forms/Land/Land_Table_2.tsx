@@ -24,6 +24,13 @@ const Land_Table_2  = () => {
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
         { 
+            headerName: "CY", 
+            headerClass: "justify-center", 
+            field: "calendar_year", 
+            editable : true, 
+            type: "numberColumn",
+        },
+        { 
             headerName: "Province", 
             headerClass: "justify-center", 
             field: "province", 
@@ -84,6 +91,11 @@ const Land_Table_2  = () => {
     ]);
 
     const genericFormFields : GenericFormField[] = [
+        {
+            name : "calendar_year",
+            label : "CY", 
+            input : <Input type="number" />
+        },
         {
             name : "province",
             label : "Province", 

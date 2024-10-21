@@ -15,6 +15,8 @@ export interface DataMigratorCol {
 export enum DataMigratorColTypes {
     string = "string",
     number = "number",
+    date = "date",
+    boolean = "boolean",
 }
 
 const DataMigrator = ({ columns, onSave }: { columns: DataMigratorCol[], onSave: (data: any[]) => void }) => {
@@ -38,6 +40,7 @@ const DataMigrator = ({ columns, onSave }: { columns: DataMigratorCol[], onSave:
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        console.log(jsonData);
         setRowData(jsonData);
         message.success('File uploaded successfully!');
       }
@@ -57,6 +60,24 @@ const DataMigrator = ({ columns, onSave }: { columns: DataMigratorCol[], onSave:
   const columnDefs = columns.map((col) => ({
     headerName: col.headerName,
     field: col.field,
+    valueGetter: col.field.includes('.')
+      ? (params) => {
+          const value = params.data[col.field];
+          console.log(`Value for ${col.field}:`, value); // Add logging for debugging
+          return value;
+        }
+      : null,
+      valueFormatter: (params) => {
+        const value = params.value;
+        switch (col.type) {
+          case DataMigratorColTypes.date:
+            return value ? new Date(value).toLocaleDateString() : '';
+          case DataMigratorColTypes.boolean:
+            return value ? 'Yes' : 'No';
+          default:
+            return value;
+        }
+      },
   }));
 
   return (

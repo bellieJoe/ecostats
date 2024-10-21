@@ -10,57 +10,29 @@ const Land_4_Schema = new mongoose.Schema({
         required: true,
     },
     other_patents : {
+        type: String,
+        required: true,
+    },
+    transmitted_to_RoD: { // Changed from transmittedToRoD to transmitted_to_RoD
         type: Number,
         required: true,
     },
-    patents: {
-        current: {
-            transmitted_to_RoD: { // Changed from transmittedToRoD to transmitted_to_RoD
-                type: Number,
-                required: true,
-            },
-            area: {
-                type: Number, // You can modify this type based on how you store area data
-                required: true,
-            },
-            beneficiaries: {
-                total: {
-                    type: Number,
-                    required: true,
-                },
-                female: {
-                    type: Number,
-                    required: true,
-                },
-                male: {
-                    type: Number,
-                    required: true,
-                },
-            },
+    area: {
+        type: Number, // You can modify this type based on how you store area data
+        required: true,
+    },
+    beneficiaries: {
+        total: {
+            type: Number,
+            required: true,
         },
-        historical: {
-            transmitted_to_RoD: { // Changed from transmittedToRoD to transmitted_to_RoD
-                type: Number,
-                required: true,
-            },
-            area: {
-                type: Number,
-                required: true,
-            },
-            beneficiaries: {
-                total: {
-                    type: Number,
-                    required: true,
-                },
-                female: {
-                    type: Number,
-                    required: true,
-                },
-                male: {
-                    type: Number,
-                    required: true,
-                },
-            },
+        female: {
+            type: Number,
+            required: true,
+        },
+        male: {
+            type: Number,
+            required: true,
         },
     },
 }, { timestamps: true }); // Optional: add createdAt and updatedAt timestamps

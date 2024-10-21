@@ -42,13 +42,13 @@ const Land_Table_4  = () => {
             children : [
                 { 
                     headerName: "No. of Patents Transmitted to RoD", 
-                    field: "patents.current.transmitted_to_RoD", 
+                    field: "transmitted_to_RoD", 
                     editable : true, 
                     type: "textColumn",
                 },
                 { 
                     headerName: "Area", 
-                    field: "patents.current.area", 
+                    field: "area", 
                     editable : true, 
                     type: "textColumn",
                 },
@@ -58,60 +58,19 @@ const Land_Table_4  = () => {
                     children : [
                         { 
                             headerName: "Total Beneficiaries", 
-                            field: "patents.current.beneficiaries.total", 
+                            field: "beneficiaries.total", 
                             editable : true, 
                             type: "textColumn",
                         },
                         { 
                             headerName: "Female", 
-                            field: "patents.current.beneficiaries.female", 
+                            field: "beneficiaries.female", 
                             editable : true, 
                             type: "textColumn",
                         },
                         { 
                             headerName: "Male", 
-                            field: "patents.current.beneficiaries.male", 
-                            editable : true, 
-                            type: "textColumn",
-                        },
-                    ]
-                },
-            ]
-        },
-        { 
-            headerName: "As of", 
-            children : [
-                { 
-                    headerName: "No. of Patents Transmitted to RoD", 
-                    field: "patents.historical.transmitted_to_RoD", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-                { 
-                    headerName: "Area", 
-                    field: "patents.historical.area", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-                { 
-                    headerName: "Beneficiaries",
-                    headerClass : "justify-center",
-                    children : [
-                        { 
-                            headerName: "Total Beneficiaries", 
-                            field: "patents.historical.beneficiaries.total", 
-                            editable : true, 
-                            type: "textColumn",
-                        },
-                        { 
-                            headerName: "Female", 
-                            field: "patents.historical.beneficiaries.female", 
-                            editable : true, 
-                            type: "textColumn",
-                        },
-                        { 
-                            headerName: "Male", 
-                            field: "patents.historical.beneficiaries.male", 
+                            field: "beneficiaries.male", 
                             editable : true, 
                             type: "textColumn",
                         },
@@ -162,66 +121,31 @@ const Land_Table_4  = () => {
             type : "title"
         },
         {
-            name : "patents.current.transmitted_to_RoD",
+            name : "transmitted_to_RoD",
             label : "No. of Patents transmitted to RoD", 
             input : <Input type="number" />,
             type : "input"
         },
         {
-            name : "patents.current.area",
+            name : "area",
             label : "Area", 
             input : <Input type="number" />,
             type : "input"
         },
         {
-            name : "patents.current.beneficiaries.total",
+            name : "beneficiaries.total",
             label : "Total Beneficiaries", 
             input : <Input type="number" />,
             type : "input"
         },
         {
-            name : "patents.current.beneficiaries.female",
+            name : "beneficiaries.female",
             label : "Female Beneficiaries", 
             input : <Input type="number" />,
             type : "input"
         },
         {
-            name : "patents.current.beneficiaries.male",
-            label : "Male Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name: "As Of",
-            label: "As Of",
-            type : "title"
-        },
-        {
-            name : "patents.historical.transmitted_to_RoD",
-            label : "No. of Patents transmitted to RoD", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "patents.historical.area",
-            label : "Area", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "patents.historical.beneficiaries.total",
-            label : "Total Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "patents.historical.beneficiaries.female",
-            label : "Female Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "patents.historical.beneficiaries.male",
+            name : "beneficiaries.male",
             label : "Male Beneficiaries", 
             input : <Input type="number" />,
             type : "input"
@@ -234,7 +158,7 @@ const Land_Table_4  = () => {
         {
             name : "other_patents",
             label : "Other Patents", 
-            input : <Input type="number" />,
+            input : <Input type="text" />,
             type : "input"
         },
     ];

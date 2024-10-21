@@ -28,30 +28,36 @@ router.get("/land_2", land_2_controller.getAll);
 router.post("/land_2", land_2_controller.create);
 router.put("/land_2", land_2_controller.update);
 router.delete("/land_2/:id", land_2_controller.delete);
+router.post("/land_2/save-many", land_2_controller.saveMany);
 
 router.get("/land_3", land_3_controller.getAll);
 router.post("/land_3", land_3_controller.create);
 router.put("/land_3", land_3_controller.update);
 router.delete("/land_3/:id", land_3_controller.delete);
+router.post("/land_3/save-many", land_3_controller.saveMany);
 
 router.get("/land_4", land_4_controller.getAll);
 router.post("/land_4", land_4_controller.create);
 router.put("/land_4", land_4_controller.update);
 router.delete("/land_4/:id", land_4_controller.delete);
+router.post("/land_4/save-many", land_4_controller.saveMany);
 
 router.get("/land_5", land_5_controller.getAll);
 router.post("/land_5", land_5_controller.create);
 router.put("/land_5", land_5_controller.update);
 router.delete("/land_5/:id", land_5_controller.delete);
+router.post("/land_5/save-many", land_5_controller.saveMany);
 
 router.get("/land_6", land_6_controller.getAll);
 router.post("/land_6", land_6_controller.create);
 router.put("/land_6", land_6_controller.update);
 router.delete("/land_6/:id", land_6_controller.delete);
+router.post("/land_6/save-many", land_6_controller.saveMany);
 
 router.get("/land_7", land_7_controller.getAll);
 router.post("/land_7", land_7_controller.create);
 router.put("/land_7", land_7_controller.update);
 router.delete("/land_7/:id", land_7_controller.delete);
+router.post("/land_7/save-many", land_7_controller.saveMany);
 
 export default router;

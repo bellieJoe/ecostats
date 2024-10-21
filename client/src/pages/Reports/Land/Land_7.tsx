@@ -1,10 +1,38 @@
 
-import { Tabs, TabsProps } from "antd";
+import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
 import Land_Table_7 from "../../../components/Reports/Forms/Land/Land_Table_7";
+import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../components/DataMigrator";
+import { formSaveMany } from "../../../services/api/formsApi";
+import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
+import { parseResError } from "../../../services/errorHandler";
 
 
 const Land_5 = () => {
+
+    const [messageApi, contextHandler] = message.useMessage();
+    
+    const columns : DataMigratorCol[] = [
+        { headerName: 'calendar_year', field: 'calendar_year', type: DataMigratorColTypes.number },
+        { headerName: 'province', field: 'province', type: DataMigratorColTypes.string },
+        { headerName: 'municipality', field: 'municipality', type: DataMigratorColTypes.string },
+        { headerName: 'no_of_lots', field: 'no_of_lots', type: DataMigratorColTypes.number },
+        { headerName: 'total_land_area_ha', field: 'total_land_area_ha', type: DataMigratorColTypes.number },
+        { headerName: 'total_forecasted_annual_revenue', field: 'total_forecasted_annual_revenue', type: DataMigratorColTypes.number },
+    ];
+
+    const handleSave = (data) => {
+        formSaveMany(data, FormEnum.LAND_7, Sector.LAND)
+        .then(res => {
+            messageApi.success("Data successfully updated.");
+        })
+        .catch(err => {
+            messageApi.error(parseResError(err).msg);
+            console.log(err)
+        })
+        .finally();
+    };
+    
     const items : TabsProps['items'] = [
         {
             key: '1',
@@ -14,11 +42,12 @@ const Land_5 = () => {
         {
             key: '3',
             label: 'Migration',
-            children: 'Migration',
+            children: <DataMigrator columns={columns} onSave={handleSave} />,
         }
     ]
     return (
         <>
+            { contextHandler }
             <Title level={4} >Management of Foreshore Areas</Title>
             <Tabs items={items} defaultActiveKey="1" />
         </>
