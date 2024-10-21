@@ -40,8 +40,25 @@ const DataMigrator = ({ columns, onSave }: { columns: DataMigratorCol[], onSave:
         const workbook = XLSX.read(data, { type: 'array' });
         const worksheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        console.log(jsonData);
-        setRowData(jsonData);
+
+        // Parse data based on column types
+        const parsedData = jsonData.map((row: any) => {
+          const parsedRow: any = {};
+          columns.forEach((col) => {
+            let value = row[col.headerName];
+            if (col.type === DataMigratorColTypes.date && typeof value === 'number') {
+              // Convert from Excel date format to JavaScript Date
+              const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+              parsedRow[col.field] = new Date(excelEpoch.getTime() + value * 86400000);
+            } else {
+              parsedRow[col.field] = value;
+            }
+          });
+          return parsedRow;
+        });
+
+        console.log(parsedData);
+        setRowData(parsedData);
         message.success('File uploaded successfully!');
       }
     };
@@ -63,21 +80,20 @@ const DataMigrator = ({ columns, onSave }: { columns: DataMigratorCol[], onSave:
     valueGetter: col.field.includes('.')
       ? (params) => {
           const value = params.data[col.field];
-          console.log(`Value for ${col.field}:`, value); // Add logging for debugging
           return value;
         }
       : null,
-      valueFormatter: (params) => {
-        const value = params.value;
-        switch (col.type) {
-          case DataMigratorColTypes.date:
-            return value ? new Date(value).toLocaleDateString() : '';
-          case DataMigratorColTypes.boolean:
-            return value ? 'Yes' : 'No';
-          default:
-            return value;
-        }
-      },
+    valueFormatter: (params) => {
+      const value = params.value;
+      switch (col.type) {
+        case DataMigratorColTypes.date:
+          return value ? new Date(value).toLocaleDateString() : '';
+        case DataMigratorColTypes.boolean:
+          return value ? 'Yes' : 'No';
+        default:
+          return value;
+      }
+    },
   }));
 
   return (

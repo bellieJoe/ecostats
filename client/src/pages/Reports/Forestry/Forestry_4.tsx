@@ -1,10 +1,38 @@
 
-import { Tabs, TabsProps } from "antd";
+import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
 import Forestry_Table_4 from "../../../components/Reports/Forms/Forestry/Forestry_Table_4";
+import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../components/DataMigrator";
+import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
+import { formSaveMany } from "../../../services/api/formsApi";
+import { parseResError } from "../../../services/errorHandler";
 
 
 const Forestry_4 = () => {
+    const [messageApi, contextHandler] = message.useMessage();
+    
+    const columns : DataMigratorCol[] = [
+        { headerName: 'calendar_year', field: 'calendar_year', type: DataMigratorColTypes.number },
+        { headerName: 'province', field: 'province', type: DataMigratorColTypes.string },
+        { headerName: 'watershed_reservation_name', field: 'watershed_reservation_name', type: DataMigratorColTypes.string },
+        { headerName: 'location', field: 'location', type: DataMigratorColTypes.string },
+        { headerName: 'area_ha', field: 'area_ha', type: DataMigratorColTypes.number },
+        { headerName: 'presidential_proclamation_no', field: 'presidential_proclamation_no', type: DataMigratorColTypes.string },
+        { headerName: 'proclamation_date', field: 'proclamation_date', type: DataMigratorColTypes.date },
+    ];
+
+    const handleSave = (data) => {
+        formSaveMany(data, FormEnum.FORESTRY_4, Sector.FORESTRY)
+        .then(res => {
+            messageApi.success("Data successfully updated.");
+        })
+        .catch(err => {
+            messageApi.error(parseResError(err).msg);
+            console.log(err)
+        })
+        .finally();
+    };
+    
     const items : TabsProps['items'] = [
         {
             key: '1',
@@ -14,11 +42,12 @@ const Forestry_4 = () => {
         {
             key: '3',
             label: 'Migration',
-            children: 'Migration',
+            children: <DataMigrator columns={columns} onSave={handleSave} />,
         }
     ]
     return (
         <>
+            { contextHandler }
             <Title level={4} >Proclaimed Watershed Forest Reserve</Title>
             <Tabs items={items} defaultActiveKey="1" />
         </>

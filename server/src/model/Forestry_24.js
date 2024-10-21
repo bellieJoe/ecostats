@@ -9,19 +9,16 @@ const Forestry_24_Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  municipality: {
+    type: String,
+    required: true,
+  },
   number_of_chainsaw_registered: {
     type: Number,
     required: true,
   },
   area_of_operation: {
-    province: {
-      type: String,
-      required: true,
-    },
-    municipality_or_city: {
-      type: String,
-      required: true,
-    },
+    type : String
   },
   number_of_chainsaw_operator: {
     type: Number,

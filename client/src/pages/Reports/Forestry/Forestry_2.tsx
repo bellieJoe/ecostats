@@ -1,10 +1,49 @@
 
-import { Tabs, TabsProps } from "antd";
+import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
 import Forestry_Table_2 from "../../../components/Reports/Forms/Forestry/Forestry_Table_2";
+import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../components/DataMigrator";
+import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
+import { formSaveMany } from "../../../services/api/formsApi";
+import { parseResError } from "../../../services/errorHandler";
 
 
 const Forestry_2 = () => {
+    const [messageApi, contextHandler] = message.useMessage();
+    
+    const columns : DataMigratorCol[] = [
+        { headerName: 'calendar_year', field: 'calendar_year', type: DataMigratorColTypes.number },
+        { headerName: 'province', field: 'province', type: DataMigratorColTypes.string },
+        { headerName: 'total_land_cover_area', field: 'total_land_cover_area', type: DataMigratorColTypes.number },
+        { headerName: 'forest_cover.total_forest_cover', field: 'forest_cover.total_forest_cover', type: DataMigratorColTypes.number },
+        { headerName: 'forest_cover.closed_forest', field: 'forest_cover.closed_forest', type: DataMigratorColTypes.number },
+        { headerName: 'forest_cover.open_forest', field: 'forest_cover.open_forest', type: DataMigratorColTypes.number },
+        { headerName: 'forest_cover.mangrove_forest', field: 'forest_cover.mangrove_forest', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.total_other_land_cover', field: 'other_land_cover.total_other_land_cover', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.brush_shrubs', field: 'other_land_cover.brush_shrubs', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.grassland', field: 'other_land_cover.grassland', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.annual_crop', field: 'other_land_cover.annual_crop', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.perennial_crop', field: 'other_land_cover.perennial_crop', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.open_barren_land', field: 'other_land_cover.open_barren_land', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.built_up_area', field: 'other_land_cover.built_up_area', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.fishpond', field: 'other_land_cover.fishpond', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.marshland_swamp', field: 'other_land_cover.marshland_swamp', type: DataMigratorColTypes.number },
+        { headerName: 'other_land_cover.inland_water', field: 'other_land_cover.inland_water', type: DataMigratorColTypes.number },
+        
+    ]
+
+    const handleSave = (data) => {
+        formSaveMany(data, FormEnum.FORESTRY_2, Sector.FORESTRY)
+        .then(res => {
+            messageApi.success("Data successfully updated.");
+        })
+        .catch(err => {
+            messageApi.error(parseResError(err).msg);
+            console.log(err)
+        })
+        .finally();
+    };
+
     const items : TabsProps['items'] = [
         {
             key: '1',
@@ -14,11 +53,12 @@ const Forestry_2 = () => {
         {
             key: '3',
             label: 'Migration',
-            children: 'Migration',
+            children: <DataMigrator columns={columns} onSave={handleSave} />,
         }
     ]
     return (
         <>
+            { contextHandler }
             <Title level={4} >Land Cover</Title>
             <Tabs items={items} defaultActiveKey="1" />
         </>

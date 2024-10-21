@@ -49,6 +49,6 @@ const Forestry_1_Schema = new mongoose.Schema({
 });
 
 // Create a model
-const Forestry_1 = mongoose.model('forest_1', Forestry_1_Schema);
+const Forestry_1 = mongoose.model('forestry_1', Forestry_1_Schema);
 
 export default Forestry_1;

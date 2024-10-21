@@ -3,32 +3,32 @@ import mongoose from "mongoose";
 const Forestry_5_Schema = new mongoose.Schema({
     calendar_year: {
         type: Number,
-        required : true
+        // required : true
     },
     province: {
         type: String,
-        required : true
+        // required : true
     },
     name_of_watershed: {
         type: String,
-        required : true
+        // required : true
     },
     previous_name_of_watershed: {
         type: String,
-        required : true
+        // required : true
     },
     area_ha: {
         type: Number,
-        required : true
+        // required : true
     },
     classification: {
         type: String,
-        enum: ["Small sized watershed", "Medium sized watershed", "Large sized watershed", "Extremely Large sized watershed"],
-        required: true,
+        enum: ["Small", "Medium", "Large"],
+        // required: true,
     },
     municipalities: {
         type: [String], // Array of strings to hold multiple municipalities
-        required: true,
+        // required: true,
     },
 }, { timestamps: true });
 

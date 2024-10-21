@@ -38,27 +38,22 @@ const Forestry_Table_24  = () => {
             type: "textColumn",
         },
         { 
+            headerName: "Municipality", 
+            field: "municipality", 
+            editable : true, 
+            type: "textColumn",
+        },
+        { 
             headerName: "Number of Chainsaw Registered", 
             field: "number_of_chainsaw_registered", 
             editable : true, 
             type: "numberColumn",
         },
         { 
-            headerName: "Area of Operation", 
-            children: [
-                { 
-                    headerName: "Province", 
-                    field: "area_of_operation.province", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-                { 
-                    headerName: "Municipality/City", 
-                    field: "area_of_operation.municipality_or_city", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-            ]
+            headerName: "Province", 
+            field: "area_of_operation", 
+            editable : true, 
+            type: "textColumn",
         },
         { 
             headerName: "Number of Chainsaw Operator", 
@@ -99,6 +94,14 @@ const Forestry_Table_24  = () => {
             type : "input"
         },
         {
+            name : "municipality",
+            label : "Municipality", 
+            input : (
+                <Input type="text"  />
+            ),
+            type : "input"
+        },
+        {
             name : "number_of_chainsaw_registered",
             label : "No. of Chainsaw Registered", 
             input : (
@@ -107,21 +110,8 @@ const Forestry_Table_24  = () => {
             type : "input"
         },
         {
-            name : "Area of Operation",
+            name : "area_of_operation",
             label : "Area of Operation", 
-            type : "title"
-        },
-        {
-            name : "area_of_operation.province",
-            label : "Province", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "area_of_operation.municipality_or_city",
-            label : "City or Municipality", 
             input : (
                 <Input type="text"  />
             ),
