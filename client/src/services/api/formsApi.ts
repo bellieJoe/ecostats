@@ -36,3 +36,15 @@ export const formGet = async (formName : string, sectorName : string, limit : nu
     });
     return res;
 }
+
+export const formGetByQuery = async (formName : string, sectorName : string, query : any) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/${sectorName}/${formName}/by-query`, {
+        params : query
+    });
+    return res;
+}
+
+export const requestReport = async (body : any) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/requested-reports/create`, body);
+    return res;
+}

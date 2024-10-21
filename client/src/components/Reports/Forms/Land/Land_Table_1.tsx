@@ -6,11 +6,39 @@ import { Button, Checkbox, DatePicker, Flex, Input, message, Pagination, Popconf
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import GenericFormDrawer from "../../../GenericFormV2";
-import { GenericFormField } from "../../../../types/forms/GenericFormTypes";
+import GenericFormDrawerV3 from "../../../GenericFormV3";
+import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
+
+export const land_1_genericFormFields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : <Input type="Number" />,
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : <Input type="text" />,
+        type : "input"
+
+    },
+    {
+        name : "contested_area",
+        label : "Contested Area (ha)",
+        input : <Input type="number" />,
+        type : "input"
+
+    },
+    {
+        name : "uncontested_area",
+        label : "Uncontested Area (ha)",
+        input : <Input type="number" />,
+        type : "input"
+    },
+];
 
 const Land_Table_1  = () => {
-
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
     const [limit, setLimit] = useState(10);
@@ -65,29 +93,6 @@ const Land_Table_1  = () => {
         }
     ]);
 
-    const genericFormFields : GenericFormField[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : <Input type="Number" />
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : <Input type="text" />
-        },
-        {
-            name : "contested_area",
-            label : "Contested Area {(ha)",
-            input : <Input type="number" />
-        },
-        {
-            name : "uncontested_area",
-            label : "Unontested Area {(ha)",
-            input : <Input type="number" />
-        },
-    ]
-
     const handleOnRowValueChanged = (d) => {
         formUpdate(d.data, FormEnum.LAND_1, Sector.LAND)
         .then(res => {
@@ -128,7 +133,6 @@ const Land_Table_1  = () => {
             console.log(err)
         }
         setRefresh(!refresh)
-
     };
     
     useEffect(() => {
@@ -180,9 +184,9 @@ const Land_Table_1  = () => {
                 </Flex>
             </div>
 
-            <GenericFormDrawer 
+            <GenericFormDrawerV3
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={land_1_genericFormFields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>
@@ -192,26 +196,3 @@ const Land_Table_1  = () => {
 
 export default Land_Table_1;
 
-
-const data  = [
-    {
-        name : "name",
-        label : "Name",
-        input : <Input type="string" />
-    },
-    {
-        name : "age",
-        label : "Age",
-        input : <Input type="number" />,
-    },
-    {
-        name : "is_active",
-        label : "Active",
-        input : <Checkbox />,
-    },
-    {
-        age : "date",
-        label : "Date",
-        input : <DatePicker />,
-    }
-]

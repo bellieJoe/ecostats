@@ -1,12 +1,12 @@
 
 import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
-import Forestry_Table_2 from "../../../components/Reports/Forms/Forestry/Forestry_Table_2";
-import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../components/DataMigrator";
-import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
-import { formSaveMany } from "../../../services/api/formsApi";
-import { parseResError } from "../../../services/errorHandler";
-import { useErrorLogStore } from "../../../stores/useErrorLogStore";
+import Forestry_Table_2 from "../../../../components/Reports/Forms/Forestry/Forestry_Table_2";
+import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../../components/DataMigrator";
+import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
+import { formSaveMany } from "../../../../services/api/formsApi";
+import { parseResError } from "../../../../services/errorHandler";
+import { useErrorLogStore } from "../../../../stores/useErrorLogStore";
 
 
 const Forestry_2 = () => {

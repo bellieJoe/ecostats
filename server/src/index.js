@@ -13,6 +13,7 @@ import unitRoutes from "./routes/unitRoutes.js"
 import landRoutes from "./routes/landRoutes.js"
 import forestryRoutes from "./routes/forestryRoutes.js"
 import biodiversityRoutes from "./routes/biodiversityRoutes.js"
+import requestedReportRoutes from "./routes/requestedReportRoutes.js"
 
 
 dotenv.config(); // Load environment variables from .env file
@@ -61,6 +62,7 @@ app.use("/users", userRoutes);
 app.use("/roles", roleRoutes);
 app.use("/programs", programRoutes);
 app.use("/units", unitRoutes);
+app.use("/requested-reports", requestedReportRoutes);
 app.use("/land", landRoutes);
 app.use("/forestry", forestryRoutes);
 app.use("/biodiversity", biodiversityRoutes);

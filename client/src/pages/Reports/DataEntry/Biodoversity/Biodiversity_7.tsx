@@ -1,31 +1,34 @@
 
 import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
-import Land_Table_3 from "../../../components/Reports/Forms/Land/Land_Table_3";
-import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../components/DataMigrator";
-import { formSaveMany } from "../../../services/api/formsApi";
-import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
-import { parseResError } from "../../../services/errorHandler";
-import { useErrorLogStore } from "../../../stores/useErrorLogStore";
+import Biodiversity_Table_7 from "../../../../components/Reports/Forms/Biodiversity/Biodiversity_Table_7";
+import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../../components/DataMigrator";
+import { useErrorLogStore } from "../../../../stores/useErrorLogStore";
+import { formSaveMany } from "../../../../services/api/formsApi";
+import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
+import { parseResError } from "../../../../services/errorHandler";
 
 
-const Land_3 = () => {
-    const errorLogStore = useErrorLogStore();
-    
+const Biodiversity_7 = () => {
+
     const [messageApi, contextHandler] = message.useMessage();
     
     const columns : DataMigratorCol[] = [
         { headerName: 'calendar_year', field: 'calendar_year', type: DataMigratorColTypes.number },
         { headerName: 'province', field: 'province', type: DataMigratorColTypes.string },
-        { headerName: 'transmitted_to_RoD', field: 'transmitted_to_RoD', type: DataMigratorColTypes.number },
-        { headerName: 'area', field: 'area', type: DataMigratorColTypes.number },
-        { headerName: 'beneficiaries.total', field: 'beneficiaries.total', type: DataMigratorColTypes.number },
+        { headerName: 'municipality', field: 'municipality', type: DataMigratorColTypes.string },
+        { headerName: 'livelihood_projects', field: 'livelihood_projects', type: DataMigratorColTypes.string },
+        { headerName: 'date_established', field: 'date_established', type: DataMigratorColTypes.date },
         { headerName: 'beneficiaries.male', field: 'beneficiaries.male', type: DataMigratorColTypes.number },
         { headerName: 'beneficiaries.female', field: 'beneficiaries.female', type: DataMigratorColTypes.number },
+        { headerName: 'beneficiaries.total', field: 'beneficiaries.total', type: DataMigratorColTypes.number },
+        { headerName: 'fund_source', field: 'fund_source', type: DataMigratorColTypes.string },
+        
     ];
+    const errorLogStore = useErrorLogStore();
 
     const handleSave = (data) => {
-        formSaveMany(data, FormEnum.LAND_3, Sector.LAND)
+        formSaveMany(data, FormEnum.BIODIVERSITY_7, Sector.BIODIVERSITY)
         .then(res => {
             messageApi.success("Data successfully updated.");
         })
@@ -43,21 +46,22 @@ const Land_3 = () => {
         {
             key: '1',
             label: 'Form',
-            children: <Land_Table_3 />,
+            children: <Biodiversity_Table_7 />,
         },
         {
             key: '3',
             label: 'Migration',
             children: <DataMigrator columns={columns} onSave={handleSave} />,
         }
-    ]
+    ];
+
     return (
         <>
             { contextHandler }
-            <Title level={4} >Residential Free Patent Issued</Title>
+            <Title level={4} >Livelihood Projects Implemented in Coastal Areas</Title>
             <Tabs items={items} defaultActiveKey="1" />
         </>
     )
 }
 
-export default Land_3;
+export default Biodiversity_7;

@@ -3,6 +3,24 @@ import mongoose from "mongoose";
 // Higher-order function to create a generic controller for any Mongoose model
 export const createCRUDController = (Model) => {
     return {
+        getByQuery : async (req, res) => {
+            try {
+                // Extract query parameters from the request
+                const query = { ...req.query };
+
+                // Use the query object to find the documents in the model
+                const models = await Model.find(query);
+
+                return res.json(models);
+            } catch (error) {
+                console.error(error);
+                return res.status(500).json({ 
+                    error: 'Server error.',
+                    details: error 
+                }); 
+            }
+        },
+
         getAll: async (req, res) => {
             try {
                 const page = parseInt(req.query.page) || 1; 

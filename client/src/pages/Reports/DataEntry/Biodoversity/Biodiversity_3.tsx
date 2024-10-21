@@ -1,12 +1,12 @@
 
 import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
-import Biodiversity_Table_3 from "../../../components/Reports/Forms/Biodiversity/Biodiversity_Table_3";
-import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../components/DataMigrator";
-import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
-import { formSaveMany } from "../../../services/api/formsApi";
-import { parseResError } from "../../../services/errorHandler";
-import { useErrorLogStore } from "../../../stores/useErrorLogStore";
+import Biodiversity_Table_3 from "../../../../components/Reports/Forms/Biodiversity/Biodiversity_Table_3";
+import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../../components/DataMigrator";
+import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
+import { formSaveMany } from "../../../../services/api/formsApi";
+import { parseResError } from "../../../../services/errorHandler";
+import { useErrorLogStore } from "../../../../stores/useErrorLogStore";
 
 
 const Biodiversity_3 = () => {

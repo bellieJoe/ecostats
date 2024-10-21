@@ -1,12 +1,12 @@
 
 import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
-import Land_Table_6 from "../../../components/Reports/Forms/Land/Land_Table_6";
-import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../components/DataMigrator";
-import { FormEnum, Sector } from "../../../types/forms/formNameEnum";
-import { formSaveMany } from "../../../services/api/formsApi";
-import { parseResError } from "../../../services/errorHandler";
-import { useErrorLogStore } from "../../../stores/useErrorLogStore";
+import Land_Table_6 from "../../../../components/Reports/Forms/Land/Land_Table_6";
+import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../../components/DataMigrator";
+import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
+import { formSaveMany } from "../../../../services/api/formsApi";
+import { parseResError } from "../../../../services/errorHandler";
+import { useErrorLogStore } from "../../../../stores/useErrorLogStore";
 
 
 const Land_6 = () => {
