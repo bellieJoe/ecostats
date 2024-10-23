@@ -12,6 +12,98 @@ import { generateYearOptions } from "../../../../services/helper";
 import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 
+
+export const biodiversity_2_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={cities.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "coastal_resource",
+        label : "Coastal Resource", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "area",
+        label : "Area (in Heactares)", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+
+    
+];
+
+export const biodiversity_2_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Coastal Resource", 
+        field: "coastal_resource", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Area (in Hectares)", 
+        field: "area", 
+        editable : true, 
+        type: "numberColumn",
+    },
+];
+
 const Biodiversity_Table_2  = () => {
 
     const [page, setPage] = useState(1);
@@ -27,36 +119,7 @@ const Biodiversity_Table_2  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Coastal Resource", 
-            field: "coastal_resource", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Area (in Hectares)", 
-            field: "area", 
-            editable : true, 
-            type: "numberColumn",
-        },
+        ...biodiversity_2_col_defs,
  
         {
             headerName: "Actions",
@@ -70,64 +133,6 @@ const Biodiversity_Table_2  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Select showSearch virtual options={cities.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "coastal_resource",
-            label : "Coastal Resource", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "area",
-            label : "Area (in Heactares)", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-
-        
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -237,7 +242,7 @@ const Biodiversity_Table_2  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={biodiversity_2_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

@@ -13,6 +13,204 @@ import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 import TextArea from "antd/es/input/TextArea";
 
+
+export const biodiversity_8_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={cities.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "name_of_wetland",
+        label : "Name of Wetland", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "wetland_type",
+        label : "Wetland Type", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "wet_area_dry_season_ha",
+        label : "Wet Area (Dry Season)(in ha)", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "wet_area_wet_season_ha",
+        label : "Wet Area (Wet Season)(in ha)", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "assessed",
+        label : "Assesed", 
+        input : (
+            <Select options={[
+                {
+                    value : "Yes",
+                    label : "Yes"
+                },
+                {
+                    value : "No",
+                    label : "No"
+                },
+            ]} />
+        ),
+        type : "input"
+    },
+    {
+        name : "presence_of_management_plan",
+        label : "Presence of Management Plan", 
+        input : (
+            <Select options={[
+                {
+                    value : "Yes",
+                    label : "Yes"
+                },
+                {
+                    value : "No",
+                    label : "No"
+                },
+            ]} />
+        ),
+        type : "input"
+    },
+    {
+        name : "recognition",
+        label : "Recognition", 
+        input : (
+            <Input type="text"/>
+        ),
+        type : "input"
+    },
+    {
+        name : "remarks",
+        label : "Remarks", 
+        input : (
+            <Input type="text"/>
+        ),
+        type : "input"
+    },
+];
+
+export const biodiversity_8_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Name of Wetland", 
+        field: "name_of_wetland", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Wetland Type", 
+        field: "wetland_type", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Wet Area (Dry Season)(in ha)", 
+        field: "wet_area_dry_season_ha", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Wet Area (Wet Season)(in ha)", 
+        field: "wet_area_wet_season_ha", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Assessed", 
+        field: "assessed", 
+        editable : true, 
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+            values: ["Yes", "No"],
+        }
+    },
+    { 
+        headerName: "Presence of Management Plan", 
+        field: "presence_of_management_plan", 
+        editable : true, 
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+            values: ["Yes", "No"],
+        }
+    },
+    { 
+        headerName: "Recognition", 
+        field: "recognition", 
+        editable : true, 
+        type: 'textColumn'
+    },
+    { 
+        headerName: "remarks", 
+        field: "remarks", 
+        editable : true, 
+        type: 'textColumn'
+    },
+];
+
 const Biodiversity_Table_8  = () => {
 
     const [page, setPage] = useState(1);
@@ -28,78 +226,7 @@ const Biodiversity_Table_8  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Name of Wetland", 
-            field: "name_of_wetland", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Wetland Type", 
-            field: "wetland_type", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Wet Area (Dry Season)(in ha)", 
-            field: "wet_area_dry_season_ha", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Wet Area (Wet Season)(in ha)", 
-            field: "wet_area_wet_season_ha", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Assessed", 
-            field: "assessed", 
-            editable : true, 
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: ["Yes", "No"],
-            }
-        },
-        { 
-            headerName: "Presence of Management Plan", 
-            field: "presence_of_management_plan", 
-            editable : true, 
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: ["Yes", "No"],
-            }
-        },
-        { 
-            headerName: "Recognition", 
-            field: "recognition", 
-            editable : true, 
-            type: 'textColumn'
-        },
-        { 
-            headerName: "remarks", 
-            field: "remarks", 
-            editable : true, 
-            type: 'textColumn'
-        },
+        ...biodiversity_8_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -112,128 +239,6 @@ const Biodiversity_Table_8  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Select showSearch virtual options={cities.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "name_of_wetland",
-            label : "Name of Wetland", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "wetland_type",
-            label : "Wetland Type", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "wet_area_dry_season_ha",
-            label : "Wet Area (Dry Season)(in ha)", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "wet_area_wet_season_ha",
-            label : "Wet Area (Wet Season)(in ha)", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "assessed",
-            label : "Assesed", 
-            input : (
-                <Select options={[
-                    {
-                        value : "Yes",
-                        label : "Yes"
-                    },
-                    {
-                        value : "No",
-                        label : "No"
-                    },
-                ]} />
-            ),
-            type : "input"
-        },
-        {
-            name : "presence_of_management_plan",
-            label : "Presence of Management Plan", 
-            input : (
-                <Select options={[
-                    {
-                        value : "Yes",
-                        label : "Yes"
-                    },
-                    {
-                        value : "No",
-                        label : "No"
-                    },
-                ]} />
-            ),
-            type : "input"
-        },
-        {
-            name : "recognition",
-            label : "Recognition", 
-            input : (
-                <Input type="text"/>
-            ),
-            type : "input"
-        },
-        {
-            name : "remarks",
-            label : "Remarks", 
-            input : (
-                <Input type="text"/>
-            ),
-            type : "input"
-        },
-    ];
 
     const handleOnRowValueChanged = (d) => {
         console.log(d)
@@ -342,7 +347,7 @@ const Biodiversity_Table_8  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={biodiversity_8_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

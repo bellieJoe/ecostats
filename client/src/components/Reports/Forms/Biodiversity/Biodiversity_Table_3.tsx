@@ -12,6 +12,214 @@ import { generateYearOptions } from "../../../../services/helper";
 import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 
+
+export const biodiversity_3_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={cities.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "date_of_inventory",
+        label : "Date of Inventory", 
+        input : (
+            <DatePicker />
+        ),
+        type : "input"
+    },
+    {
+        name : "area_assessed",
+        label : "Area Assessed (in hectares)", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "status_percentage",
+        label : "Status (%)", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "dominant_species",
+        label : "Dominant Species", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "types_of_substrate",
+        label : "Types of Substrate (no.)", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "condition.quantitative_interpretation",
+        label : "Quantitative Interpretation (%)", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "condition.qualitative_interpretation",
+        label : "Qualitative Interpretation", 
+        input : (
+            <Select options={[
+                {
+                    label: "Poor",
+                    value: "Poor"
+                },
+                {
+                    label: "Fair",
+                    value: "Fair"
+                },
+                {
+                    label: "Good",
+                    value: "Good"
+                },
+                {
+                    label: "Excellent",
+                    value: "Excellent"
+                },
+            ]} />
+        ),
+        type : "input"
+    },
+    {
+        name : "year_assessed",
+        label : "Year Assesed", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+
+];
+
+export const biodiversity_3_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Date of Inventory", 
+        field: "date_of_inventory", 
+        editable : true, 
+        valueFormatter: (params) => {
+            const date = new Date(params.value);
+            return date.toLocaleDateString(); // Display in a user-friendly format
+        },
+        cellEditor: "agDateCellEditor",
+        valueParser: (params) => {
+            console.log(params)
+            return new Date(params.newValue).toISOString(); // Save in ISO format
+        },
+    },
+    { 
+        headerName: "Area Assessed (in hectares)", 
+        field: "area_assessed", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Status (%)", 
+        field: "status_percentage", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Dominant Species", 
+        field: "dominant_species", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Types of Substrate (no.)", 
+        field: "types_of_substrate", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Condition", 
+        children : [
+            { 
+                headerName: "Quantitative Interpretation (%)", 
+                field: "condition.quantitative_interpretation", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            { 
+                headerName: "Qualitative Interpretation", 
+                field: "condition.qualitative_interpretation", 
+                editable : true, 
+                cellEditor: 'agSelectCellEditor',
+                cellEditorParams: {
+                    values: ["Fair", "Good", "Poor", "Excellent" ],
+                }
+            },
+        ]
+    },
+    { 
+        headerName: "Year Assesed", 
+        field: "year_assessed", 
+        editable : true, 
+        type: "numberColumn",
+    },
+];
+
 const Biodiversity_Table_3  = () => {
 
     const [page, setPage] = useState(1);
@@ -27,88 +235,7 @@ const Biodiversity_Table_3  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Date of Inventory", 
-            field: "date_of_inventory", 
-            editable : true, 
-            valueFormatter: (params) => {
-                const date = new Date(params.value);
-                return date.toLocaleDateString(); // Display in a user-friendly format
-            },
-            cellEditor: "agDateCellEditor",
-            valueParser: (params) => {
-                console.log(params)
-                return new Date(params.newValue).toISOString(); // Save in ISO format
-            },
-        },
-        { 
-            headerName: "Area Assessed (in hectares)", 
-            field: "area_assessed", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Status (%)", 
-            field: "status_percentage", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Dominant Species", 
-            field: "dominant_species", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Types of Substrate (no.)", 
-            field: "types_of_substrate", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Condition", 
-            children : [
-                { 
-                    headerName: "Quantitative Interpretation (%)", 
-                    field: "condition.quantitative_interpretation", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                { 
-                    headerName: "Qualitative Interpretation", 
-                    field: "condition.qualitative_interpretation", 
-                    editable : true, 
-                    cellEditor: 'agSelectCellEditor',
-                    cellEditorParams: {
-                        values: ["Fair", "Good", "Poor", "Excellent" ],
-                    }
-                },
-            ]
-        },
-        { 
-            headerName: "Year Assesed", 
-            field: "year_assessed", 
-            editable : true, 
-            type: "numberColumn",
-        },
+        ...biodiversity_3_col_defs,
  
         {
             headerName: "Actions",
@@ -122,128 +249,6 @@ const Biodiversity_Table_3  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Select showSearch virtual options={cities.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "date_of_inventory",
-            label : "Date of Inventory", 
-            input : (
-                <DatePicker />
-            ),
-            type : "input"
-        },
-        {
-            name : "area_assessed",
-            label : "Area Assessed (in hectares)", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "status_percentage",
-            label : "Status (%)", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "dominant_species",
-            label : "Dominant Species", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "types_of_substrate",
-            label : "Types of Substrate (no.)", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "condition.quantitative_interpretation",
-            label : "Quantitative Interpretation (%)", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "condition.qualitative_interpretation",
-            label : "Qualitative Interpretation", 
-            input : (
-                <Select options={[
-                    {
-                        label: "Poor",
-                        value: "Poor"
-                    },
-                    {
-                        label: "Fair",
-                        value: "Fair"
-                    },
-                    {
-                        label: "Good",
-                        value: "Good"
-                    },
-                    {
-                        label: "Excellent",
-                        value: "Excellent"
-                    },
-                ]} />
-            ),
-            type : "input"
-        },
-        {
-            name : "year_assessed",
-            label : "Year Assesed", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-  
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -353,7 +358,7 @@ const Biodiversity_Table_3  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={biodiversity_3_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

@@ -10,6 +10,85 @@ import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/Ge
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
+export const forestry_3_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "total_area",
+        label : "Total Area", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "production_forest",
+        label : "Production Forest", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "protection_forest",
+        label : "Protection Forest", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+];
+
+export const forestry_3_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Total Area", 
+        field: "total_area", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Production Forest", 
+        field: "production_forest", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Protection Forest", 
+        field: "protection_forest", 
+        editable : true, 
+        type: "numberColumn",
+    },
+];
+
 const Forestry_Table_3  = () => {
 
     const [page, setPage] = useState(1);
@@ -25,36 +104,7 @@ const Forestry_Table_3  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Total Area", 
-            field: "total_area", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Production Forest", 
-            field: "production_forest", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Protection Forest", 
-            field: "protection_forest", 
-            editable : true, 
-            type: "numberColumn",
-        },
+        ...forestry_3_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -67,52 +117,6 @@ const Forestry_Table_3  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "total_area",
-            label : "Total Area", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "production_forest",
-            label : "Production Forest", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "protection_forest",
-            label : "Protection Forest", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -219,7 +223,7 @@ const Forestry_Table_3  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={forestry_3_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

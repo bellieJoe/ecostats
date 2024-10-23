@@ -13,6 +13,161 @@ import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 import TextArea from "antd/es/input/TextArea";
 
+export const biodiversity_7_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={cities.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "livelihood_projects",
+        label : "Livelihood Projects", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "date_established",
+        label : "Date Established", 
+        input : (
+            <DatePicker />
+        ),
+        type : "input"
+    },
+    {
+        name : "title_1",
+        label : "Beneficiaries",
+        type : "title"
+    },
+    {
+        name : "beneficiaries.male",
+        label : "Male", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "beneficiaries.female",
+        label : "Female", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "fund_source",
+        label : "Fund Source", 
+        input : (
+            <Input type="string" />
+        ),
+        type : "input"
+    },
+];
+
+export const biodiversity_7_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Livelihood Projects", 
+        field: "livelihood_projects", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Date Established", 
+        field: "date_established", 
+        editable : true, 
+        valueFormatter: (params) => {
+            const date = new Date(params.value);
+            return date.getFullYear(); // Display in a user-friendly format
+        },
+        cellEditor: "agDateCellEditor",
+        valueParser: (params) => {
+            console.log(params)
+            return new Date(params.newValue).toISOString(); // Save in ISO format
+        },
+    },
+    {
+        headerName : "Beneficiaries",
+        children : [
+            {
+                headerName : "Male",
+                field: "beneficiaries.male", 
+                editable : true, 
+                type : "numberColumn"
+            },
+            {
+                headerName : "Female",
+                field: "beneficiaries.female", 
+                editable : true, 
+                type : "numberColumn"
+            },
+            {
+                headerName : "Total",
+                field: "beneficiaries.total", 
+                editable : false, 
+                type : "numberColumn"
+            }
+        ]
+    },
+    { 
+        headerName: "Fund Source", 
+        field: "fund_source", 
+        editable : true, 
+        type: "textColumn",
+    },
+];
+
 const Biodiversity_Table_7  = () => {
 
     const [page, setPage] = useState(1);
@@ -28,73 +183,7 @@ const Biodiversity_Table_7  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Livelihood Projects", 
-            field: "livelihood_projects", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Date Established", 
-            field: "date_established", 
-            editable : true, 
-            valueFormatter: (params) => {
-                const date = new Date(params.value);
-                return date.getFullYear(); // Display in a user-friendly format
-            },
-            cellEditor: "agDateCellEditor",
-            valueParser: (params) => {
-                console.log(params)
-                return new Date(params.newValue).toISOString(); // Save in ISO format
-            },
-        },
-        {
-            headerName : "Beneficiaries",
-            children : [
-                {
-                    headerName : "Male",
-                    field: "beneficiaries.male", 
-                    editable : true, 
-                    type : "numberColumn"
-                },
-                {
-                    headerName : "Female",
-                    field: "beneficiaries.female", 
-                    editable : true, 
-                    type : "numberColumn"
-                },
-                {
-                    headerName : "Total",
-                    field: "beneficiaries.total", 
-                    editable : false, 
-                    type : "numberColumn"
-                }
-            ]
-        },
-        { 
-            headerName: "Fund Source", 
-            field: "fund_source", 
-            editable : true, 
-            type: "textColumn",
-        },
+        ...biodiversity_7_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -107,91 +196,6 @@ const Biodiversity_Table_7  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Select showSearch virtual options={cities.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "livelihood_projects",
-            label : "Livelihood Projects", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "date_established",
-            label : "Date Established", 
-            input : (
-                <DatePicker />
-            ),
-            type : "input"
-        },
-        {
-            name : "title_1",
-            label : "Beneficiaries",
-            type : "title"
-        },
-        {
-            name : "beneficiaries.male",
-            label : "Male", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "beneficiaries.female",
-            label : "Female", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "fund_source",
-            label : "Fund Source", 
-            input : (
-                <Input type="string" />
-            ),
-            type : "input"
-        },
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.beneficiaries.total = d.data.beneficiaries.male + d.data.beneficiaries.female;
@@ -301,7 +305,7 @@ const Biodiversity_Table_7  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={biodiversity_7_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

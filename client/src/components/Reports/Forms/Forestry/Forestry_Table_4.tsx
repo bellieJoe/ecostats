@@ -10,6 +10,122 @@ import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
+export const forestry_4_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "watershed_reservation_name",
+        label : "Name of Watershed Reservation", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "location",
+        label : "Location", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "area_ha",
+        label : "Area (ha)", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "presidential_proclamation_no",
+        label : "Presidential Proclamation No.", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "proclamation_date",
+        label : "Proclamation Date(mm/dd/yyyy)", 
+        input : (
+            <DatePicker type="number" className="w-full" />
+        ),
+        type : "input"
+    },
+    
+];
+
+export const forestry_4_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Name of Watershed Reservation", 
+        field: "watershed_reservation_name", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Location", 
+        field: "location", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Area (ha)", 
+        field: "area_ha", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Presidential Proclamation No.", 
+        field: "presidential_proclamation_no", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Proclamation Date(mm/dd/yyyy)", 
+        field: "proclamation_date", 
+        editable : true, 
+        valueFormatter: (params) => {
+            const date = new Date(params.value);
+            return date.toLocaleDateString(); // Display in a user-friendly format
+        },
+        cellEditor: "agDateCellEditor",
+        valueParser: (params) => {
+            console.log(params)
+            return new Date(params.newValue).toISOString(); // Save in ISO format
+        },
+    },
+];
+
 const Forestry_Table_4  = () => {
 
     const [page, setPage] = useState(1);
@@ -25,56 +141,7 @@ const Forestry_Table_4  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Name of Watershed Reservation", 
-            field: "watershed_reservation_name", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Location", 
-            field: "location", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Area (ha)", 
-            field: "area_ha", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Presidential Proclamation No.", 
-            field: "presidential_proclamation_no", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Proclamation Date(mm/dd/yyyy)", 
-            field: "proclamation_date", 
-            editable : true, 
-            valueFormatter: (params) => {
-                const date = new Date(params.value);
-                return date.toLocaleDateString(); // Display in a user-friendly format
-            },
-            cellEditor: "agDateCellEditor",
-            valueParser: (params) => {
-                console.log(params)
-                return new Date(params.newValue).toISOString(); // Save in ISO format
-            },
-        },
+        ...forestry_4_col_defs,
         
         {
             headerName: "Actions",
@@ -88,69 +155,6 @@ const Forestry_Table_4  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "watershed_reservation_name",
-            label : "Name of Watershed Reservation", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "location",
-            label : "Location", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "area_ha",
-            label : "Area (ha)", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "presidential_proclamation_no",
-            label : "Presidential Proclamation No.", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "proclamation_date",
-            label : "Proclamation Date(mm/dd/yyyy)", 
-            input : (
-                <DatePicker type="number" className="w-full" />
-            ),
-            type : "input"
-        },
-        
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -259,7 +263,7 @@ const Forestry_Table_4  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={forestry_4_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

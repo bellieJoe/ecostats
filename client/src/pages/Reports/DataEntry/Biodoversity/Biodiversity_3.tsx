@@ -1,12 +1,13 @@
 
 import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
-import Biodiversity_Table_3 from "../../../../components/Reports/Forms/Biodiversity/Biodiversity_Table_3";
+import Biodiversity_Table_3, { biodiversity_3_col_defs, biodiversity_3_gen_form_fields } from "../../../../components/Reports/Forms/Biodiversity/Biodiversity_Table_3";
 import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../../components/DataMigrator";
 import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
 import { formSaveMany } from "../../../../services/api/formsApi";
 import { parseResError } from "../../../../services/errorHandler";
 import { useErrorLogStore } from "../../../../stores/useErrorLogStore";
+import CustomReport from "../../../../components/CustomReport/CustomReport";
 
 
 const Biodiversity_3 = () => {
@@ -51,10 +52,19 @@ const Biodiversity_3 = () => {
             children: <Biodiversity_Table_3 />,
         },
         {
-            key: '3',
+            key: '2',
             label: 'Migration',
             children: <DataMigrator columns={columns} onSave={handleSave} />,
-        }
+        },
+        {
+            key: '3',
+            label: 'Reports',
+            children: <CustomReport 
+                        formName={FormEnum.BIODIVERSITY_3} 
+                        sector={Sector.BIODIVERSITY} 
+                        fields={biodiversity_3_gen_form_fields}
+                        colDefs={biodiversity_3_col_defs} />
+        },
     ]
     return (
         <>

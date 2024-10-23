@@ -1,12 +1,13 @@
 
 import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
-import Forestry_Table_5 from "../../../../components/Reports/Forms/Forestry/Forestry_Table_5";
+import Forestry_Table_5, { forestry_5_col_defs, forestry_5_gen_form_fields } from "../../../../components/Reports/Forms/Forestry/Forestry_Table_5";
 import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../../components/DataMigrator";
 import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
 import { formSaveMany } from "../../../../services/api/formsApi";
 import { parseResError } from "../../../../services/errorHandler";
 import { useErrorLogStore } from "../../../../stores/useErrorLogStore";
+import CustomReport from "../../../../components/CustomReport/CustomReport";
 
 
 const Forestry_5 = () => {
@@ -45,10 +46,19 @@ const Forestry_5 = () => {
             children: <Forestry_Table_5 />,
         },
         {
-            key: '3',
+            key: '2',
             label: 'Migration',
             children: <DataMigrator columns={columns} onSave={handleSave} />,
-        }
+        },
+        {
+            key: '3',
+            label: 'Reports',
+            children: <CustomReport 
+                        formName={FormEnum.FORESTRY_5} 
+                        sector={Sector.FORESTRY} 
+                        fields={forestry_5_gen_form_fields}
+                        colDefs={forestry_5_col_defs} />
+        },
     ]
     return (
         <>

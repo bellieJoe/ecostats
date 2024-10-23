@@ -10,6 +10,274 @@ import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/Ge
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
+export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "total_land_cover_area",
+        label : "Total Land Cover Area", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "title_1",
+        label : "Forest Cover", 
+        type : "title"
+    },
+    {
+        name : "forest_cover.total_forest_cover",
+        label : "Total Forest Cover", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forest_cover.closed_forest",
+        label : "Closed Forest", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forest_cover.open_forest",
+        label : "Open Forest", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forest_cover.mangrove_forest",
+        label : "Mangrove Forest", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "title_2",
+        label : "Other Land Cover", 
+        type : "title"
+    },
+    {
+        name : "other_land_cover.total_other_land_cover",
+        label : "Total Other Land Cover", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.brush_shrubs",
+        label : "Brush/Shrubs", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.grassland",
+        label : "Grassland", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.annual_crop",
+        label : "Annual Crop", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.perennial_crop",
+        label : "Perennial Crop", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.open_barren_land",
+        label : "Open/Barren Land", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.built_up_area",
+        label : "Built-up Area", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.fishpond",
+        label : "Fishpond", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.marshland_swamp",
+        label : "Marshland/ Swamp", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_land_cover.inland_water",
+        label : "Inland Water", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    
+];
+
+export const forestry_2_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Total Land Cover Area", 
+        field: "total_land_cover_area", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Forest Cover", 
+        children : [
+            {
+                headerName : "Total Forest Cover",
+                field: "forest_cover.total_forest_cover", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Closed Forest",
+                field: "forest_cover.closed_forest", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Open Forest",
+                field: "forest_cover.open_forest", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Mangrove Forest",
+                field: "forest_cover.mangrove_forest", 
+                editable : true, 
+                type: "numberColumn",
+            },
+        ]
+    },
+    { 
+        headerName: "Other Land Cover", 
+        children : [
+            {
+                headerName : "Total Other Land Cover",
+                field: "other_land_cover.total_other_land_cover", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Brush/ Shrubs",
+                field: "other_land_cover.brush_shrubs", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Grassland",
+                field: "other_land_cover.grassland", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Annual Crop",
+                field: "other_land_cover.annual_crop", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Perennial Crop",
+                field: "other_land_cover.perennial_crop", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Open/Barren Land",
+                field: "other_land_cover.open_barren_land", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Built-up Area",
+                field: "other_land_cover.built_up_area", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Fishpond",
+                field: "other_land_cover.fishpond", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Marshland/ Swamp",
+                field: "other_land_cover.marshland_swamp", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Inland Water",
+                field: "other_land_cover.inland_water", 
+                editable : true, 
+                type: "numberColumn",
+            }
+        ]
+    },
+]
+
 const Forestry_Table_2  = () => {
 
     const [page, setPage] = useState(1);
@@ -25,119 +293,8 @@ const Forestry_Table_2  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Total Land Cover Area", 
-            field: "total_land_cover_area", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Forest Cover", 
-            children : [
-                {
-                    headerName : "Total Forest Cover",
-                    field: "forest_cover.total_forest_cover", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Closed Forest",
-                    field: "forest_cover.closed_forest", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Open Forest",
-                    field: "forest_cover.open_forest", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Mangrove Forest",
-                    field: "forest_cover.mangrove_forest", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-            ]
-        },
-        { 
-            headerName: "Other Land Cover", 
-            children : [
-                {
-                    headerName : "Total Other Land Cover",
-                    field: "other_land_cover.total_other_land_cover", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Brush/ Shrubs",
-                    field: "other_land_cover.brush_shrubs", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Grassland",
-                    field: "other_land_cover.grassland", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Annual Crop",
-                    field: "other_land_cover.annual_crop", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Perennial Crop",
-                    field: "other_land_cover.perennial_crop", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Open/Barren Land",
-                    field: "other_land_cover.open_barren_land", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Built-up Area",
-                    field: "other_land_cover.built_up_area", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Fishpond",
-                    field: "other_land_cover.fishpond", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Marshland/ Swamp",
-                    field: "other_land_cover.marshland_swamp", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Inland Water",
-                    field: "other_land_cover.inland_water", 
-                    editable : true, 
-                    type: "numberColumn",
-                }
-            ]
-        },
         
+        ...forestry_2_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -150,159 +307,6 @@ const Forestry_Table_2  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "total_land_cover_area",
-            label : "Total Land Cover Area", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "title_1",
-            label : "Forest Cover", 
-            type : "title"
-        },
-        {
-            name : "forest_cover.total_forest_cover",
-            label : "Total Forest Cover", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forest_cover.closed_forest",
-            label : "Closed Forest", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forest_cover.open_forest",
-            label : "Open Forest", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forest_cover.mangrove_forest",
-            label : "Mangrove Forest", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "title_2",
-            label : "Other Land Cover", 
-            type : "title"
-        },
-        {
-            name : "other_land_cover.total_other_land_cover",
-            label : "Total Other Land Cover", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.brush_shrubs",
-            label : "Brush/Shrubs", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.grassland",
-            label : "Grassland", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.annual_crop",
-            label : "Annual Crop", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.perennial_crop",
-            label : "Perennial Crop", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.open_barren_land",
-            label : "Open/Barren Land", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.built_up_area",
-            label : "Built-up Area", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.fishpond",
-            label : "Fishpond", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.marshland_swamp",
-            label : "Marshland/ Swamp", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_land_cover.inland_water",
-            label : "Inland Water", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -409,7 +413,7 @@ const Forestry_Table_2  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={forestry_2_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

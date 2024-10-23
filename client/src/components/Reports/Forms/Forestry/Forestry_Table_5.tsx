@@ -12,6 +12,142 @@ import { generateYearOptions } from "../../../../services/helper";
 import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 
+export const forestry_5_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "name_of_watershed",
+        label : "Name of Watershed", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "previous_name_of_watershed",
+        label : "Previous Name of Watershed", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "area_ha",
+        label : "Area (ha)", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "classification",
+        label : "Classification", 
+        input : (
+            <Select options={[
+                {
+                    value : "Small sized watershed",
+                    label : "Small sized watershed"
+                },
+                {
+                    value : "Medium sized watershed",
+                    label : "Medium sized watershed"
+                },
+                {
+                    value : "Large sized watershed",
+                    label : "Large sized watershed"
+                },
+                {
+                    value : "Extremely Large sized watershed",
+                    label : "Extremely Large sized watershed"
+                },
+            ]}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipalities",
+        label : "Municipalities", 
+        input : (
+            <Select virtual mode="multiple" options={cities.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+
+    
+];
+
+export const forestry_5_col_defs  = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Name of Watershed", 
+        field: "name_of_watershed", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Previous Name of Watershed", 
+        field: "previous_name_of_watershed", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Area (in hectares)", 
+        field: "area_ha", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Classification (small, medium, large)", 
+        field: "classification", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipalities", 
+        field: "municipalities", 
+        editable : false, 
+        // type: "textColumn",
+    },
+];
+
 const Forestry_Table_5  = () => {
 
     const [page, setPage] = useState(1);
@@ -27,48 +163,7 @@ const Forestry_Table_5  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Name of Watershed", 
-            field: "name_of_watershed", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Previous Name of Watershed", 
-            field: "previous_name_of_watershed", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Area (in hectares)", 
-            field: "area_ha", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Classification (small, medium, large)", 
-            field: "classification", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipalities", 
-            field: "municipalities", 
-            editable : false, 
-            // type: "textColumn",
-        },
+        ...forestry_5_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -81,97 +176,6 @@ const Forestry_Table_5  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "name_of_watershed",
-            label : "Name of Watershed", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "previous_name_of_watershed",
-            label : "Previous Name of Watershed", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "area_ha",
-            label : "Area (ha)", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "classification",
-            label : "Classification", 
-            input : (
-                <Select options={[
-                    {
-                        value : "Small sized watershed",
-                        label : "Small sized watershed"
-                    },
-                    {
-                        value : "Medium sized watershed",
-                        label : "Medium sized watershed"
-                    },
-                    {
-                        value : "Large sized watershed",
-                        label : "Large sized watershed"
-                    },
-                    {
-                        value : "Extremely Large sized watershed",
-                        label : "Extremely Large sized watershed"
-                    },
-                ]}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipalities",
-            label : "Municipalities", 
-            input : (
-                <Select virtual mode="multiple" options={cities.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-
-        
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -281,12 +285,11 @@ const Forestry_Table_5  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={forestry_5_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>
     )
 }
-
 
 export default Forestry_Table_5;

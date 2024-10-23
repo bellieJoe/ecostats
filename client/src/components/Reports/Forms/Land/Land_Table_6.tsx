@@ -12,6 +12,141 @@ import { generateYearOptions } from "../../../../services/helper";
 import CellDateEditor from "../../../CellDateEditor";
 import { ValueFormatterParams } from "ag-grid-community";
 
+export const land_6_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "name_of_patentee",
+        label : "Name of Patentee", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name : "area_in_ha",
+        label : "Area (ha)", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "location_title",
+        label : "Location",
+        type : "title"
+    },
+    {
+        name : "location.barangay",
+        label : "Barangay", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name : "location.municipality",
+        label : "Municipality", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name : "date_transmitted_to_rod",
+        label : "Date Transmitted to RoD", 
+        input : <DatePicker type="number" className="w-full" />,
+        type : "input"
+    },
+    {
+        name : "government_sites_housing_project_endorsement",
+        label : "Government Sites/Housing Project endorsed to Central Office for Issuance of Proclamation/Special Patent",
+        type : "title"
+    },
+    {
+        name : "government_sites_housing_project_endorsement.school_site",
+        label : "School Site", 
+        // input : <Checkbox />,
+        type : "checkbox"
+    },
+    {
+        name : "government_sites_housing_project_endorsement.lgu_government_site",
+        label : "Government Site", 
+        // input : <Checkbox />,
+        type : "checkbox"
+    },
+];
+
+export const land_6_col_defs = [
+    { 
+        headerName: "CY (Calendar Year)", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Name of Patentee", 
+        field: "name_of_patentee", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Area (ha)", 
+        field: "area_in_ha", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Location", 
+        children : [
+            { 
+                headerName: "Barangay", 
+                field: "location.barangay", 
+                editable : true, 
+                type: "textColumn",
+            },
+            { 
+                headerName: "Municipality", 
+                field: "location.municipality", 
+                editable : true, 
+                type: "textColumn",
+            },
+        ]
+    },
+    { 
+        headerName: "Date Transmitted to RoD", 
+        field: "date_transmitted_to_rod", 
+        editable : true, 
+        valueFormatter: (params) => {
+            const date = new Date(params.value);
+            return date.toLocaleDateString(); // Display in a user-friendly format
+        },
+        cellEditor: "agDateCellEditor",
+        valueParser: (params) => {
+            console.log(params)
+            return new Date(params.newValue).toISOString(); // Save in ISO format
+        },
+    },
+    { 
+        headerName: "Government Sites/Housing Project endorsed to Central Office for Issuance of Proclamation/Special Patent", 
+        children : [
+            { 
+                headerName: "School Site", 
+                field: "government_sites_housing_project_endorsement.school_site", 
+                editable : true, 
+                type: "textColumn",
+            },
+            { 
+                headerName: "LGU Government Site", 
+                field: "government_sites_housing_project_endorsement.lgu_government_site", 
+                editable : true, 
+                type: "textColumn",
+            },
+        ]
+    },
+]
+
 const Land_Table_6  = () => {
 
     const [page, setPage] = useState(1);
@@ -27,72 +162,7 @@ const Land_Table_6  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY (Calendar Year)", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Name of Patentee", 
-            field: "name_of_patentee", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Area (ha)", 
-            field: "area_in_ha", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Location", 
-            children : [
-                { 
-                    headerName: "Barangay", 
-                    field: "location.barangay", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-                { 
-                    headerName: "Municipality", 
-                    field: "location.municipality", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-            ]
-        },
-        { 
-            headerName: "Date Transmitted to RoD", 
-            field: "date_transmitted_to_rod", 
-            editable : true, 
-            valueFormatter: (params) => {
-                const date = new Date(params.value);
-                return date.toLocaleDateString(); // Display in a user-friendly format
-            },
-            cellEditor: "agDateCellEditor",
-            valueParser: (params) => {
-                console.log(params)
-                return new Date(params.newValue).toISOString(); // Save in ISO format
-            },
-        },
-        { 
-            headerName: "Government Sites/Housing Project endorsed to Central Office for Issuance of Proclamation/Special Patent", 
-            children : [
-                { 
-                    headerName: "School Site", 
-                    field: "government_sites_housing_project_endorsement.school_site", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-                { 
-                    headerName: "LGU Government Site", 
-                    field: "government_sites_housing_project_endorsement.lgu_government_site", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-            ]
-        },
+        ...land_6_col_defs,
         {
             headerName: "Actions",
             cellRenderer: (params) => {
@@ -105,71 +175,7 @@ const Land_Table_6  = () => {
         },
     ]);
 
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "name_of_patentee",
-            label : "Name of Patentee", 
-            input : <Input type="text" />,
-            type : "input"
-        },
-        {
-            name : "area_in_ha",
-            label : "Area (ha)", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "location_title",
-            label : "Location",
-            type : "title"
-        },
-        {
-            name : "location.barangay",
-            label : "Barangay", 
-            input : <Input type="text" />,
-            type : "input"
-        },
-        {
-            name : "location.municipality",
-            label : "Municipality", 
-            input : <Input type="text" />,
-            type : "input"
-        },
-        {
-            name : "date_transmitted_to_rod",
-            label : "Date Transmitted to RoD", 
-            input : <DatePicker type="number" className="w-full" />,
-            type : "input"
-        },
-        {
-            name : "government_sites_housing_project_endorsement",
-            label : "Government Sites/Housing Project endorsed to Central Office for Issuance of Proclamation/Special Patent",
-            type : "title"
-        },
-        {
-            name : "government_sites_housing_project_endorsement.school_site",
-            label : "School Site", 
-            // input : <Checkbox />,
-            type : "checkbox"
-        },
-        {
-            name : "government_sites_housing_project_endorsement.lgu_government_site",
-            label : "Government Site", 
-            // input : <Checkbox />,
-            type : "checkbox"
-        },
-    ];
+    
 
     const handleOnRowValueChanged = (d) => {
         formUpdate(d.data, FormEnum.LAND_6, Sector.LAND)
@@ -276,7 +282,7 @@ const Land_Table_6  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={land_6_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

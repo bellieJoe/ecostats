@@ -5,7 +5,7 @@ import { GenericFormFieldV3 } from "../../types/forms/GenericFormTypes";
 import { Button, Drawer, Flex, message, Popconfirm, Space } from "antd";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { useEffect, useRef, useState } from "react";
-import { formGetByQuery, getRequestReport, requestReport } from "../../services/api/formsApi";
+import { delRequestReport, formGetByQuery, getRequestReport, requestReport } from "../../services/api/formsApi";
 import { parseResError } from "../../services/errorHandler";
 import CustomReportGenerator from "./GenericFormReportFilter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,6 +13,7 @@ import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { AgGridReact } from "ag-grid-react";
 import { usePreviewReportStore } from "../../stores/useReportStore";
 import { useReactToPrint } from "react-to-print"
+import { wrap } from "module";
 
 interface RequestReportFormProps {
     formName : FormEnum
@@ -137,7 +138,8 @@ const PreviewPrint = () => {
                             autoHeight : true,
                             wrapText : true,
                             editable : false,
-                            wrapHeaderText : true
+                            wrapHeaderText : true,
+                            autoHeaderHeight: true
                         }}
                         onGridReady={params => {
                             console.log(params);
@@ -165,11 +167,24 @@ const PreviewPrint = () => {
 
 const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps ) => {
 
+    const [messageApi, contextHandler] = message.useMessage();
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(false);
     const [rowData, setRowData] = useState([]);
     const authStore = useAuthStore();
     const previewReportStore = usePreviewReportStore();
+
+    const handleDelete = (id:string) => {
+        delRequestReport(id)
+        .then(res => {
+            setRefresh(!refresh);
+            messageApi.success("Report Successfully Deleted")
+        })
+        .catch(err => {
+            messageApi.error(parseResError(err).msg)
+        })
+        .finally()
+    }
 
     const columnDefs : any = [
         {
@@ -196,13 +211,24 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
             }
         },
         {
+            headerName : "Selected Fields",
+            field : "fields",
+            wrapText : true,
+            autoHeight : true,
+            valueFormatter : (params) => {
+                let val = ""
+                params.data.fields.filter(e => e.included).forEach(e => {val += e.name + ", "});
+                return val;
+            }
+        },
+        {
             headerName: "Actions",
             headerClass: "justify-center",
             cellRenderer: (params) => {
                 return (
                     <>
                         <Space>
-                            <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this request?" >
+                            <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this request?" onConfirm={() => handleDelete(params.data._id)}>
                                 <Button size="small" color="danger" variant="filled">Delete</Button>
                             </Popconfirm>
                             <Button size="small" color="primary" variant="filled" onClick={() => previewReportStore.setStore(colDefs, formName, sector, params.data)}>Preview & Print</Button>
@@ -214,7 +240,6 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
     ];
 
     
-
     useEffect(() => {
         (async () => {
             setLoading(true)
@@ -235,15 +260,24 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
 
     return (
         <>
+            { contextHandler }
+            <RequestReportForm fields={fields} formName={formName} /><br /><br />
+
             <Title level={4} className="mb-2">
-                Requests  
-                <Button onClick={() => setRefresh(!refresh)} size="small" icon={<FontAwesomeIcon icon={faRefresh} />}></Button>
+                Custom Reports  
+                <Button className="ml-2" variant="text" color="primary" onClick={() => setRefresh(!refresh)} size="small" icon={<FontAwesomeIcon icon={faRefresh} />}></Button>
             </Title>
             
-            <RequestReportForm fields={fields} formName={formName} /><br /><br />
 
             <div className="ag-theme-alpine" style={{ width: '100%', height: '500px' }}>
                 <AgGridReact
+                    autoSizeStrategy={{
+                        type: "fitGridWidth"
+                    }}
+                    defaultColDef={{
+                        wrapText : true,
+                        filter : "agTextFilterColumn"
+                    }}
                     pagination={true}
                     loading={loading}
                     columnDefs={columnDefs}

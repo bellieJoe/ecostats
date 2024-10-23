@@ -10,6 +10,101 @@ import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/Ge
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
+export const land_5_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name : "no_of_transmitted_to_rod",
+        label : "No of Transmitted to RoD", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "area_ha",
+        label : "Area (ha)", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "male_beneficiaries",
+        label : "Male Beneficiaries", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "female_beneficiaries",
+        label : "Female Beneficiaries", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+];
+
+export const land_5_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "No of Transmitted to RoD", 
+        field: "no_of_transmitted_to_rod", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Area (ha)", 
+        field: "area_ha", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Number of Beneficiaries", 
+        children : [
+            { 
+                headerName: "Total Beneficiaries", 
+                field: "total_beneficiaries", 
+                editable : false, 
+                type: "numberColumn",
+            },
+            { 
+                headerName: "Female", 
+                field: "female_beneficiaries", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            { 
+                headerName: "Male", 
+                field: "male_beneficiaries", 
+                editable : true, 
+                type: "numberColumn",
+            },
+        ]
+    },
+];
+
+
 const Land_Table_5  = () => {
 
     const [page, setPage] = useState(1);
@@ -25,54 +120,7 @@ const Land_Table_5  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "No of Transmitted to RoD", 
-            field: "no_of_transmitted_to_rod", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Area (ha)", 
-            field: "area_ha", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Number of Beneficiaries", 
-            children : [
-                { 
-                    headerName: "Total Beneficiaries", 
-                    field: "total_beneficiaries", 
-                    editable : false, 
-                    type: "numberColumn",
-                },
-                { 
-                    headerName: "Female", 
-                    field: "female_beneficiaries", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                { 
-                    headerName: "Male", 
-                    field: "male_beneficiaries", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-            ]
-        },
-        
+        ...land_5_col_defs,
         {
             headerName: "Actions",
             cellRenderer: (params) => {
@@ -84,50 +132,6 @@ const Land_Table_5  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : <Input type="text" />,
-            type : "input"
-        },
-        {
-            name : "no_of_transmitted_to_rod",
-            label : "No of Transmitted to RoD", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "area_ha",
-            label : "Area (ha)", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "male_beneficiaries",
-            label : "Male Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "female_beneficiaries",
-            label : "Female Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -234,7 +238,7 @@ const Land_Table_5  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={land_5_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

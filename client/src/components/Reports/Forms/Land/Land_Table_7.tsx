@@ -10,6 +10,106 @@ import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/Ge
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
+export const land_7_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name : "no_of_transmitted_to_rod",
+        label : "No of Transmitted to RoD", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "title_1",
+        label : "Foreshore Lease Agreements Issued", 
+        type : "title"
+    },
+    {
+        name : "no_of_lots",
+        label : "No. of Lots", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "total_land_area_ha",
+        label : "Total Land Area (ha)", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "total_forecasted_annual_revenue",
+        label : "Total Forecasted Annual Revenue (Php)", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    
+];
+
+export const land_7_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Foreshore Lease Agreements Issued", 
+        children : [
+            { 
+                headerName: "No. of Lots", 
+                field: "no_of_lots", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            { 
+                headerName: "Total Land Area (ha)", 
+                field: "total_land_area_ha", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            { 
+                headerName: "Total Forecasted Annual Revenue (Php)", 
+                field: "total_forecasted_annual_revenue", 
+                editable : true, 
+                type: "numberColumn",
+            },
+        ]
+    },
+];
+
 const Land_Table_7  = () => {
 
     const [page, setPage] = useState(1);
@@ -25,47 +125,7 @@ const Land_Table_7  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Foreshore Lease Agreements Issued", 
-            children : [
-                { 
-                    headerName: "No. of Lots", 
-                    field: "no_of_lots", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                { 
-                    headerName: "Total Land Area (ha)", 
-                    field: "total_land_area_ha", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                { 
-                    headerName: "Total Forecasted Annual Revenue (Php)", 
-                    field: "total_forecasted_annual_revenue", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-            ]
-        },
+        ...land_7_col_defs,
         
         {
             headerName: "Actions",
@@ -79,61 +139,7 @@ const Land_Table_7  = () => {
         }
     ]);
 
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : <Input type="text" />,
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : <Input type="text" />,
-            type : "input"
-        },
-        {
-            name : "no_of_transmitted_to_rod",
-            label : "No of Transmitted to RoD", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "title_1",
-            label : "Foreshore Lease Agreements Issued", 
-            type : "title"
-        },
-        {
-            name : "no_of_lots",
-            label : "No. of Lots", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "total_land_area_ha",
-            label : "Total Land Area (ha)", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "total_forecasted_annual_revenue",
-            label : "Total Forecasted Annual Revenue (Php)", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        
-    ];
+    
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -240,7 +246,7 @@ const Land_Table_7  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={land_7_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

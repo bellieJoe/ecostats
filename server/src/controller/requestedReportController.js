@@ -57,3 +57,23 @@ export const getByQuery = async (req, res) => {
         ); 
     }
 }
+
+export const deleteReport = async (req, res) => {
+    try {
+        const id = req.params.id;
+
+        await RequestedReportModel.deleteOne({_id : id});
+
+        return res.json();
+
+    } catch (error) {
+        console.log(error)
+        await session.abortTransaction();
+        res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}

@@ -13,6 +13,150 @@ import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 import TextArea from "antd/es/input/TextArea";
 
+export const biodiversity_6_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={cities.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "date_established",
+        label : "Date Established", 
+        input : (
+            <Select 
+            showSearch 
+            allowClear
+            options={generateYearOptions(1800, new Date().getFullYear())}
+            />
+        ),
+        type : "input",
+        required : false
+    },
+    {
+        name : "date_rehabilitated",
+        label : "Date Rehabilitated", 
+        input : (
+            <Select 
+            showSearch 
+            allowClear
+            options={generateYearOptions(1800, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "rehabilitated_area",
+        label : "Rehabilitated Area", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "species_identified",
+        label : "Species Identified", 
+        input : (
+            <TextArea  />
+        ),
+        type : "input"
+    },
+    {
+        name : "fund_source",
+        label : "Fund Source", 
+        input : (
+            <Input type="string" />
+        ),
+        type : "input"
+    },
+];
+
+export const biodiversity_6_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Rehabilitated Area", 
+        field: "rehabilitated_area", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Date Established", 
+        field: "date_established", 
+        editable : true, 
+        type : "numberColumn",
+        valueFormatter: (params) => {
+            return params.value ? params.value : "Naturally Grown"
+        },
+    },
+    { 
+        headerName: "Date Rehabilated", 
+        field: "date_rehabilitated", 
+        editable : true, 
+        type : "numberColumn"
+    },
+    { 
+        headerName: "Species Identified", 
+        field: "species_identified", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Fund Source", 
+        field: "fund_source", 
+        editable : true, 
+        type: "textColumn",
+    },
+
+];
+
 const Biodiversity_Table_6  = () => {
 
     const [page, setPage] = useState(1);
@@ -28,57 +172,7 @@ const Biodiversity_Table_6  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Rehabilitated Area", 
-            field: "rehabilitated_area", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Date Established", 
-            field: "date_established", 
-            editable : true, 
-            type : "numberColumn",
-            valueFormatter: (params) => {
-                return params.value ? params.value : "Naturally Grown"
-            },
-        },
-        { 
-            headerName: "Date Rehabilated", 
-            field: "date_rehabilitated", 
-            editable : true, 
-            type : "numberColumn"
-        },
-        { 
-            headerName: "Species Identified", 
-            field: "species_identified", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Fund Source", 
-            field: "fund_source", 
-            editable : true, 
-            type: "textColumn",
-        },
+        ...biodiversity_6_col_defs,
         {
             headerName: "Actions",
             pinned:"right",

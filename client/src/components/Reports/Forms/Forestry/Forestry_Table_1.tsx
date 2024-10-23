@@ -10,6 +10,207 @@ import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/Ge
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
+export const forestry_1_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "total_land_area",
+        label : "Total Land Area", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "certified_a_n_d",
+        label : "Certified A&D", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "title_2",
+        label : "Forestland", 
+        type : "title"
+    },
+    {
+        name : "forestland.total_forestland",
+        label : "Total Forestland", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forestland.unclassified_forestland_ha",
+        label : "Unclassified Forestland", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forestland.classified_forestland.total_classified_forestland",
+        label : "Total Classified Forest Land", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forestland.classified_forestland.established_forest_reserves",
+        label : "Established Forest Reserves", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forestland.classified_forestland.established_timberland",
+        label : "Established Timberland", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forestland.classified_forestland.national_parks_and_grbs_wa",
+        label : "National Parks and GRBS/ WA", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forestland.classified_forestland.military_and_naval_reservations",
+        label : "Military and Naval Reservations", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forestland.classified_forestland.civil_registration",
+        label : "Civil Registration", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "forestland.classified_forestland.fishpond",
+        label : "Fishpond", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+
+];
+
+export const forestry_1_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Total Land Area", 
+        field: "total_land_area", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Certified A&D", 
+        field: "certified_a_n_d", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    {
+        headerName : "ForestLand",
+        children : [
+            { 
+                headerName: "Total Forestland", 
+                field: "forestland.total_forestland", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            { 
+                headerName: "Unclassified Forestland", 
+                field: "forestland.unclassified_forestland_ha", 
+                editable : true, 
+                type: "numberColumn",
+            },
+            {
+                headerName : "Classified ForestLand",
+                children : [
+                    { 
+                        headerName: "Total Classified Forestland", 
+                        field: "forestland.classified_forestland.total_classified_forestland", 
+                        editable : true, 
+                        type: "numberColumn",
+                    }, 
+                    { 
+                        headerName: "Established Forest Reserves", 
+                        field: "forestland.classified_forestland.established_forest_reserves", 
+                        editable : true, 
+                        type: "numberColumn",
+                    }, 
+                    { 
+                        headerName: "National Parks and GRBS/ WA", 
+                        field: "forestland.classified_forestland.national_parks_and_grbs_wa", 
+                        editable : true, 
+                        type: "numberColumn",
+                    }, 
+                    { 
+                        headerName: "Military and Naval Reservations", 
+                        field: "forestland.classified_forestland.military_and_naval_reservations", 
+                        editable : true, 
+                        type: "numberColumn",
+                    }, 
+                    { 
+                        headerName: "Civil Registration", 
+                        field: "forestland.classified_forestland.civil_registration", 
+                        editable : true, 
+                        type: "numberColumn",
+                    }, 
+                    { 
+                        headerName: "Fishpond", 
+                        field: "forestland.classified_forestland.fishpond", 
+                        editable : true, 
+                        type: "numberColumn",
+                    }, 
+                ]
+            }
+        ]
+    },
+]
+
 const Forestry_Table_1  = () => {
 
     const [page, setPage] = useState(1);
@@ -25,88 +226,7 @@ const Forestry_Table_1  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Total Land Area", 
-            field: "total_land_area", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Certified A&D", 
-            field: "certified_a_n_d", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        {
-            headerName : "ForestLand",
-            children : [
-                { 
-                    headerName: "Total Forestland", 
-                    field: "forestland.total_forestland", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                { 
-                    headerName: "Unclassified Forestland", 
-                    field: "forestland.unclassified_forestland_ha", 
-                    editable : true, 
-                    type: "numberColumn",
-                },
-                {
-                    headerName : "Classified ForestLand",
-                    children : [
-                        { 
-                            headerName: "Total Classified Forestland", 
-                            field: "forestland.classified_forestland.total_classified_forestland", 
-                            editable : true, 
-                            type: "numberColumn",
-                        }, 
-                        { 
-                            headerName: "Established Forest Reserves", 
-                            field: "forestland.classified_forestland.established_forest_reserves", 
-                            editable : true, 
-                            type: "numberColumn",
-                        }, 
-                        { 
-                            headerName: "National Parks and GRBS/ WA", 
-                            field: "forestland.classified_forestland.national_parks_and_grbs_wa", 
-                            editable : true, 
-                            type: "numberColumn",
-                        }, 
-                        { 
-                            headerName: "Military and Naval Reservations", 
-                            field: "forestland.classified_forestland.military_and_naval_reservations", 
-                            editable : true, 
-                            type: "numberColumn",
-                        }, 
-                        { 
-                            headerName: "Civil Registration", 
-                            field: "forestland.classified_forestland.civil_registration", 
-                            editable : true, 
-                            type: "numberColumn",
-                        }, 
-                        { 
-                            headerName: "Fishpond", 
-                            field: "forestland.classified_forestland.fishpond", 
-                            editable : true, 
-                            type: "numberColumn",
-                        }, 
-                    ]
-                }
-            ]
-        },
+        ...forestry_1_col_defs,
         {
             headerName: "Actions",
             cellRenderer: (params) => {
@@ -118,122 +238,6 @@ const Forestry_Table_1  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "total_land_area",
-            label : "Total Land Area", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "certified_a_n_d",
-            label : "Certified A&D", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "title_2",
-            label : "Forestland", 
-            type : "title"
-        },
-        {
-            name : "forestland.total_forestland",
-            label : "Total Forestland", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forestland.unclassified_forestland_ha",
-            label : "Unclassified Forestland", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forestland.classified_forestland.total_classified_forestland",
-            label : "Total Classified Forest Land", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forestland.classified_forestland.established_forest_reserves",
-            label : "Established Forest Reserves", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forestland.classified_forestland.established_timberland",
-            label : "Established Timberland", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forestland.classified_forestland.national_parks_and_grbs_wa",
-            label : "National Parks and GRBS/ WA", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forestland.classified_forestland.military_and_naval_reservations",
-            label : "Military and Naval Reservations", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forestland.classified_forestland.civil_registration",
-            label : "Civil Registration", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "forestland.classified_forestland.fishpond",
-            label : "Fishpond", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -340,7 +344,7 @@ const Forestry_Table_1  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={forestry_1_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

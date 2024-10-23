@@ -14,6 +14,186 @@ import province from "philippines/provinces.json"
 import {barangays, municipalities} from "psgc";
 import _ from 'lodash';
 
+export const biodiversity_9_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={_.uniqBy(cities, 'name').map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "barangay",
+        label : "Barangay", 
+        input : (
+            <Select showSearch virtual options={_.uniqBy(barangays.all(), 'name').map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "name_of_cave",
+        label : "Name of Cave", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "other_cave_name",
+        label : "Other Cave Name", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input",
+        required : false
+    },
+    {
+        name : "classification_per_dmc",
+        label : "Classification per DMC", 
+        input : (
+            <Select options={[
+                {
+                    value : "I",
+                    label: "I"
+                },
+                {
+                    value : "II",
+                    label: "II"
+                },
+                {
+                    value : "III",
+                    label: "III"
+                },
+            ]} />
+        ),
+        type : "input"
+    },
+    {
+        name : "dmc_no",
+        label : "DMC No.", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "presence_of_management_plan",
+        label : "Presence of Management Plan", 
+        input : (
+            <Select options={[
+                {
+                    value : "Yes",
+                    label : "Yes"
+                },
+                {
+                    value : "No",
+                    label : "No"
+                },
+            ]} />
+        ),
+        type : "input"
+    },
+];
+
+export const biodiversity_9_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Barangay", 
+        field: "barangay", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Name of Cave", 
+        field: "name_of_cave", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Other Cave Name", 
+        field: "other_cave_name", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Classification", 
+        field: "classification_per_dmc", 
+        editable : true, 
+        cellEditor: "agSelectCellEditor",
+        cellEditorParams: {
+            values: ["I", "II", "III"],
+        }
+    },
+
+    { 
+        headerName: "DMC No,", 
+        field: "dmc_no", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Presence of Management Plan", 
+        field: "presence_of_management_plan", 
+        editable : true, 
+        cellEditor: "agSelectCellEditor",
+        cellEditorParams: {
+            values: ["Yes", "No"],
+        }
+    },
+];
+
 const Biodiversity_Table_9  = () => {
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
@@ -28,67 +208,7 @@ const Biodiversity_Table_9  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Barangay", 
-            field: "barangay", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Name of Cave", 
-            field: "name_of_cave", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Other Cave Name", 
-            field: "other_cave_name", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Classification", 
-            field: "classification_per_dmc", 
-            editable : true, 
-            cellEditor: "agSelectCellEditor",
-            cellEditorParams: {
-                values: ["I", "II", "III"],
-            }
-        },
-
-        { 
-            headerName: "DMC No,", 
-            field: "dmc_no", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Presence of Management Plan", 
-            field: "presence_of_management_plan", 
-            editable : true, 
-            cellEditor: "agSelectCellEditor",
-            cellEditorParams: {
-                values: ["Yes", "No"],
-            }
-        },
+        ...biodiversity_9_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -101,122 +221,6 @@ const Biodiversity_Table_9  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Select showSearch virtual options={_.uniqBy(cities, 'name').map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "barangay",
-            label : "Barangay", 
-            input : (
-                <Select showSearch virtual options={_.uniqBy(barangays.all(), 'name').map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "name_of_cave",
-            label : "Name of Cave", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "other_cave_name",
-            label : "Other Cave Name", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input",
-            required : false
-        },
-        {
-            name : "classification_per_dmc",
-            label : "Classification per DMC", 
-            input : (
-                <Select options={[
-                    {
-                        value : "I",
-                        label: "I"
-                    },
-                    {
-                        value : "II",
-                        label: "II"
-                    },
-                    {
-                        value : "III",
-                        label: "III"
-                    },
-                ]} />
-            ),
-            type : "input"
-        },
-        {
-            name : "dmc_no",
-            label : "DMC No.", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "presence_of_management_plan",
-            label : "Presence of Management Plan", 
-            input : (
-                <Select options={[
-                    {
-                        value : "Yes",
-                        label : "Yes"
-                    },
-                    {
-                        value : "No",
-                        label : "No"
-                    },
-                ]} />
-            ),
-            type : "input"
-        },
-    ];
 
     const handleOnRowValueChanged = (d) => {
         console.log(d)
@@ -325,7 +329,7 @@ const Biodiversity_Table_9  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={biodiversity_9_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

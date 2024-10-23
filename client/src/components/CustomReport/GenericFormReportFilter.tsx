@@ -142,7 +142,7 @@ const CustomReportGenerator: React.FC<{
           rules={[{ validator: validateSelection }]} // Custom validation rule
         >
           <Row>
-            {fields.map(({ name, label }) => (
+            {fields.filter(e => e.type != 'title' && e.type != 'divider').map(({ name, label }) => (
               <Col span={24} key={name}>
                 <Form.Item name={name} valuePropName="checked" noStyle>
                   <Checkbox>{label}</Checkbox>

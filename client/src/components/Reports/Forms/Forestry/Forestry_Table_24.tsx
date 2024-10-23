@@ -10,6 +10,100 @@ import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/Ge
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
+export const forestry_24_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "number_of_chainsaw_registered",
+        label : "No. of Chainsaw Registered", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "area_of_operation",
+        label : "Area of Operation", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "number_of_chainsaw_operator",
+        label : "Number of Chainsaw Operator", 
+        input : (
+            <Input type="number"  />
+        ),
+        type : "input"
+    },
+    
+];
+
+export const forestry_24_col_defs  = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Number of Chainsaw Registered", 
+        field: "number_of_chainsaw_registered", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "area_of_operation", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Number of Chainsaw Operator", 
+        field: "number_of_chainsaw_operator", 
+        editable : true, 
+        type: "numberColumn",
+    },
+];
+
 const Forestry_Table_24  = () => {
 
     const [page, setPage] = useState(1);
@@ -25,42 +119,7 @@ const Forestry_Table_24  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Number of Chainsaw Registered", 
-            field: "number_of_chainsaw_registered", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "area_of_operation", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Number of Chainsaw Operator", 
-            field: "number_of_chainsaw_operator", 
-            editable : true, 
-            type: "numberColumn",
-        },
+        ...forestry_24_col_defs,
         {
             headerName: "Actions",
             cellRenderer: (params) => {
@@ -72,61 +131,6 @@ const Forestry_Table_24  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "number_of_chainsaw_registered",
-            label : "No. of Chainsaw Registered", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "area_of_operation",
-            label : "Area of Operation", 
-            input : (
-                <Input type="text"  />
-            ),
-            type : "input"
-        },
-        {
-            name : "number_of_chainsaw_operator",
-            label : "Number of Chainsaw Operator", 
-            input : (
-                <Input type="number"  />
-            ),
-            type : "input"
-        },
-        
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -233,7 +237,7 @@ const Forestry_Table_24  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={forestry_24_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

@@ -55,3 +55,8 @@ export const getRequestReport = async (query : any) : Promise<any> => {
     });
     return res;
 }
+
+export const delRequestReport = async (id : string) : Promise<any> => {
+    const res = await axios.delete(`${apiUrl}/requested-reports/delete/${id}`);
+    return res;
+}

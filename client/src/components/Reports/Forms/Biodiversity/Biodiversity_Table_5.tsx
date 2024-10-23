@@ -13,6 +13,119 @@ import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 import TextArea from "antd/es/input/TextArea";
 
+
+export const biodiversity_5_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={cities.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "date_of_assessment",
+        label : "Date of Assessment", 
+        input : (
+            <DatePicker />
+        ),
+        type : "input"
+    },
+    {
+        name : "assessed_area",
+        label : "Assessed Area", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "species_identified",
+        label : "Species Identified", 
+        input : (
+            <TextArea  />
+        ),
+        type : "input"
+    }
+];
+
+export const biodiversity_5_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Assessed Area", 
+        field: "assessed_area", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Date of Assessment", 
+        field: "date_of_assessment", 
+        editable : true, 
+        valueFormatter: (params) => {
+            const date = new Date(params.value);
+            return date.toLocaleDateString(); // Display in a user-friendly format
+        },
+        cellEditor: "agDateCellEditor",
+        valueParser: (params) => {
+            console.log(params)
+            return new Date(params.newValue).toISOString(); // Save in ISO format
+        },
+    },
+    
+    { 
+        headerName: "Species Identified", 
+        field: "species_identified", 
+        editable : true, 
+        type: "textColumn",
+    },
+];
+
 const Biodiversity_Table_5  = () => {
 
     const [page, setPage] = useState(1);
@@ -28,51 +141,7 @@ const Biodiversity_Table_5  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Assessed Area", 
-            field: "assessed_area", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Date of Assessment", 
-            field: "date_of_assessment", 
-            editable : true, 
-            valueFormatter: (params) => {
-                const date = new Date(params.value);
-                return date.toLocaleDateString(); // Display in a user-friendly format
-            },
-            cellEditor: "agDateCellEditor",
-            valueParser: (params) => {
-                console.log(params)
-                return new Date(params.newValue).toISOString(); // Save in ISO format
-            },
-        },
-        
-        { 
-            headerName: "Species Identified", 
-            field: "species_identified", 
-            editable : true, 
-            type: "textColumn",
-        },
+        ...biodiversity_5_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -85,70 +154,6 @@ const Biodiversity_Table_5  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Select showSearch virtual options={cities.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "date_of_assessment",
-            label : "Date of Assessment", 
-            input : (
-                <DatePicker />
-            ),
-            type : "input"
-        },
-        {
-            name : "assessed_area",
-            label : "Assessed Area", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "species_identified",
-            label : "Species Identified", 
-            input : (
-                <TextArea  />
-            ),
-            type : "input"
-        }
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -258,7 +263,7 @@ const Biodiversity_Table_5  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={biodiversity_5_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

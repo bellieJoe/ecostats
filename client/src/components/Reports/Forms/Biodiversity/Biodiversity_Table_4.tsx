@@ -12,6 +12,153 @@ import { generateYearOptions } from "../../../../services/helper";
 import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 
+export const biodiversity_4_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Select showSearch virtual options={province.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={cities.map(val => {
+                return {
+                    value: val.name,
+                    label : val.name
+                }
+            })}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "date_of_inventory",
+        label : "Date of Inventory", 
+        input : (
+            <DatePicker />
+        ),
+        type : "input"
+    },
+    {
+        name : "area",
+        label : "Area (in hectares)", 
+        input : (
+            <Input type="number" />
+        ),
+        type : "input"
+    },
+    {
+        name : "dominant_species",
+        label : "Dominant Species", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "status",
+        label : "Status", 
+        input : (
+            <Select showSearch  options={[
+                {
+                    value :"Good",
+                    label :"Good"
+                },
+                {
+                    value :"Poor",
+                    label :"Poor"
+                },
+                {
+                    value :"Excellent",
+                    label :"Excellent"
+                },
+                {
+                    value :"Fair",
+                    label :"Fair"
+                },
+            ]}  />
+        ),
+        type : "input"
+    },
+
+
+];
+
+export const biodiversity_4_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Date of Inventory", 
+        field: "date_of_inventory", 
+        editable : true, 
+        valueFormatter: (params) => {
+            const date = new Date(params.value);
+            return date.toLocaleDateString(); // Display in a user-friendly format
+        },
+        cellEditor: "agDateCellEditor",
+        valueParser: (params) => {
+            console.log(params)
+            return new Date(params.newValue).toISOString(); // Save in ISO format
+        },
+    },
+    { 
+        headerName: "Area (in hectares)", 
+        field: "area", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Dominant Species", 
+        field: "dominant_species", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Status", 
+        field: "status", 
+        editable : true, 
+        cellEditor: 'agSelectCellEditor',
+        cellEditorParams: {
+            values: ["Fair", "Good", "Poor", "Very Good" ],
+        }
+    },
+];
+
 const Biodiversity_Table_4  = () => {
 
     const [page, setPage] = useState(1);
@@ -27,60 +174,7 @@ const Biodiversity_Table_4  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Date of Inventory", 
-            field: "date_of_inventory", 
-            editable : true, 
-            valueFormatter: (params) => {
-                const date = new Date(params.value);
-                return date.toLocaleDateString(); // Display in a user-friendly format
-            },
-            cellEditor: "agDateCellEditor",
-            valueParser: (params) => {
-                console.log(params)
-                return new Date(params.newValue).toISOString(); // Save in ISO format
-            },
-        },
-        { 
-            headerName: "Area (in hectares)", 
-            field: "area", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Dominant Species", 
-            field: "dominant_species", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Status", 
-            field: "status", 
-            editable : true, 
-            cellEditor: 'agSelectCellEditor',
-            cellEditorParams: {
-                values: ["Fair", "Good", "Poor", "Very Good" ],
-            }
-        },
-        
+        ...biodiversity_4_col_defs,
       
         {
             headerName: "Actions",
@@ -94,97 +188,6 @@ const Biodiversity_Table_4  = () => {
             }
         }
     ]);
-
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Select showSearch virtual options={cities.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "date_of_inventory",
-            label : "Date of Inventory", 
-            input : (
-                <DatePicker />
-            ),
-            type : "input"
-        },
-        {
-            name : "area",
-            label : "Area (in hectares)", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "dominant_species",
-            label : "Dominant Species", 
-            input : (
-                <Input type="text" />
-            ),
-            type : "input"
-        },
-        {
-            name : "status",
-            label : "Status", 
-            input : (
-                <Select showSearch  options={[
-                    {
-                        value :"Good",
-                        label :"Good"
-                    },
-                    {
-                        value :"Poor",
-                        label :"Poor"
-                    },
-                    {
-                        value :"Excellent",
-                        label :"Excellent"
-                    },
-                    {
-                        value :"Fair",
-                        label :"Fair"
-                    },
-                ]}  />
-            ),
-            type : "input"
-        },
-
-  
-    ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -294,7 +297,7 @@ const Biodiversity_Table_4  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={biodiversity_4_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>
