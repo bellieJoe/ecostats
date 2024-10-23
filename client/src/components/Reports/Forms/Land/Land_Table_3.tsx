@@ -10,6 +10,194 @@ import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/Ge
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
+export const land_3_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name: "For Calendar Year",
+        label: "For Calendar Year",
+        type : "title"
+    },
+    {
+        name : "transmitted_to_RoD",
+        label : "No. of Patents transmitted to RoD", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "area",
+        label : "Area", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "beneficiaries.total",
+        label : "Total Beneficiaries", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "beneficiaries.female",
+        label : "Female Beneficiaries", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "beneficiaries.male",
+        label : "Male Beneficiaries", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    // {
+    //     name: "As Of",
+    //     label: "As Of",
+    //     type : "title"
+    // },
+    // {
+    //     name : "patents.historical.transmitted_to_RoD",
+    //     label : "No. of Patents transmitted to RoD", 
+    //     input : <Input type="number" />,
+    //     type : "input"
+    // },
+    // {
+    //     name : "patents.historical.area",
+    //     label : "Area", 
+    //     input : <Input type="number" />,
+    //     type : "input"
+    // },
+    // {
+    //     name : "patents.historical.beneficiaries.total",
+    //     label : "Total Beneficiaries", 
+    //     input : <Input type="number" />,
+    //     type : "input"
+    // },
+    // {
+    //     name : "patents.historical.beneficiaries.female",
+    //     label : "Female Beneficiaries", 
+    //     input : <Input type="number" />,
+    //     type : "input"
+    // },
+    // {
+    //     name : "patents.historical.beneficiaries.male",
+    //     label : "Male Beneficiaries", 
+    //     input : <Input type="number" />,
+    //     type : "input"
+    // },
+];
+
+export const land_3_col_defs = [
+    { 
+        headerName: "CY", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Province", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "For Calendar Year", 
+        children : [
+            { 
+                headerName: "No. of Patents Transmitted to RoD", 
+                field: "transmitted_to_RoD", 
+                editable : true, 
+                type: "textColumn",
+            },
+            { 
+                headerName: "Area", 
+                field: "area", 
+                editable : true, 
+                type: "textColumn",
+            },
+            { 
+                headerName: "Beneficiaries",
+                headerClass : "justify-center",
+                children : [
+                    { 
+                        headerName: "Total Beneficiaries", 
+                        field: "beneficiaries.total", 
+                        editable : true, 
+                        type: "textColumn",
+                    },
+                    { 
+                        headerName: "Female", 
+                        field: "beneficiaries.female", 
+                        editable : true, 
+                        type: "textColumn",
+                    },
+                    { 
+                        headerName: "Male", 
+                        field: "beneficiaries.male", 
+                        editable : true, 
+                        type: "textColumn",
+                    },
+                ]
+            },
+        ]
+    },
+    // { 
+    //     headerName: "As of", 
+    //     children : [
+    //         { 
+    //             headerName: "No. of Patents Transmitted to RoD", 
+    //             field: "patents.historical.transmitted_to_RoD", 
+    //             editable : true, 
+    //             type: "textColumn",
+    //         },
+    //         { 
+    //             headerName: "Area", 
+    //             field: "patents.historical.area", 
+    //             editable : true, 
+    //             type: "textColumn",
+    //         },
+    //         { 
+    //             headerName: "Beneficiaries",
+    //             headerClass : "justify-center",
+    //             children : [
+    //                 { 
+    //                     headerName: "Total Beneficiaries", 
+    //                     field: "patents.historical.beneficiaries.total", 
+    //                     editable : true, 
+    //                     type: "textColumn",
+    //                 },
+    //                 { 
+    //                     headerName: "Female", 
+    //                     field: "patents.historical.beneficiaries.female", 
+    //                     editable : true, 
+    //                     type: "textColumn",
+    //                 },
+    //                 { 
+    //                     headerName: "Male", 
+    //                     field: "patents.historical.beneficiaries.male", 
+    //                     editable : true, 
+    //                     type: "textColumn",
+    //                 },
+    //             ]
+    //         },
+    //     ]
+    // },
+    
+];
+
 const Land_Table_3  = () => {
 
     const [page, setPage] = useState(1);
@@ -25,101 +213,7 @@ const Land_Table_3  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Province", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "For Calendar Year", 
-            children : [
-                { 
-                    headerName: "No. of Patents Transmitted to RoD", 
-                    field: "transmitted_to_RoD", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-                { 
-                    headerName: "Area", 
-                    field: "area", 
-                    editable : true, 
-                    type: "textColumn",
-                },
-                { 
-                    headerName: "Beneficiaries",
-                    headerClass : "justify-center",
-                    children : [
-                        { 
-                            headerName: "Total Beneficiaries", 
-                            field: "beneficiaries.total", 
-                            editable : true, 
-                            type: "textColumn",
-                        },
-                        { 
-                            headerName: "Female", 
-                            field: "beneficiaries.female", 
-                            editable : true, 
-                            type: "textColumn",
-                        },
-                        { 
-                            headerName: "Male", 
-                            field: "beneficiaries.male", 
-                            editable : true, 
-                            type: "textColumn",
-                        },
-                    ]
-                },
-            ]
-        },
-        // { 
-        //     headerName: "As of", 
-        //     children : [
-        //         { 
-        //             headerName: "No. of Patents Transmitted to RoD", 
-        //             field: "patents.historical.transmitted_to_RoD", 
-        //             editable : true, 
-        //             type: "textColumn",
-        //         },
-        //         { 
-        //             headerName: "Area", 
-        //             field: "patents.historical.area", 
-        //             editable : true, 
-        //             type: "textColumn",
-        //         },
-        //         { 
-        //             headerName: "Beneficiaries",
-        //             headerClass : "justify-center",
-        //             children : [
-        //                 { 
-        //                     headerName: "Total Beneficiaries", 
-        //                     field: "patents.historical.beneficiaries.total", 
-        //                     editable : true, 
-        //                     type: "textColumn",
-        //                 },
-        //                 { 
-        //                     headerName: "Female", 
-        //                     field: "patents.historical.beneficiaries.female", 
-        //                     editable : true, 
-        //                     type: "textColumn",
-        //                 },
-        //                 { 
-        //                     headerName: "Male", 
-        //                     field: "patents.historical.beneficiaries.male", 
-        //                     editable : true, 
-        //                     type: "textColumn",
-        //                 },
-        //             ]
-        //         },
-        //     ]
-        // },
-        
+        ...land_3_col_defs,
         {
             headerName: "Actions",
             cellRenderer: (params) => {
@@ -132,95 +226,7 @@ const Land_Table_3  = () => {
         }
     ]);
 
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : <Input type="text" />,
-            type : "input"
-        },
-        {
-            name: "For Calendar Year",
-            label: "For Calendar Year",
-            type : "title"
-        },
-        {
-            name : "transmitted_to_RoD",
-            label : "No. of Patents transmitted to RoD", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "area",
-            label : "Area", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "beneficiaries.total",
-            label : "Total Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "beneficiaries.female",
-            label : "Female Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        {
-            name : "beneficiaries.male",
-            label : "Male Beneficiaries", 
-            input : <Input type="number" />,
-            type : "input"
-        },
-        // {
-        //     name: "As Of",
-        //     label: "As Of",
-        //     type : "title"
-        // },
-        // {
-        //     name : "patents.historical.transmitted_to_RoD",
-        //     label : "No. of Patents transmitted to RoD", 
-        //     input : <Input type="number" />,
-        //     type : "input"
-        // },
-        // {
-        //     name : "patents.historical.area",
-        //     label : "Area", 
-        //     input : <Input type="number" />,
-        //     type : "input"
-        // },
-        // {
-        //     name : "patents.historical.beneficiaries.total",
-        //     label : "Total Beneficiaries", 
-        //     input : <Input type="number" />,
-        //     type : "input"
-        // },
-        // {
-        //     name : "patents.historical.beneficiaries.female",
-        //     label : "Female Beneficiaries", 
-        //     input : <Input type="number" />,
-        //     type : "input"
-        // },
-        // {
-        //     name : "patents.historical.beneficiaries.male",
-        //     label : "Male Beneficiaries", 
-        //     input : <Input type="number" />,
-        //     type : "input"
-        // },
-    ];
+
 
     const handleOnRowValueChanged = (d) => {
         formUpdate(d.data, FormEnum.LAND_3, Sector.LAND)
@@ -324,7 +330,7 @@ const Land_Table_3  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={land_3_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

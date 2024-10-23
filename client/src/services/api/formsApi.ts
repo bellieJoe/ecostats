@@ -48,3 +48,10 @@ export const requestReport = async (body : any) : Promise<any> => {
     const res = await axios.post(`${apiUrl}/requested-reports/create`, body);
     return res;
 }
+
+export const getRequestReport = async (query : any) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/requested-reports/get-by-query`, {
+        params : query
+    });
+    return res;
+}

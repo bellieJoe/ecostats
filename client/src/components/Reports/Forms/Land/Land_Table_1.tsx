@@ -8,8 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import GenericFormDrawerV3 from "../../../GenericFormV3";
 import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
+import CustomReportTable from "../../../CustomReport/CustomReportTable";
+import { land_2_col_defs } from "./Land_Table_2";
 
-export const land_1_genericFormFields : GenericFormFieldV3[] = [
+export const land_1_gen_form_fields : GenericFormFieldV3[] = [
     {
         name : "calendar_year",
         label : "Calendar Year", 
@@ -38,6 +40,38 @@ export const land_1_genericFormFields : GenericFormFieldV3[] = [
     },
 ];
 
+// Column Definitions: Defines the columns to be displayed.
+export const land_1_col_defs : any[] = [
+    { 
+        headerName: "Calendar year", 
+        headerClass: "justify-center", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        headerClass: "justify-center", 
+        field: "province",  
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Contested Area (ha)", 
+        field: "uncontested_area", 
+        editable : true, 
+        type: "numberColumn" 
+
+    },
+    { 
+        headerName: " Uncontested Area (ha)", 
+        field: "contested_area", 
+        editable : true, 
+        type: "numberColumn" 
+
+    }
+];
+
 const Land_Table_1  = () => {
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
@@ -50,48 +84,7 @@ const Land_Table_1  = () => {
     // Row Data: The data to be displayed.
     const [rowData, setRowData] = useState([]);
     
-    // Column Definitions: Defines the columns to be displayed.
-    const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "Calendar year", 
-            headerClass: "justify-center", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            headerClass: "justify-center", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Contested Area (ha)", 
-            field: "uncontested_area", 
-            editable : true, 
-            type: "numberColumn" 
-
-        },
-        { 
-            headerName: " Uncontested Area (ha)", 
-            field: "contested_area", 
-            editable : true, 
-            type: "numberColumn" 
-
-        },
-        {
-            headerName: "Actions",
-            headerClass: "justify-center",
-            cellRenderer: (params) => {
-                return (
-                    <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this row?" onConfirm={() => handleDelete(params.data._id)}>
-                        <Button color="danger" variant="filled">Delete</Button>
-                    </Popconfirm>
-                )
-            }
-        }
-    ]);
+    
 
     const handleOnRowValueChanged = (d) => {
         formUpdate(d.data, FormEnum.LAND_1, Sector.LAND)
@@ -134,6 +127,21 @@ const Land_Table_1  = () => {
         }
         setRefresh(!refresh)
     };
+
+    const [colDefs, setColDefs] = useState<any[]>([
+        ...land_1_col_defs,
+        {
+            headerName: "Actions",
+            headerClass: "justify-center",
+            cellRenderer: (params) => {
+                return (
+                    <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this row?" onConfirm={() => handleDelete(params.data._id)}>
+                        <Button color="danger" variant="filled">Delete</Button>
+                    </Popconfirm>
+                )
+            }
+        }
+    ]);
     
     useEffect(() => {
         setLoading(true)
@@ -186,9 +194,11 @@ const Land_Table_1  = () => {
 
             <GenericFormDrawerV3
             visible={addRecord} 
-            fields={land_1_genericFormFields} 
+            fields={land_1_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
+
+            
         </>
     )
 }

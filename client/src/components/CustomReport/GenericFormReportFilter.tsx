@@ -1,5 +1,6 @@
 import { Drawer, Form, Button, Divider, Typography, Checkbox, Row, Col, Input } from 'antd';
-import { GenericFormFieldV3 } from '../types/forms/GenericFormTypes';
+import { GenericFormFieldV3 } from '../../types/forms/GenericFormTypes';
+import TextArea from 'antd/es/input/TextArea';
 
 /**
  * CustomReportGenerator component.
@@ -17,7 +18,7 @@ const CustomReportGenerator: React.FC<{
   visible: boolean;
   fields: GenericFormFieldV3[];
   onClose: () => void;
-  onSubmit: (reportTitle: string, filters: Record<string, any>, fieldSelections: { name: string; included: boolean }[]) => Promise<void>;
+  onSubmit: (reportTitle: string, description : string, filters: Record<string, any>, fieldSelections: { name: string; included: boolean }[]) => Promise<void>;
 }> = ({ visible, fields, onClose, onSubmit }) => {
   const [form] = Form.useForm();
   const [selectionForm] = Form.useForm();
@@ -39,13 +40,15 @@ const CustomReportGenerator: React.FC<{
 
       const filterValues = form.getFieldsValue();
       const selectionValues = selectionForm.getFieldsValue();
-
-      // Extract report title separately
+      
+      // Extract report title and description separately
       const reportTitle = filterValues.reportTitle;
+      const description = filterValues.reportDescription;
+      
 
       // Filter out the fields that are empty in the filter form
       const filledFilterValues = Object.fromEntries(
-        Object.entries(filterValues).filter(([key, value]) => key !== 'reportTitle' && value !== undefined && value !== null && value !== '')
+        Object.entries(filterValues).filter(([key, value]) => key !== 'reportTitle' && key != 'reportDescription' && value !== undefined && value !== null && value !== '')
       );
 
       // Create the array of field selections based on the checkbox values
@@ -54,14 +57,15 @@ const CustomReportGenerator: React.FC<{
         included: selectionValues[name] || false,
       }));
 
-      // Submit report title, filter values, and field selections
-      await onSubmit(reportTitle, filledFilterValues, fieldSelections); // Await the async onSubmit
+      // Submit report title, description, filter values, and field selections
+      await onSubmit(reportTitle, description, filledFilterValues, fieldSelections); // Await the async onSubmit
       form.resetFields();
       selectionForm.resetFields();
     } catch (error) {
       console.error('Validation failed:', error);
     }
   };
+
 
   return (
     <Drawer
@@ -82,11 +86,20 @@ const CustomReportGenerator: React.FC<{
     >
       <Form form={form} layout="vertical">
         <Form.Item
+          key="reportTitle"
           label="Report Title"
           name="reportTitle"
           rules={[{ required: true, message: 'Report title is required.' }]} // Make report title required
         >
           <Input placeholder="Enter report title" />
+        </Form.Item>
+
+        <Form.Item
+          key="reportDescription"
+          label="Description"
+          name="reportDescription"
+        >
+          <TextArea placeholder="Enter report description" />
         </Form.Item>
 
         <Typography.Title level={4}>Filter Data</Typography.Title>

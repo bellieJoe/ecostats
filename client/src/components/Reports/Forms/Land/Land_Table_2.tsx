@@ -6,8 +6,112 @@ import { Button, Flex, Input, message, Pagination, Popconfirm } from "antd";
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import GenericFormDrawer from "../../../GenericFormV2";
-import { GenericFormField } from "../../../../types/forms/GenericFormTypes";
+import GenericFormDrawer from "../../../GenericFormV3";
+import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
+
+export const land_2_col_defs = [
+    { 
+        headerName: "CY", 
+        headerClass: "justify-center", 
+        field: "calendar_year", 
+        editable : true, 
+        type: "numberColumn",
+    },
+    { 
+        headerName: "Province", 
+        headerClass: "justify-center", 
+        field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+        headerClass: "justify-center" 
+
+    },
+    { 
+        headerName: "No. of Lots", 
+        field: "no_of_lots", 
+        editable : true, 
+        type: "textColumn",
+
+    },
+    { 
+        headerName: "Total Land Area", 
+        field: "total_land_area", 
+        editable : true, 
+        type: "textColumn",
+    },
+    {
+        headerName: "Income (Php)", 
+        children : [
+            { 
+                headerName: "Sale", 
+                field: "sale", 
+                editable : true, 
+                type: "numberColumn" 
+    
+            },
+            { 
+                headerName: "Lease", 
+                field: "lease", 
+                editable : true, 
+                type: "numberColumn" 
+    
+            },
+        ]
+    },
+];
+
+export const land_2_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "CY", 
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name : "municipality",
+        label : "City/Municipality",
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
+        name : "no_of_lots",
+        label : "No. of Lots",
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "total_land_area",
+        label : "Total Land Area",
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "sale",
+        label : "Sale",
+        input : <Input type="number" />,
+        type : "input"
+    },
+    {
+        name : "lease",
+        label : "Lease",
+        input : <Input type="number" />,
+        type : "input"
+    },
+];
+
+
 const Land_Table_2  = () => {
 
     const [page, setPage] = useState(1);
@@ -23,60 +127,7 @@ const Land_Table_2  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        { 
-            headerName: "CY", 
-            headerClass: "justify-center", 
-            field: "calendar_year", 
-            editable : true, 
-            type: "numberColumn",
-        },
-        { 
-            headerName: "Province", 
-            headerClass: "justify-center", 
-            field: "province", 
-            editable : true, 
-            type: "textColumn",
-        },
-        { 
-            headerName: "Municipality", 
-            field: "municipality", 
-            editable : true, 
-            type: "textColumn",
-            headerClass: "justify-center" 
-
-        },
-        { 
-            headerName: "No. of Lots", 
-            field: "no_of_lots", 
-            editable : true, 
-            type: "textColumn",
-
-        },
-        { 
-            headerName: "Total Land Area", 
-            field: "total_land_area", 
-            editable : true, 
-            type: "textColumn",
-        },
-        {
-            headerName: "Income (Php)", 
-            children : [
-                { 
-                    headerName: "Sale", 
-                    field: "sale", 
-                    editable : true, 
-                    type: "numberColumn" 
-        
-                },
-                { 
-                    headerName: "Lease", 
-                    field: "lease", 
-                    editable : true, 
-                    type: "numberColumn" 
-        
-                },
-            ]
-        },
+        ...land_2_col_defs,
         {
             headerName: "Actions",
             headerClass: "justify-center",
@@ -90,43 +141,7 @@ const Land_Table_2  = () => {
         }
     ]);
 
-    const genericFormFields : GenericFormField[] = [
-        {
-            name : "calendar_year",
-            label : "CY", 
-            input : <Input type="number" />
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : <Input type="text" />
-        },
-        {
-            name : "municipality",
-            label : "City/Municipality",
-            input : <Input type="text" />
-        },
-        {
-            name : "no_of_lots",
-            label : "No. of Lots",
-            input : <Input type="number" />
-        },
-        {
-            name : "total_land_area",
-            label : "Total Land Area",
-            input : <Input type="number" />
-        },
-        {
-            name : "sale",
-            label : "Sale",
-            input : <Input type="number" />
-        },
-        {
-            name : "lease",
-            label : "Lease",
-            input : <Input type="number" />
-        },
-    ]
+    
 
     const handleOnRowValueChanged = (d) => {
         formUpdate(d.data, FormEnum.LAND_2, Sector.LAND)
@@ -225,7 +240,7 @@ const Land_Table_2  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={land_2_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

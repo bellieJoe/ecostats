@@ -1,6 +1,14 @@
 import mongoose, { Schema } from 'mongoose'; // Using ES6 import syntax
 
 const RequestedReportSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required : true
+  },
+  description: {
+    type: String,
+    default : null
+  },
   filters: {
     type: Object,
     required : true

@@ -1,12 +1,13 @@
 
 import { message, Tabs, TabsProps } from "antd";
 import Title from "antd/es/typography/Title";
-import Land_Table_3 from "../../../../components/Reports/Forms/Land/Land_Table_3";
+import Land_Table_3, { land_3_col_defs, land_3_gen_form_fields } from "../../../../components/Reports/Forms/Land/Land_Table_3";
 import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../../components/DataMigrator";
 import { formSaveMany } from "../../../../services/api/formsApi";
 import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
 import { parseResError } from "../../../../services/errorHandler";
 import { useErrorLogStore } from "../../../../stores/useErrorLogStore";
+import CustomReport from "../../../../components/CustomReport/CustomReport";
 
 
 const Land_3 = () => {
@@ -46,10 +47,19 @@ const Land_3 = () => {
             children: <Land_Table_3 />,
         },
         {
-            key: '3',
+            key: '2',
             label: 'Migration',
             children: <DataMigrator columns={columns} onSave={handleSave} />,
-        }
+        },
+        {
+            key: '3',
+            label: 'Reports',
+            children: <CustomReport 
+                        formName={FormEnum.LAND_3} 
+                        sector={Sector.LAND} 
+                        fields={land_3_gen_form_fields}
+                        colDefs={land_3_col_defs} />
+        },
     ]
     return (
         <>

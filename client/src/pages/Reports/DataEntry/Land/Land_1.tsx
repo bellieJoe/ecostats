@@ -1,13 +1,13 @@
 
 import { message, Tabs, TabsProps } from "antd";
-import Land_Table_1 from "../../../../components/Reports/Forms/Land/Land_Table_1";
+import Land_Table_1, { land_1_col_defs, land_1_gen_form_fields } from "../../../../components/Reports/Forms/Land/Land_Table_1";
 import Title from "antd/es/typography/Title";
 import DataMigrator, { DataMigratorCol, DataMigratorColTypes } from "../../../../components/DataMigrator";
 import { formSaveMany } from "../../../../services/api/formsApi";
 import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
 import { parseResError } from "../../../../services/errorHandler";
 import { useErrorLogStore } from "../../../../stores/useErrorLogStore";
-import Land1CustomReport from "../../CustomReport/Land/Land1CustomReport";
+import CustomReport from "../../../../components/CustomReport/CustomReport";
 
 
 const Land_1 = () => {
@@ -51,13 +51,15 @@ const Land_1 = () => {
         {
             key: '3',
             label: 'Reports',
-            children: <Land1CustomReport />,
+            children: <CustomReport 
+                        formName={FormEnum.LAND_1} 
+                        sector={Sector.LAND} 
+                        fields={land_1_gen_form_fields}
+                        colDefs={land_1_col_defs} />
         }
     ];
 
     
-
-
     return (
         <>
             {contextHandler}
