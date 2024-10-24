@@ -1,8 +1,4 @@
-import { validationResult } from "express-validator";
-import UserModel from "../model/User.js";
-import ProgramModel from "../model/Program.js";
-import ProgramHeadModel from "../model/ProgramHead.js";
-import mongoose from "mongoose";
+
 import RequestedReportModel from "../model/RequestedReport.js";
 
 export const create = async (req, res) => {

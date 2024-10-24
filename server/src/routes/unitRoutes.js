@@ -1,21 +1,20 @@
 import express from "express"
 import { 
+    addFocalPerson,
     countUnits,
     create, 
     deleteUnit, 
     getByProgram, 
+    getFocalPersons, 
     getUnitById, 
-    getUnitHeads, 
-    removeHead, 
+    removeFocal, 
     searchUnitByName,
     updateUnit
 } from "../controller/unitController.js";
 import {
     createUnitValidation,
-    getUnitHeadsValidation,
     updateUnitValidation
 } from "../middleware/validations/programValidations.js";
-import { deleteProgram } from "../controller/programController.js";
 
 const router = express.Router()
 
@@ -33,9 +32,12 @@ router.put("/update",updateUnitValidation, updateUnit);
 
 router.get('/get-by-id/:unitId', getUnitById)
 
-router.get('/heads/:unitId', getUnitHeadsValidation, getUnitHeads)
+router.post('/add-focal-person', addFocalPerson)
 
-router.delete('/remove-head', removeHead)
+router.get('/get-focals/:unitId', getFocalPersons)
+
+router.delete('/remove-focal/:id', removeFocal)
+
 
 
 export default router;

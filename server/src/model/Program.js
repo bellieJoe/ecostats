@@ -1,7 +1,4 @@
 import { Schema, model } from "mongoose";
-import ProgramHeadModel from "./ProgramHead.js";
-import UnitModel from "./Unit.js";
-
 const ProgramSchema = new Schema({
     name : {
         type : String,
@@ -10,12 +7,19 @@ const ProgramSchema = new Schema({
     description : {
         type : String
     },  
-    management : {
-        type : String
-    },
     deletedAt : {
         type : Date,
         default: null
+    },
+    programHead : {
+        type : Schema.Types.ObjectId,
+        ref : "users",
+        required : true
+    },
+    management : {
+        type : String,
+        enum : ["land", "biodiversity", "forestry"],
+        required : true
     }
 },
 {

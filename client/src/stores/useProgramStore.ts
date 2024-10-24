@@ -10,9 +10,6 @@ interface ProgramsStore {
     clear : () => void
 }
 
-
-
-
 export const useProgramsStore = create<ProgramsStore>((set) => ({
     programs : [],
 
@@ -35,26 +32,26 @@ interface ProgramHeadState {
     clear : () => void
 }
 
-export const useProgramHeadStore = create<ProgramHeadState>((set) => ({
-    heads: [],
-    programId : null,
-    name : null,
+// export const useProgramHeadStore = create<ProgramHeadState>((set) => ({
+//     heads: [],
+//     programId : null,
+//     name : null,
 
-    setHeads : (users : User[]) => {
-        set({heads : users})
-    },
+//     setHeads : (users : User[]) => {
+//         set({heads : users})
+//     },
 
-    setProgram : (id:string, name:string) => {
-        set({programId : id, name: name})
-    },
+//     setProgram : (id:string, name:string) => {
+//         set({programId : id, name: name})
+//     },
 
-    clear : () => {
-        set({
-            heads : [],
-            programId : null
-        })
-    }
-}));
+//     clear : () => {
+//         set({
+//             heads : [],
+//             programId : null
+//         })
+//     }
+// }));
 
 
 interface UpdateProgramState {
@@ -64,6 +61,7 @@ interface UpdateProgramState {
     formData : {
         id : string
         name : string
+        management : string
     }
 
     setFormData : (name:string, val:string) => void
@@ -80,7 +78,8 @@ export const useUpdateProgramStore = create<UpdateProgramState>((set) => ({
     errors: [],
     formData : {
         name : "",
-        id : ""
+        id : "",
+        management : ""
     },
     
     setFormData : (name, val) => {
@@ -91,7 +90,8 @@ export const useUpdateProgramStore = create<UpdateProgramState>((set) => ({
             program : program,
             formData : {
                 name : program.name,
-                id : program._id
+                id : program._id,
+                management : program.management
             }
         })
     },
@@ -114,3 +114,4 @@ export const useUpdateProgramStore = create<UpdateProgramState>((set) => ({
     }
 }
 ))
+

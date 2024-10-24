@@ -8,6 +8,7 @@ import ProgramLists from "../../../components/Admin/Programs/ProgramLists";
 import { countPrograms } from "../../../services/api/programApi";
 import { countUnits } from "../../../services/api/unitApi";
 import UnitsList from "../../../components/Admin/Programs/UnitsList";
+import RoleGuard from "../../../components/Guards/RoleGuard";
 
 
 const Programs = () => {
@@ -44,7 +45,7 @@ const Programs = () => {
     }, [])
 
     return (
-        <>
+        <RoleGuard role={["admin", "planning officer"]}>
             { contextHolder }
             <Title level={3} >Programs/Division</Title>
             <div className="">
@@ -91,7 +92,7 @@ const Programs = () => {
             <Drawer open={drawerStates.assignHead} onClose={() => setDraweStates({...drawerStates, assignHead:false})} >
                 <AssignHeads />
             </Drawer>
-        </>
+        </RoleGuard>
     );
 }
 

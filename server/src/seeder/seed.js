@@ -1,5 +1,4 @@
 import mongoose from "mongoose"
-import SeedRoles from "./roleSeeder.js";
 import SeedUsers from "./userSeeder.js";
 import dotenv from "dotenv"
 
@@ -7,12 +6,12 @@ dotenv.config()
 
 const seedDatabase = async () => {
     try {
-        await mongoose.connect("mongodb+srv://jandusayjoe14:1VpIMPNLXd2YLlMd@cluster0.g1x9p.mongodb.net/ecostats_db?retryWrites=true&w=majority&appName=Cluster0")
+        await mongoose.connect("mongodb+srv://jandusayjoe14:1VpIMPNLXd2YLlMd@cluster0.g1x9p.mongodb.net/ecostats_db_new?retryWrites=true&w=majority&appName=Cluster0")
         .then(() => console.log('Connected to MongoDB'))
         .catch(err => console.error('Failed to connect to MongoDB', err));
 
         // write the seeder logic here
-        await SeedRoles();
+        // await SeedRoles();
         await SeedUsers();
 
         console.log("Finish Seeding");

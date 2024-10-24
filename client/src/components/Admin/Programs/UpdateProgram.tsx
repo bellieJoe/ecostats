@@ -1,10 +1,11 @@
-import { Button, Drawer, Flex, Form, Input, message } from "antd";
+import { Button, Drawer, Flex, Form, Input, message, Select } from "antd";
 import { useUpdateProgramStore } from "../../../stores/useProgramStore";
 import { useEffect, useState } from "react";
 import { getProgramById, updateProgram } from "../../../services/api/programApi";
 import { parseResError } from "../../../services/errorHandler";
 import Title from "antd/es/typography/Title";
 import { Program } from "../../../types/Program";
+import { Sector } from "../../../types/forms/formNameEnum";
 
 interface Props {
     onUpdated? : (program : Program) => any
@@ -18,7 +19,7 @@ const UpdateProgram = ({onUpdated} : Props) => {
 
     const submitForm = (e) => {
         setIsSaving(true)
-        updateProgram(e.id, e.name)
+        updateProgram(e.id, e.name, e.management)
         .then(res => {
             store.clear();
             messageApi.success("Program updated successfully");
@@ -69,18 +70,29 @@ const UpdateProgram = ({onUpdated} : Props) => {
                     <Form.Item 
                     rules={[{required: true}]}
                     name="id"
-                    hidden
-                    >
+                    hidden>
                         <Input placeholder="Program Name"   />
                     </Form.Item>
 
                     <Form.Item 
                     label="Program Name" 
                     rules={[{required: true}]}
-                    name="name"
-                    
-                    >
+                    name="name">
                         <Input placeholder="Program Name"    />
+                    </Form.Item>
+
+                    <Form.Item 
+                    label="Assigned Management" 
+                    rules={[{required: true}]}
+                    name="management">
+                        <Select 
+                        className="w-full" 
+                        placeholder="Assign Management"
+                        options={[
+                            { value: Sector.LAND, label: "Land Management" },
+                            { value: Sector.FORESTRY, label: "Forestry Management" },
+                            { value: Sector.BIODIVERSITY, label: "Biodiversity Management" },
+                        ]} />
                     </Form.Item>
 
                     <Form.Item>

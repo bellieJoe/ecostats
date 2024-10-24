@@ -6,14 +6,11 @@ import SignUp from './pages/Home/SignUp/SignUp'
 import Users from './pages/Admin/Users/Users'
 import ErrorPage from './pages/ErrorPage/ErrorPage'
 import { useEffect } from 'react'
-import { getRoles } from './services/api/roleApi'
-import { Role } from './types/Role'
-import { useRoleStore } from './stores/useRoleStore'
 import { getUserById, isAuthenticated } from './services/api/userApi'
 import { useAuthStore } from './stores/useAuthStore'
 import { jwtDecode } from 'jwt-decode'
 import Cookies from "js-cookie"
-import { ConfigProvider, Layout, message } from 'antd'
+import { ConfigProvider, Layout } from 'antd'
 import axios from 'axios'
 import Programs from './pages/Admin/Programs/Programs'
 import LandTOC from './pages/Reports/DataEntry/Land/LandTOC'
@@ -51,7 +48,6 @@ import { useErrorLogStore } from './stores/useErrorLogStore'
 axios.defaults.withCredentials = true;
 
 function App() {
-  const {clearRoles, setRoles} = useRoleStore();
   const {setUser, accessToken} = useAuthStore();
   const errorStore = useErrorLogStore();
 
@@ -60,18 +56,6 @@ function App() {
     "token": {
       "colorPrimary": "#41a61d",
       "colorInfo": "#41a61d"
-    }
-  }
-  
-  const initRoles = () => {
-    try {
-      getRoles()
-      .then((roles:Role[]) => {
-        clearRoles()
-        setRoles(roles)
-      })
-    } catch (error) {
-      console.log(error)
     }
   }
 
@@ -99,10 +83,6 @@ function App() {
     initUser();
   }, [accessToken])
 
-  useEffect(() => {
-    initRoles();
-  }, [])
-
   return (
     <ConfigProvider
       theme={configTheme}>
@@ -118,7 +98,7 @@ function App() {
                 </Route>
 
                 <Route path='admin' element={<Admin />}>
-                  <Route path='' element={<Users />} />
+                  {/* <Route path='' element={<Users />} /> */}
                   <Route path='users' element={<Users />} />
                   <Route path='programs' element={<Programs />} />
                 </Route>

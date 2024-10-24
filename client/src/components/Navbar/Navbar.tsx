@@ -45,7 +45,7 @@ const Navbar = () => {
             Cookies.remove("refreshToken")
             clearTokens()
             setUser(null)
-            navigate("/")
+            location.href = "/"
           }
         },
       ];

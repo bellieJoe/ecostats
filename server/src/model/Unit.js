@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import UnitHeadModel from "./UnitHead.js";
 
 const UnitSchema = new Schema({
     name : {
@@ -17,6 +16,11 @@ const UnitSchema = new Schema({
     deletedAt : {
         type : Date,
         default : null
+    },
+    unitHead : {
+        type : Schema.Types.ObjectId,
+        ref : "users",
+        required : true
     }
 },
 {

@@ -1,11 +1,12 @@
 import { Button, Card, Input, message, Select, SelectProps } from "antd";
 import Title from "antd/es/typography/Title";
-import { useCallback, useState } from "react";
-import { searchUserByName } from "../../../services/api/userApi";
+import { useCallback, useEffect, useState } from "react";
+import { getByQuery, searchUserByName } from "../../../services/api/userApi";
 import debounce from 'lodash.debounce';
 import { createProgram } from "../../../services/api/programApi";
 import { ValidationError } from "../../../types/ApiValidationError";
 import FieldError from "../../FieldError";
+import { Sector } from "../../../types/forms/formNameEnum";
 
 
 
@@ -14,9 +15,10 @@ const CreateProgram = () => {
     const [selectUserloading, setSelectUserloading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-    const [formData, setFormData] = useState<{name:string, userId:string|null}>({
+    const [formData, setFormData] = useState<{name:string, userId:string|null, management : string}>({
         userId: null,
-        name : ""
+        name : "",
+        management : ""
     });
     const [validationErrors , setValidationErrors] = useState<ValidationError[]>([]);
     
@@ -24,8 +26,15 @@ const CreateProgram = () => {
     const debouncedSearch = useCallback(
         debounce((value) => {
             setSelectUserloading(true)
-            searchUserByName(value)
+            getByQuery({
+                name : {
+                    $regex : value,
+                    $options : "i"
+                },
+                role : "chief"
+            })
             .then(res => {
+                console.log(res.data)
                 const options = res.data.map(val => {
                     return {
                         value : val._id,
@@ -50,9 +59,10 @@ const CreateProgram = () => {
     const onSave = () => {
         setIsSaving(true)
         setValidationErrors([])
-        createProgram(formData.userId!, formData.name)
+        console.log({...formData})
+        createProgram(formData.userId!, formData.name, formData.management)
         .then(res => {
-            setFormData({userId: null, name : ""})
+            setFormData({userId: null, name : "", management : ""})
             messageApi.success("Program successfully created.")
         })
         .catch(err => {
@@ -66,6 +76,7 @@ const CreateProgram = () => {
         })
         .finally(() => setIsSaving(false))
     }
+
 
     const optionRenderer = (option) => {
         return (
@@ -85,6 +96,22 @@ const CreateProgram = () => {
                     <Title level={5}>Program/Division Name</Title>
                     <Input placeholder="Enter Division Name" onChange={(e)=>setFormData({...formData, name:e.target.value})} value={formData.name} />
                     <FieldError errors={validationErrors} name={"name"} />
+                </div>
+
+                <div className="mb-2">
+                    <Title level={5}>Assign Management</Title>
+                    {/* <Input placeholder="Assign" onChange={(e)=>setFormData({...formData, name:e.target.value})} value={formData.name} /> */}
+                    <Select 
+                        className="w-full" 
+                        placeholder="Assign Management"
+                        value={formData.management}
+                        onChange={(e)=>setFormData({...formData, management: e})}
+                        options={[
+                            { value: Sector.LAND, label: "Land Management" },
+                            { value: Sector.FORESTRY, label: "Forestry Management" },
+                            { value: Sector.BIODIVERSITY, label: "Biodiversity Management" },
+                        ]} />
+                    <FieldError errors={validationErrors} name={"management"} />
                 </div>
 
                 <div className="mb-2">

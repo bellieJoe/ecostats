@@ -2,20 +2,21 @@ import { useEffect, useState } from "react";
 import { Alert, Button, Drawer, Flex, message, Popconfirm, Select, Space, Table  } from "antd";
 import Title from "antd/es/typography/Title";
 import { deleteProgram, getAllPrograms } from "../../../services/api/programApi";
-import { useProgramHeadStore, useProgramsStore, useUpdateProgramStore } from "../../../stores/useProgramStore";
-import ProgramHeadList from "./ProgramHeadList";
+import { useProgramsStore, useUpdateProgramStore } from "../../../stores/useProgramStore";
 import { useViewUnitsStore } from "../../../stores/useUnitStore";
 import CreateUnit from "./CreateUnit";
 import { parseResError } from "../../../services/errorHandler";
-import { ReloadOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate, faPlus } from '@fortawesome/free-solid-svg-icons';
 import UpdateProgram from "./UpdateProgram";
 import { Sector } from "../../../types/forms/formNameEnum";
+import { User } from "../../../types/User";
 
 interface DataSource {
     key: string
     name: string
+    management : string
+    programHead : User
 }
 
 const ProgramLists = () => {
@@ -26,7 +27,6 @@ const ProgramLists = () => {
     const [messageApi, contextHolder] = message.useMessage()
     const [dataSource, setDataSource] = useState<DataSource[]>([]);
     const [ isProgramsLoading, setIsProgramsLoading ] = useState(false);
-    const programHeadStore = useProgramHeadStore();
     const viewUnitsStore = useViewUnitsStore();
     const [program, setProgram] = useState<{
         value : string,
@@ -41,21 +41,25 @@ const ProgramLists = () => {
         },
         {
             title: 'Program Head',
-            key: 'progrmaHead',
+            key: 'programHead',
             render : (record : DataSource) => {
-                return <Button size="small" onClick={() => programHeadStore.setProgram(record.key, record.name)}>Program Head/s</Button>
+                return (
+                    <>
+                        { record.programHead.name }
+                    </>
+                );
             }
         },
         {
             title: 'Access Management',
-            key: 'managementAccess',
+            key: 'management',
             render : (record : DataSource) => {
-                return (
-                    <Select className="w-full" options={[
-                        { value: Sector.LAND, label: "Land Management" },
-                        { value: Sector.FORESTRY, label: "Forestry Management" },
-                    ]} />
-                )
+                if(record.management == Sector.LAND)
+                    return "Land Management";
+                if(record.management == Sector.BIODIVERSITY)
+                    return "Biodiversity Management";
+                if(record.management == Sector.FORESTRY)
+                    return "Forestry Management";
             }
         },
         {
@@ -78,7 +82,7 @@ const ProgramLists = () => {
             render : (record : DataSource) => {
                 return (
                     <Space>
-                        <Button size="small" variant="solid" color="primary" onClick={() => updateProgramStore.settProgramId(record.key)}>Update</Button>
+                        <Button size="small" variant="text" color="primary" onClick={() => updateProgramStore.settProgramId(record.key)}>Update</Button>
                         <Popconfirm 
                         title="Delete Program" 
                         onConfirm={() => handleDeleteProgram(record.key)}
@@ -88,7 +92,7 @@ const ProgramLists = () => {
                                 Are you sure you want to delete this program?<br /> <br />
                                 <Alert type="warning" description="Note that this will also delete all associated units and program heads.." />
                             </>}>
-                            <Button size="small" variant="filled" color="danger">Delete</Button>
+                            <Button size="small" variant="text" color="danger">Delete</Button>
                         </Popconfirm>
                     </Space>
                 )
@@ -110,10 +114,6 @@ const ProgramLists = () => {
         .finally();
     }
 
-    const changeAccessManagement = () => {
-        
-    }
-
     useEffect(() => {
         setIsProgramsLoading(true)
         getAllPrograms(page, limit)
@@ -132,7 +132,9 @@ const ProgramLists = () => {
         const d : any[]  = programStore.programs.map((val, i) => {
             return  {
                 key: val._id,
-                name: val.name
+                name: val.name,
+                management : val.management,
+                programHead : val.programHead
             }
         })
         setDataSource(d);
@@ -157,13 +159,12 @@ const ProgramLists = () => {
                 onChange: (page) => setPage(page)
             }} />
 
-            <ProgramHeadList />
-
             <Drawer open={!!program} onClose={() => setProgram(null)}>
                 <CreateUnit program={program!} />
             </Drawer>
 
             <UpdateProgram onUpdated={(res) => setRefresh(!refresh)} />
+
         </>
     )
 }

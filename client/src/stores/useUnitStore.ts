@@ -1,25 +1,23 @@
-import { VoidFunctionComponent } from "react";
+
 import { Unit } from "../types/Unit";
 import { create } from "zustand";
 import { ValidationError } from "../types/ApiValidationError";
 import { User } from "../types/User";
 
-interface ViewUnits {
+
+export const useViewUnitsStore = create<{
     units : Unit[],
     programId : string | null,
     programName : string | null,
     page : number,
     limit : number,
     total : number,
-
     setUnits : (untis : Unit[]) => void,
     setProgram : (id:string, name:string) => void,
     setPage : (page : number) => void,
     setLimit : (limit : number) => void,
     setTotal : (total : number) => void
-}
-
-export const useViewUnitsStore = create<ViewUnits>(set => ({
+}>(set => ({
     units : [],
     programId : null,
     programName : null,
@@ -44,8 +42,7 @@ export const useViewUnitsStore = create<ViewUnits>(set => ({
     }
 }));
 
-
-interface UpdateUnitState {
+export const useUpdateUnitStore = create<{
     unit : Unit|null
     unitId : string | null
     errors : ValidationError[],
@@ -59,10 +56,7 @@ interface UpdateUnitState {
     setUnit : (unit : Unit) => void
     setUnitId : (id : string) => void
     setErrors : (errors : ValidationError[]) => void
-}
-
-
-export const useUpdateUnitStore = create<UpdateUnitState>((set) => ({
+}>((set) => ({
     unit: null,
     unitId: null,
     errors: [],
@@ -103,17 +97,14 @@ export const useUpdateUnitStore = create<UpdateUnitState>((set) => ({
 }
 ));
 
-
-interface UnitHeadState { 
+export const useUnitHeadStore = create<{
     heads : User[] 
     unitId : string|null
     name : string|null
     setHeads : (users : User[]) => void
     setUnit : (id:string, name : string) => void
     clear : () => void
-}
-
-export const useUnitHeadStore = create<UnitHeadState>((set) => ({
+}>((set) => ({
     heads: [],
     unitId : null,
     name : null,
@@ -131,5 +122,25 @@ export const useUnitHeadStore = create<UnitHeadState>((set) => ({
             heads : [],
             unitId : null
         })
+    }
+}));
+
+export const useAddFocalStore = create<{
+    unit : Unit | null,
+    setUnit : (unit:Unit|null) => void
+}>((set) => ({
+    unit : null,
+    setUnit : (unit : Unit|null) => {
+        set({ unit });
+    }
+}));
+
+export const useViewFocalsStore = create<{
+    unitId : string|null,
+    setUnitId : (unitId:string|null) => void
+}>((set) => ({
+    unitId : null,
+    setUnitId : (unitId : string|null) => {
+        set({ unitId });
     }
 }));

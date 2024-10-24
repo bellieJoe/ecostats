@@ -45,14 +45,30 @@ export const getUnitById = async (unitId:string) : Promise<any> => {
     return res;
 }
 
-export const getUnitHeads = async (unitId : string) : Promise<any> => {
-    const res = await axios.get(`${apiUrl}/units/heads/${unitId}`);
+export const addFocalPerson = async (unitId:string, userId:string, position:string) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/units/add-focal-person`, { unitId, userId, position });
     return res;
 }
 
-export const removeUnitHead = async (unitId:string, userId:string) : Promise<any> => {
-    const res = await axios.delete(`${apiUrl}/units/remove-head`, {
-        params : { unitId: unitId, userId }
-    });
+export const getFocalPersons = async (unitId:string) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/units/get-focals/${unitId}`);
+    return res;
+
+}
+
+export const removeFocal = async (id:string) : Promise<any> => {
+    const res = await axios.delete(`${apiUrl}/units/remove-focal/${id}`);
     return res;
 }
+
+// export const getUnitHeads = async (unitId : string) : Promise<any> => {
+//     const res = await axios.get(`${apiUrl}/units/heads/${unitId}`);
+//     return res;
+// }
+
+// export const removeUnitHead = async (unitId:string, userId:string) : Promise<any> => {
+//     const res = await axios.delete(`${apiUrl}/units/remove-head`, {
+//         params : { unitId: unitId, userId }
+//     });
+//     return res;
+// }

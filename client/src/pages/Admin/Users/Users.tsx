@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { activateUser, deactivateUser, getAllUsers } from "../../../services/api/userApi";
 import { Button, message, Popconfirm, Space, Switch, Table, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
-import EditUserRole from "../../../components/Admin/Users/EditUserRole";
 import { useEditRoleStore } from "../../../stores/useRoleStore";
 import Search from "antd/es/input/Search";
 import { useEditUserStore, useViewUsersStore } from "../../../stores/useUserStore";
 import EditUserDetails from "../../../components/Admin/Users/EditUserDetails";
+import RoleGuard from "../../../components/Guards/RoleGuard";
 
 interface DataSource {
     key: string
     name: string
     email: string
     isActive: boolean
+    role : string
 }
 
 const Users = () => {
@@ -22,7 +23,6 @@ const Users = () => {
     const viewUsersStore = useViewUsersStore();
     const [messageApi, contextHolder] = message.useMessage()
     const [dataSource, setDataSource] = useState<DataSource[]>([]);
-    const  { setUserId } = useEditRoleStore();
     const [ isSearching, setIsSearching ] = useState(false);
     const [ isUsersLoading, setIsUsersLoading ] = useState(false);
     const [ searchKeyword, setSearchKeyword ] = useState("");
@@ -87,13 +87,23 @@ const Users = () => {
             key: 'email',
         },
         {
+            title: 'Role',
+            key: 'role',
+            render : (record) => {
+                return (
+                    <>  
+                        { record.role }
+                    </>
+                )
+            }
+        },
+        {
             title: 'Actions',
             key: 'action',
             render : (record : DataSource) => {
                 return (
                     <Space>
-                        <Button size="small" onClick={() => editUserStore.setUserId(record.key)}>Update</Button>
-                        <Button size="small" onClick={() => setUserId(record.key)}>Roles</Button>
+                        <Button variant="text" color="primary" size="small" onClick={() => editUserStore.setUserId(record.key)}>Update</Button>
                     </Space>
                 )
             }
@@ -139,13 +149,15 @@ const Users = () => {
                 name: val.name,
                 email: val.email,
                 isActive: val.isActive,
+                role : val.role
             }
-        })
+        });
+        console.log(d)
         setDataSource(d);
     }, [viewUsersStore.users])
 
     return (
-        <>
+        <RoleGuard role={["admin"]} redirectTo="/error/401">
             {contextHolder}
 
             <Title level={3} >User Accounts</Title>
@@ -172,9 +184,9 @@ const Users = () => {
                 onChange: (page) => setPage(page)
             }} />
 
-            <EditUserRole />
+            {/* <EditUserRole /> */}
             <EditUserDetails />
-        </>
+        </RoleGuard>
     )
 }
 

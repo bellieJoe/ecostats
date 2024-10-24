@@ -82,7 +82,20 @@ function SignUp() {
 
     const navigate = useNavigate();
 
-    const { roles } = useRoleStore();
+    const roles = [
+        {
+            name : "Planning Officer",
+            value : "planning officer"
+        },
+        {
+            name : "Chief",
+            value : "chief"
+        },
+        {
+            name : "Focal",
+            value : "focal"
+        },
+    ];
 
     const [ errors , setErrors ] = useState<ValidationError[]>([])
 
@@ -91,7 +104,7 @@ function SignUp() {
         email : '',
         password : '',
         passwordConfirmation : '',
-        userRole : ''
+        role : ''
     });
 
     const handleFormControlChange = (e) => {
@@ -103,12 +116,12 @@ function SignUp() {
         e.preventDefault();
         setErrors([])
         try {
-            const { email, password, name, userRole } = signupFormData;
+            const { email, password, name, role } = signupFormData;
             if(signupFormData.password != signupFormData.passwordConfirmation){
                 setErrors([{path: "passwordConfirmation", location: "", msg : "Pasword doesnt match.", type: ""}])
                 return;
             }
-            const res = await signup({ email, password, name, userRole });
+            const res = await signup({ email, password, name, role });
             navigate("/login")
         } catch (error : any) {
             if(error.response.status = 422){
@@ -190,8 +203,8 @@ function SignUp() {
                                 <Select
                                     label="User Role"
                                     sx={{ color: "#fff" }}
-                                    value={signupFormData.userRole}
-                                    name="userRole"
+                                    value={signupFormData.role}
+                                    name="role"
                                     onChange={handleFormControlChange}
                                 >
                                     {

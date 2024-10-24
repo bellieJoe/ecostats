@@ -1,14 +1,13 @@
 import { Button, Card, Input, message, Select, SelectProps } from "antd";
 import Title from "antd/es/typography/Title";
 import { useCallback, useState } from "react";
-import { assignTo, searchUserByName } from "../../../services/api/userApi";
+import { assignTo, getByQuery, searchUserByName } from "../../../services/api/userApi";
 import debounce from 'lodash.debounce';
-import { createProgram, searchProgramByName } from "../../../services/api/programApi";
+import { searchProgramByName } from "../../../services/api/programApi";
 import { ValidationError } from "../../../types/ApiValidationError";
 import FieldError from "../../FieldError";
-import { createUnit, searchUnitByName } from "../../../services/api/unitApi";
-
-
+import {  searchUnitByName } from "../../../services/api/unitApi";
+import { parseResError } from "../../../services/errorHandler";
 
 const AssignHeads = () => {
     const [userOptions, setUserOptions] = useState([]);
@@ -75,15 +74,23 @@ const AssignHeads = () => {
     const debouncedUnitSearch = useCallback(
         debounce((value) => {
             setSelectUnitloading(true)
-            searchUnitByName(value)
+            getByQuery({
+                name : {
+                    $regex : value,
+                    $options : "i"
+                },
+                role : "chief"
+            })
             .then(res => {
+                console.log(res.data)
                 const options = res.data.map(val => {
                     return {
                         value : val._id,
-                        label : val.name
+                        label : val.name,
+                        email : val.email
                     }
                 });
-                setUnitOptions(options)
+                setUserOptions(options)
             })
             .catch(err => {
                 messageApi.error("Unexpected Error occured")
@@ -120,7 +127,7 @@ const AssignHeads = () => {
                 setValidationErrors(err.response.data.errors)
             }
             else{
-                messageApi.error(err.response.data.msg)
+                messageApi.error(parseResError(err).msg)
             }
         })
         .finally(() => setIsSaving(false))

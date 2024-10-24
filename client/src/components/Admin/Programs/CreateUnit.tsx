@@ -1,7 +1,7 @@
 import { Button, Card, Input, message, Select, SelectProps } from "antd";
 import Title from "antd/es/typography/Title";
 import { useCallback, useEffect, useState } from "react";
-import { searchUserByName } from "../../../services/api/userApi";
+import { getByQuery, searchUserByName } from "../../../services/api/userApi";
 import debounce from 'lodash.debounce';
 import { createProgram, searchProgramByName } from "../../../services/api/programApi";
 import { ValidationError } from "../../../types/ApiValidationError";
@@ -31,8 +31,15 @@ const CreateUnit = (props  : { program? : ProgramOption} ) => {
     const debouncedUserSearch = useCallback(
         debounce((value) => {
             setSelectUserloading(true)
-            searchUserByName(value)
+            getByQuery({
+                name : {
+                    $regex : value,
+                    $options : "i"
+                },
+                role : "chief"
+            })
             .then(res => {
+                console.log(res.data)
                 const options = res.data.map(val => {
                     return {
                         value : val._id,

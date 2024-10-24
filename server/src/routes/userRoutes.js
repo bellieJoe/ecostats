@@ -13,7 +13,6 @@ import {
     login, 
     refreshToken, 
     signup, 
-    test, 
     getUserById ,
     activate,
     deactivate,
@@ -21,6 +20,7 @@ import {
     searchByName,
     assignUserToUnitOrProgram
 } from "../controller/userController.js";
+import UserModel from "../model/User.js";
 
 router.post('/login', userLoginValidation, login);
 
@@ -40,10 +40,11 @@ router.get('/search/:name', searchByName);
 
 router.get('/get-by-id/:id', getUserById);
 
-router.get('/test', test);
-
 router.post('/assign-to', assignToUntOrPrgrmValidation, assignUserToUnitOrProgram);
 
-
+router.get("/query", async (req, res) => {
+    const users = await UserModel.find(req.query.query);
+    return res.json(users);
+});
 
 export default router;

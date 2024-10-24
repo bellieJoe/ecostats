@@ -6,7 +6,7 @@ import { refreshToken as _refreshToken } from "../../services/api/userApi";
 
 interface Props {
     children : any
-    redirectTo? : string
+    role? : string[]
 }
 
 const RouteGuard = (props : Props) => {
@@ -26,7 +26,7 @@ const RouteGuard = (props : Props) => {
                     console.log(err)
                 })
             }
-        }, 10000);
+        }, 300000);
         return () => clearInterval(interval);
     }, [refreshToken, isIdle]);
 
@@ -40,18 +40,24 @@ const RouteGuard = (props : Props) => {
         };
 
         checkAuth();
-    }, [])
+    }, []);
 
-    return (
-        <div className="h-full" onClick={() => setIsIdle(false)}>
-            {
-                isAuth && props.redirectTo ? props.children  : (<Navigate to={props.redirectTo!} />)
-            }
-            {
-                isAuth && !props.redirectTo && props.children 
-            }
-        </div>
-    )
+    if(isAuth){
+        return <div className="h-full" onClick={() => setIsIdle(false)}>{props.children}</div>
+    }
+    else{
+        return <Navigate to="/login" />
+    }
+    // return (
+    //     <div className="h-full" onClick={() => setIsIdle(false)}>
+    //         {
+    //             isAuth && props.redirectTo ? props.children  : (<Navigate to={props.redirectTo!} />)
+    //         }
+    //         {
+    //             isAuth && !props.redirectTo && props.children 
+    //         }
+    //     </div>
+    // )
 }
 
 export default RouteGuard;

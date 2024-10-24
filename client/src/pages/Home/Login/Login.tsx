@@ -113,7 +113,7 @@ const Login = () => {
             Cookies.set("accessToken", tokens.accessToken, {expires: 7});
             Cookies.set("refreshToken", tokens.refreshToken, {expires: 7});
             setTokens(tokens);
-            navigate("/app")
+            location.href = "/app";
         } catch (error) {
             console.log(error)
             messageApi.error(parseResError(error).msg)

@@ -3,12 +3,11 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
 import { validationResult } from "express-validator";
-import UserRoleModel from "../model/UserRole.js";
-import RoleModel from "../model/Role.js";
 import UnitModel from "../model/Unit.js";
 import mongoose from "mongoose";
-import ProgramHeadModel from "../model/ProgramHead.js";
-import UnitHeadModel from "../model/UnitHead.js";
+// import ProgramHeadModel from "../model/ProgramHead.js";
+// import UnitHeadModel from "../model/UnitHead.js";
+import ProgramModel from "../model/Program.js";
 
 dotenv.config()
 
@@ -61,21 +60,16 @@ export const signup = async (req, res)  => {
         if(!errors.isEmpty())
             return res.status(422).json({errors: errors.array()})
 
-        const { email, password, userRole, name } = req.body;
+        const { email, password, role, name } = req.body;
         
         const user = new UserModel({
             email,
             passwordHash : await bcrypt.hash(password, 10),
             name,
-            isActive: true
-        })
-        const role = await RoleModel.findOne({value: userRole})
-        await user.save({session});
-        const _userRole = new UserRoleModel({
-            user,
+            isActive: true,
             role
-        })
-        await _userRole.save({session});
+        });
+        await user.save({session});
 
         await session.commitTransaction();
 
@@ -139,8 +133,7 @@ export const all = async (req, res) => {
 
         const users = await UserModel.find(q)
                             .skip(skip)
-                            .limit(limit)
-                            .select("_id name email isActive createdAt ");
+                            .limit(limit);
 
         return res.json({
             total,
@@ -163,8 +156,7 @@ export const searchByName = async (req, res) => {
     try {
         const name = req.params.name; 
 
-        const users = await UserModel.find({ name : { $regex : name, $options: "i" }})
-            .select("_id name email isActive createdAt ");
+        const users = await UserModel.find({ name : { $regex : name, $options: "i" }});
 
         return res.json(users)
     } catch (error) {
@@ -178,20 +170,21 @@ export const searchByName = async (req, res) => {
     }
 }
 
-export const test =  async  (req, res) => {
-    try {
-        const i = await RoleModel.findById("6708b427fadb06d0251a8066")
-        res.json(i)
-    } catch (error) {
-        console.log(error)
-        return res.status(500).json(
-            { 
-                error: 'Server error.',
-                details : error
-            }   
-        );
-    }
-}
+// export const searchByNameAndRole = async (req, res) => {
+//     try {
+//         const { name, role } = req.query;
+        
+//         const users = 
+//     } catch (error) {
+//         console.log(error)
+//         return res.status(500).json(
+//             { 
+//                 error: 'Server error.',
+//                 details : error
+//             }   
+//         ); 
+//     }
+// }
 
 export const getUserById = async (req, res) => {
     try {
@@ -204,7 +197,7 @@ export const getUserById = async (req, res) => {
             })
         }
 
-        const user = await UserModel.findOne({_id:id}).select("_id name email isActive createdAt")
+        const user = await UserModel.findOne({_id:id});
 
         if(!user){
             return res.json(404).send({
@@ -315,10 +308,12 @@ export const update = async (req, res)  => {
         const id = req.params.id;
         const name = req.body.name;
         const email = req.body.email;
+        const role = req.body.role;
 
         const user = await UserModel.findById(id)
         user.email = email;
         user.name = name;
+        user.role = role;
         await user.save()
 
         return res.json(user);
@@ -347,19 +342,11 @@ export const assignUserToUnitOrProgram = async (req, res)  => {
         const unitId = req.body.unitId;
    
         if(programId) {
-            const pHead =  new ProgramHeadModel({
-                programId : programId,
-                userId : userId
-            })
-            await pHead.save({session})
+            await ProgramModel.findOneAndUpdate({ _id : programId }, { programHead : userId }).session(session);
         }
    
         if(unitId) {
-            const uHead = new UnitHeadModel({
-                unitId : unitId,
-                userId : userId
-            })
-            await uHead.save({session})
+            await UnitModel.findOneAndUpdate({ _id : unitId }, { unitHead : userId }).session(session);
         }
 
         await session.commitTransaction()

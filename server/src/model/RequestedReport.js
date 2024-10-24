@@ -21,19 +21,24 @@ const RequestedReportSchema = new mongoose.Schema({
     type : String,
     required : true
   },
+  unitId : {
+    type : Schema.Types.ObjectId,
+    required : true,
+    ref: "units"
+  },
   requested_by: {
     type: Schema.Types.ObjectId,
     ref : "users",
     required : true
   },
-  approved_by_unit_head: {
-    type: Boolean,
-    default : false
+  reviewed_at : {
+    type : Date,
+    default : null
   },
-  approved_by_division_head: {
-    type: Boolean,
-    default : false
-  },
+  approved_at : {
+    type : Date,
+    default : null
+  }
 }, {
   timestamps: true, // Adds createdAt and updatedAt timestamps
 });

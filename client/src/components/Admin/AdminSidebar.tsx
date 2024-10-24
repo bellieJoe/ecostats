@@ -1,20 +1,22 @@
 import { ConfigProvider, Menu, MenuProps, ThemeConfig } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
-import { FolderOutlined, HomeOutlined, PlusSquareOutlined, PushpinOutlined, UserOutlined } from '@ant-design/icons';
+import { FolderOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import SidebarUser from "../SidebarUser";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const AdminSidebar = ({open}) => {
     const navigate = useNavigate();
+    const authStore = useAuthStore();
 
     const [collapsed, setCollapsed] = useState(true);
 
     const menuStyle1 : React.CSSProperties = {
-        fontWeight: "bold"
+        fontWeight: "bold",
     };
 
     const items: MenuItem[] = [
@@ -23,14 +25,16 @@ const AdminSidebar = ({open}) => {
             label: "Users",
             icon: <UserOutlined />,
             style: menuStyle1,
-            onClick: () => navigate("users")
+            onClick: () => navigate("users"),
+            disabled : authStore.user?.role != "admin",
         },
         {
             key: "programs",
             label: "Programs",
             icon: <FolderOutlined />,
             style: menuStyle1,
-            onClick: () => navigate("programs")
+            onClick: () => navigate("programs"),
+            disabled : !["admin", "planning officer"].includes(authStore.user?.role!)
         }
 
     ];

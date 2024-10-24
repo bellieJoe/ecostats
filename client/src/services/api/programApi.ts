@@ -2,8 +2,8 @@ import axios from "axios";
 
 const apiUrl : string = import.meta.env.VITE_API_URL;
 
-export const createProgram = async (userId : string, name : string) : Promise<any> => {
-    const res = await axios.post(`${apiUrl}/programs/create`, {userId, name});
+export const createProgram = async (userId : string, name : string, management : string) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/programs/create`, {userId, name, management});
     return res;
 }
 
@@ -49,8 +49,8 @@ export const getProgramById = async (programId:string) : Promise<any> => {
     return res;
 }
     
-export const updateProgram = async (id :string, name : string) : Promise<any> => {
-    const res = await axios.put(`${apiUrl}/programs/update`, {id, name});
+export const updateProgram = async (id :string, name : string, management:string) : Promise<any> => {
+    const res = await axios.put(`${apiUrl}/programs/update`, {id, name, management});
     return res;
 }
     

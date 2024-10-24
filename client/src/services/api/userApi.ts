@@ -94,7 +94,7 @@ export const getTokensFromCookie = () : AuthToken => {
     }
 }
 
-export const signup = async (data : {email : string, password : string, name : string, userRole : string}) : Promise<void> => {
+export const signup = async (data : {email : string, password : string, name : string, role : string}) : Promise<void> => {
     await axios.post(`${apiUrl}/users/signup`, data);
 }
 
@@ -110,8 +110,8 @@ export const deactivateUser = async (id : string) : Promise<any> => {
     return await axios.post(`${apiUrl}/users/deactivate/${id}`);
 }
 
-export const updateUser = async (id : string, name : string, email : string) : Promise<any> => {
-    return await axios.put(`${apiUrl}/users/update/${id}`, { name, email });
+export const updateUser = async (id : string, name : string, email : string, role : string) : Promise<any> => {
+    return await axios.put(`${apiUrl}/users/update/${id}`, { name, email, role });
 }
 
 export const searchUserByName = async (name : string) : Promise<any> => {
@@ -121,5 +121,13 @@ export const searchUserByName = async (name : string) : Promise<any> => {
 export const assignTo = async (userId : string, programId : string|null, unitId : string|null) : Promise<any> => {
     return await axios.post(`${apiUrl}/users/assign-to`, {
         userId, programId, unitId
+    });
+}
+
+export const getByQuery = async (query : any) : Promise<any> => {
+    return await axios.get(`${apiUrl}/users/query`, {
+        params: {
+            query : query
+        }
     });
 }

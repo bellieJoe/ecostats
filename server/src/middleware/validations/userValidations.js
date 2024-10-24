@@ -1,11 +1,8 @@
 import { body, param } from "express-validator";
 import UserModel from "../../model/User.js";
-import RoleModel from "../../model/Role.js";
 import UnitModel from "../../model/Unit.js";
 import ProgramModel from "../../model/Program.js";
 import { getUserIdFromToken } from "../../controller/userController.js";
-import ProgramHeadModel from "../../model/ProgramHead.js";
-import UnitHeadModel from "../../model/UnitHead.js";
 import mongoose from "mongoose";
 
 export const userLoginValidation = [
@@ -36,17 +33,21 @@ export const userSignupValidation = [
     .exists().withMessage("Password is required")
     .notEmpty().withMessage("Password must not be empty"),
 
-    body("userRole")
+    body("role")
     .exists().withMessage("Role is required")
-    .notEmpty().withMessage("Role must not be empty")
-    .isString().withMessage("Role must be string")
-    .custom(async (value) => {
-        const isExist = await RoleModel.exists({value: value});
-        if(!isExist){
-            throw new Error('Invalid User Role.');
-        }
-        return true;
-    })
+    .notEmpty().withMessage("Role must not be empty"),
+
+    // body("userRole")
+    // .exists().withMessage("Role is required")
+    // .notEmpty().withMessage("Role must not be empty")
+    // .isString().withMessage("Role must be string")
+    // .custom(async (value) => {
+    //     const isExist = await RoleModel.exists({value: value});
+    //     if(!isExist){
+    //         throw new Error('Invalid User Role.');
+    //     }
+    //     return true;
+    // })
 ]
 
 export const refreshTokenValidation = [ 
@@ -126,7 +127,7 @@ export const assignToUntOrPrgrmValidation = [
         if(!exist){
             throw new Error("Program should be an existing program.")
         }
-        const head = await ProgramHeadModel.findOne({programId : value, userId: req.body.userId, deletedAt : null})
+        const head = await ProgramModel.findOne({_id : value, programHead: req.body.userId, deletedAt : null})
         if(head) {
             throw new Error("Program is already assigned to the user.")
 
@@ -146,7 +147,7 @@ export const assignToUntOrPrgrmValidation = [
         if(!exist){
             throw new Error("Unit does not exist")
         }
-        const head = await UnitHeadModel.findOne({userId: req.body.userId, deletedAt : null, unitId : value})
+        const head = await UnitModel.findOne({unitHead: req.body.userId, deletedAt : null, _id : value})
         if(head) {
             throw new Error("Unit is already assigned to the user.")
 

@@ -1,6 +1,6 @@
 import { Mongoose, Schema, model } from "mongoose";
 
-const UnitHeadSchema = new Schema({
+const FocalPersonSchema = new Schema({
     unitId : {
         type : Schema.Types.ObjectId,
         required : true,
@@ -11,11 +11,17 @@ const UnitHeadSchema = new Schema({
         required : true,
         ref : "users"
     },
+    position : {
+        type : String,
+        required : true
+    },
     deletedAt : {
         type : Date,
         default : null
     }
+}, {
+    timestamps : true
 });
 
-const UnitHeadModel = model("unitHeads", UnitHeadSchema);
-export default UnitHeadModel;
+const FocalPersonModel = model("focal_person", FocalPersonSchema);
+export default FocalPersonModel;

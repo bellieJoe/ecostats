@@ -1,4 +1,4 @@
-import { Button, Drawer, Input, message, Space, Tag } from "antd";
+import { Button, Drawer, Input, message, Select, Space, Tag } from "antd";
 import { useEffect, useState } from "react";
 import Title from "antd/es/typography/Title";
 import { useEditUserStore, useViewUsersStore } from "../../../stores/useUserStore";
@@ -15,7 +15,8 @@ const EditUserDetails = () => {
     const [isSaving, setIsSaving] = useState(false)
     const [formData, setFormData] = useState({
         name: "",
-        email: ""
+        email: "",
+        role : ""
     });
     const [validationErrors , setValidationErrors] = useState<ValidationError[]>([]);
     const viewUsersStore = useViewUsersStore();
@@ -27,7 +28,7 @@ const EditUserDetails = () => {
 
     const handleOnSave = () => {
         setIsSaving(true)
-        updateUser(user?._id!, formData.name, formData.email)
+        updateUser(user?._id!, formData.name, formData.email, formData.role)
         .then((res) => {
             viewUsersStore.setUsers(viewUsersStore.users.map(user => {
                 if(user._id == res.data._id){
@@ -83,7 +84,8 @@ const EditUserDetails = () => {
         if(user){
             setFormData({
                 name: user!.name,
-                email: user!.email
+                email: user!.email,
+                role : user.role
             })
         }
     }, [user])
@@ -103,6 +105,31 @@ const EditUserDetails = () => {
                     <label className="font-semibold">Name</label>
                     <Input placeholder="Name" value={formData.name} onChange={handleFormControlChange} name="name" />
                     <FieldError errors={validationErrors} name={"name"} />
+                </div>
+                <div className="mb-2">
+                    <label className="font-semibold">Role</label>
+                    <Select className="block w-full" placeholder="Select Role" 
+                    value={formData.role} 
+                    onChange={(e) => setFormData({...formData, role : e})} 
+                    options={[
+                        {
+                            label : "System Admin",
+                            value : "admin"
+                        },
+                        {
+                            label : "Planning Officer",
+                            value : "planning officer"
+                        },
+                        {
+                            label : "Chief",
+                            value : "chief"
+                        },
+                        {
+                            label : "Focal",
+                            value : "focal"
+                        },
+                    ]}/>
+                    <FieldError errors={validationErrors} name={"role"} />
                 </div>
                 <div className="mb-2">
                     <label className="font-semibold">Email</label>

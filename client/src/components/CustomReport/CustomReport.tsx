@@ -271,6 +271,7 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
 
             <div className="ag-theme-alpine" style={{ width: '100%', height: '500px' }}>
                 <AgGridReact
+                    
                     autoSizeStrategy={{
                         type: "fitGridWidth"
                     }}

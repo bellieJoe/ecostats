@@ -2,9 +2,8 @@ import { validationResult } from "express-validator";
 import UserModel from "../model/User.js";
 import ProgramModel from "../model/Program.js";
 import UnitModel from "../model/Unit.js";
-import UnitHead from "../model/UnitHead.js";
 import mongoose, { mongo } from "mongoose";
-import UnitHeadModel from "../model/UnitHead.js";
+import FocalPersonModel from "../model/FocalPerson.js";
 
 
 export const create = async (req, res) => {
@@ -19,18 +18,13 @@ export const create = async (req, res) => {
         const name = req.body.name;
         const programId = req.body.programId;
 
-        const user = await UserModel.findById(userId);
         const unit = new  UnitModel({
             name: name,
-            programId : programId
+            programId : programId,
+            unitHead : userId
         });
-        await unit.save();
-        const unitHead = new UnitHead({
-            userId : user,
-            unitId : unit
-        });
-        await unitHead.save();
-
+        await unit.save({session});
+        
         await session.commitTransaction();
 
         return res.send();
@@ -52,8 +46,7 @@ export const searchUnitByName = async (req, res) => {
     try {
         const name = req.params.name; 
 
-        const units = await UnitModel.find({ name : { $regex : name, $options: "i" }, deletedAt : null})
-            .select("_id name createdAt");
+        const units = await UnitModel.find({ name : { $regex : name, $options: "i" }, deletedAt : null}).populate("unitHead");
 
         return res.json(units)
     } catch (error) {
@@ -115,7 +108,7 @@ export const getByProgram = async (req, res) => {
         const units = await UnitModel.find(q)
                             .skip(skip)
                             .limit(limit)
-                            .select("_id name  createdAt ");
+                            .populate("unitHead");
 
         return res.json({
             total,
@@ -143,14 +136,6 @@ export const deleteUnit = async (req, res) => {
       
       await UnitModel.findOneAndUpdate({
         _id : unitId
-      }, {
-        deletedAt : Date.now()
-      })
-      .session(session);
-
-      await UnitHeadModel.updateMany({
-        unitId : unitId,
-        deletedAt : null
       }, {
         deletedAt : Date.now()
       })
@@ -200,7 +185,7 @@ export const getUnitById = async (req, res) => {
     try {
         const unitId = req.params.unitId;
 
-        const unit = await UnitModel.findById(unitId).select("_id name");
+        const unit = await UnitModel.findById(unitId).populate("unitHead");
 
         return res.status(200).json(unit)
        
@@ -215,21 +200,28 @@ export const getUnitById = async (req, res) => {
     }
 }
 
-export const getUnitHeads = async (req, res) => {
+export const addFocalPerson = async (req, res) => {
     try {
-        const unitId = req.params.unitId;
+        
+        const { unitId , userId, position } = req.body;
 
-        const unitHeads = await UnitHeadModel.find({
-            unitId: unitId,
-            deletedAt : null
-        })
-        .populate({
-            path: "userId",
-            select: "_id name email createdAt"
+        const exists = await FocalPersonModel.exists({ userId : userId, deletedAt : null });
+        if(exists) {
+            return res.status(500).json({
+                error: "Duplicate",
+                msg: "User is already assigned to a unit."
+            });
+        }
+
+        const focal = new FocalPersonModel({
+            userId,
+            unitId,
+            position
         });
+        await focal.save();
 
-        return res.json(unitHeads.map(p => p.userId))
-       
+        return res.send();
+
     } catch (error) {
         console.log(error)
         return res.status(500).json(
@@ -241,19 +233,43 @@ export const getUnitHeads = async (req, res) => {
     }
 }
 
-export const removeHead = async (req, res) => {
+export const getFocalPersons = async (req, res) => {
     try {
-        const userId = req.query.userId;
-        const unitId = req.query.unitId;
+        
+        const { unitId } = req.params;
 
-        const unitHead = await UnitHeadModel.findOne({
-            userId, unitId: unitId, deletedAt : null
-        });
-        unitHead.deletedAt = Date.now()
-        await unitHead.save();
+        const focals = await FocalPersonModel.find({
+            unitId,
+            deletedAt : null
+        })
+        .populate("userId");
 
-        return res.status(200).send()
-       
+        return res.json(focals)
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
+export const removeFocal = async (req, res) => {
+    try {
+        
+        const { id } = req.params;
+
+        const focals = await FocalPersonModel.findOneAndUpdate({
+            _id : id
+        }, {
+            deletedAt: Date.now()
+        })
+
+        return res.json()
+
     } catch (error) {
         console.log(error)
         return res.status(500).json(

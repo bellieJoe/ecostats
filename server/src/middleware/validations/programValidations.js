@@ -18,6 +18,10 @@ export const createProgramValidation = [
         }
     }),
 
+    body("management")
+    .exists().withMessage("Management Id is required.")
+    .notEmpty().withMessage("Management should not be empty"),
+
     body("name")
     .exists().withMessage("Name is required.")
     .notEmpty().withMessage("Name should not be empty")
@@ -97,21 +101,6 @@ export const getProgramHeadsValidation = [
     })
 ]
 
-export const getUnitHeadsValidation = [
-    param("unitId")
-    .custom(async (value) => {
-        if(!mongoose.Types.ObjectId.isValid(value)){
-            throw new Error("Unit is invalid")
-        }
-        const unit = await UnitModel.findById(value);
-        if(!unit){
-            throw new Error("Program does not exist.")
-        }
-        return true;
-    })
-]
-
-
 export const updateProgramValidation = [
     param("id")
     .custom(async (value) => {
@@ -124,6 +113,10 @@ export const updateProgramValidation = [
         }
         return true;
     }),
+
+    body("management")
+    .exists().withMessage("Management Id is required.")
+    .notEmpty().withMessage("Management should not be empty"),
 
     body("name")
     .exists().withMessage("Name is required.")
