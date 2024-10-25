@@ -61,6 +61,16 @@ export const removeFocal = async (id:string) : Promise<any> => {
     return res;
 }
 
+export const getUnitsByQuery = async (query : any, populate : any[]) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/units/query`, {
+        params : {
+            query : JSON.stringify(query),
+            populate : JSON.stringify(populate),
+        }
+    });
+    return res;
+}
+
 // export const getUnitHeads = async (unitId : string) : Promise<any> => {
 //     const res = await axios.get(`${apiUrl}/units/heads/${unitId}`);
 //     return res;

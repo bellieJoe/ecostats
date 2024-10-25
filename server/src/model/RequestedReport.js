@@ -21,7 +21,7 @@ const RequestedReportSchema = new mongoose.Schema({
     type : String,
     required : true
   },
-  unitId : {
+  unit_id : {
     type : Schema.Types.ObjectId,
     required : true,
     ref: "units"
@@ -38,6 +38,11 @@ const RequestedReportSchema = new mongoose.Schema({
   approved_at : {
     type : Date,
     default : null
+  },
+  rejected_by : {
+    type : Schema.Types.ObjectId,
+    default : null,
+    ref : "users"
   }
 }, {
   timestamps: true, // Adds createdAt and updatedAt timestamps

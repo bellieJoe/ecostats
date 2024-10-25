@@ -8,8 +8,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import GenericFormDrawerV3 from "../../../GenericFormV3";
 import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
-import CustomReportTable from "../../../CustomReport/CustomReportTable";
-import { land_2_col_defs } from "./Land_Table_2";
 
 export const land_1_gen_form_fields : GenericFormFieldV3[] = [
     {

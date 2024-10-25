@@ -1,15 +1,34 @@
 
+import mongoose from "mongoose";
 import RequestedReportModel from "../model/RequestedReport.js";
+import ReportLogModel from "../model/ReportLogs.js";
+import UserModel from "../model/User.js"
+import FocalPerson from "../model/FocalPerson.js"
+import { getUserFromToken, getUserIdFromToken } from "./userController.js";
 
 export const create = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction()
     try {
 
         const title = req.body.title;
         const description = req.body.description;
         const filters = req.body.filters;
         const fields = req.body.fields;
-        const requested_by = req.body.requested_by
-        const form_name = req.body.form_name
+        const requested_by = req.body.requested_by;
+        const form_name = req.body.form_name;
+
+        const focal = await FocalPerson.findOne({
+            userId :requested_by,
+            deletedAt : null
+        });
+
+        if(!focal) {
+            return res.status(404).json({
+                error: "Unit Not Found",
+                msg: "Unable to create the report as this user is not a member of any unit."
+            })
+        }
         
         const requestedReport = new RequestedReportModel({
             title,
@@ -17,10 +36,21 @@ export const create = async (req, res) => {
             filters,
             fields,
             requested_by,
-            form_name
+            form_name,
+            unit_id : focal.unitId
         });
-        await requestedReport.save();
+        await requestedReport.save({session});
+        console.log(requestedReport._id)
+
+        const user = await UserModel.findById(requested_by).session(session);
+
+        new ReportLogModel({
+            message : `${user.name} created the request.`,
+            reportId : requestedReport._id
+        }).save({session});
         
+        
+        await session.commitTransaction();
         return res.send();
     } catch (error) {
         console.log(error)
@@ -31,16 +61,26 @@ export const create = async (req, res) => {
                 details : error
             }   
         );
-    } 
+    } finally {
+        session.endSession()
+    }
 }
 
 export const getByQuery = async (req, res) => {
     try {
-        const query = { ...req.query };
+        const query = JSON.parse(req.query.query);
+        const populate =  JSON.parse(req.query.populate);
 
-        const requests = await RequestedReportModel.find(query);
+        console.log(query)
+        let request;
+        if(populate) {
+            request = await RequestedReportModel.find(query).populate(populate);
+        }
+        else {
+            request = await RequestedReportModel.find(query);
+        }
 
-        return res.json(requests);
+        return res.json(request);
 
     } catch (error) {
         console.log(error)
@@ -73,3 +113,167 @@ export const deleteReport = async (req, res) => {
         ); 
     }
 }
+
+export const addLog = async (req, res) => {
+    try {
+
+        const { reportId, comment, message } = req.body;
+
+        const reportLog = new ReportLogModel({
+            reportId,
+            comment,
+            message
+        });
+        await reportLog.save()
+        
+        return res.send();
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        );
+    } 
+}
+
+export const getLogsByQuery = async (req, res) => {
+    try {
+        const query = JSON.parse(req.query.query);
+        const populate =  JSON.parse(req.query.populate);
+
+        let request;
+        if(populate) {
+            request = await ReportLogModel.find(query).populate(populate).sort({createdAt : "descending"});
+        }
+        else {
+            request = await ReportLogModel.find(query).sort({createdAt : "descending"});
+        }
+
+        return res.json(request);
+
+    } catch (error) {
+        console.log(error)
+        await session.abortTransaction();
+        res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
+
+export const reviewReport = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction()
+    try {
+        const user = await getUserFromToken(req.cookies.accessToken);
+        const id = req.params.id;
+
+        await RequestedReportModel.findOneAndUpdate(
+            {_id : id},
+            {
+                reviewed_at : Date.now()
+            }
+        ).session(session);
+
+        const log = new ReportLogModel({
+            message : `${user.name} reviewed the report.`,
+            reportId : id
+        });
+        await log.save({session});
+        
+        await session.commitTransaction();
+        return res.json();
+
+    } catch (error) {
+        console.log(error)
+        await session.abortTransaction();
+        res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    } finally {
+        await session.endSession();
+    }
+}
+
+export const approveReport = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction()
+    try {
+        const user = await getUserFromToken(req.cookies.accessToken);
+        const id = req.params.id;
+
+        await RequestedReportModel.findOneAndUpdate(
+            {_id : id},
+            {
+                approved_at : Date.now()
+            }
+        ).session(session);
+
+        const log = new ReportLogModel({
+            message : `${user.name} approved the report.`,
+            reportId : id
+        });
+        await log.save({session});
+        
+        await session.commitTransaction();
+        return res.json();
+
+    } catch (error) {
+        console.log(error)
+        await session.abortTransaction();
+        res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    } finally {
+        await session.endSession();
+    }
+}
+
+export const rejectReport = async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction()
+    try {
+        const user = await getUserFromToken(req.cookies.accessToken);
+        const id = req.params.id;
+
+        console.log(user)
+        await RequestedReportModel.findOneAndUpdate(
+            {_id : id},
+            {
+                rejected_by : user._id
+            }
+        ).session(session);
+
+        const log = new ReportLogModel({
+            message : `${user.name} rejected the report.`,
+            reportId : id
+        });
+        await log.save({session});
+        
+        await session.commitTransaction();
+        return res.json();
+
+    } catch (error) {
+        console.log(error)
+        await session.abortTransaction();
+        res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    } finally {
+        await session.endSession();
+    }
+}
+

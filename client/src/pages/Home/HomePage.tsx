@@ -14,7 +14,7 @@ const HomePage = () => {
         <>
             <Layout style={layoutStyle} >
                 <Content style={{
-                    height: "100%"
+                    height: "100%",
                 }}>
                     <Outlet />
                 </Content>

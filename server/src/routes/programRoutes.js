@@ -4,6 +4,7 @@ import {
     countPrograms,
     create ,
     deleteProgram,
+    getByQuery,
     getProgramById,
     searchProgramByName,
     updateProgram
@@ -32,5 +33,7 @@ router.delete('/delete/:programId', deleteProgram)
 router.get('/get-by-id/:programId', getProgramById)
 
 router.put('/update', updateProgramValidation, updateProgram)
+
+router.get('/query', getByQuery)
 
 export default router;

@@ -7,9 +7,10 @@ import {
     getByProgram, 
     getFocalPersons, 
     getUnitById, 
-    removeFocal, 
+    getByQuery, 
     searchUnitByName,
-    updateUnit
+    updateUnit,
+    removeFocal
 } from "../controller/unitController.js";
 import {
     createUnitValidation,
@@ -36,7 +37,9 @@ router.post('/add-focal-person', addFocalPerson)
 
 router.get('/get-focals/:unitId', getFocalPersons)
 
-router.delete('/remove-focal/:id', removeFocal)
+router.delete('/remove-focal/:id', removeFocal);
+
+router.get('/query', getByQuery)
 
 
 

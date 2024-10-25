@@ -54,3 +54,13 @@ export const updateProgram = async (id :string, name : string, management:string
     return res;
 }
     
+export const getProgramByQuery = async (query:any, populate:any) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/programs/query`, {
+        params : {
+            query : JSON.stringify(query),
+            populate : JSON.stringify(populate)
+        }
+    });
+    return res;
+}
+    

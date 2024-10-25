@@ -31,7 +31,7 @@ const Navbar = () => {
         {
             label: 'Profile',
             key: '1',
-            icon: (<UserOutlined />)
+            icon: (<UserOutlined />),
           },
         {
           type: 'divider',

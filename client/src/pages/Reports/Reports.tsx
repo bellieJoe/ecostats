@@ -1,8 +1,6 @@
 import { Button, Grid, Layout } from "antd";
-import Navbar from "../../components/Navbar/Navbar";
 import { Content } from "antd/es/layout/layout";
 import { Outlet } from "react-router-dom";
-import AdminSidebar from "../../components/Admin/AdminSidebar";
 import { useEffect, useState } from "react";
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import RouteGuard from "../../components/Guards/RouteGuard";
@@ -27,7 +25,7 @@ const Reports = () => {
     }, [screens])
     
     return (
-        <RouteGuard redirectTo="/error/401">
+        <RouteGuard>
             <Layout className="h-full">
                 <ReportsSidebar open={collapsed} />
                 <Layout>

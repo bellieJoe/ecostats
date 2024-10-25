@@ -40,3 +40,27 @@ export const usePreviewReportStore = create<PreviewReportState>((set) => ({
         })
     }
 }));
+
+export const useAddCommentStore = create<{
+    reportId : null | string
+    setReportId : (id:string|null) => void
+}>(set => ({
+    reportId : null,
+    setReportId : (id) => {
+        set({
+            reportId : id
+        })
+    }
+}));
+
+export const useViewLogsStore = create<{
+    reportId : null | string
+    setReportId : (id:string|null) => void
+}>(set => ({
+    reportId : null,
+    setReportId : (id) => {
+        set({
+            reportId : id
+        })
+    }
+}));

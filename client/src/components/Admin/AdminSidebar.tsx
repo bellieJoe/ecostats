@@ -19,25 +19,7 @@ const AdminSidebar = ({open}) => {
         fontWeight: "bold",
     };
 
-    const items: MenuItem[] = [
-        {
-            key: "users",
-            label: "Users",
-            icon: <UserOutlined />,
-            style: menuStyle1,
-            onClick: () => navigate("users"),
-            disabled : authStore.user?.role != "admin",
-        },
-        {
-            key: "programs",
-            label: "Programs",
-            icon: <FolderOutlined />,
-            style: menuStyle1,
-            onClick: () => navigate("programs"),
-            disabled : !["admin", "planning officer"].includes(authStore.user?.role!)
-        }
-
-    ];
+    const [items, setItems] = useState<any[]>([]);
 
     const theme : ThemeConfig = {
         "token": {
@@ -64,7 +46,33 @@ const AdminSidebar = ({open}) => {
         }
     }
 
-    useEffect(() => setCollapsed(open), [open])
+    useEffect(() => setCollapsed(open), [open]);
+
+    useEffect(() => {
+        const i = [
+            {
+                key: "users",
+                label: "Users",
+                icon: <UserOutlined />,
+                style: menuStyle1,
+                onClick: () => navigate("users"),
+                role : ["admin"]
+            },
+            {
+                key: "programs",
+                label: "Programs",
+                icon: <FolderOutlined />,
+                style: menuStyle1,
+                onClick: () => navigate("programs"),
+                role : ["admin", "planning officer"]
+            }
+    
+        ];
+
+        setItems(i.filter(i => {
+            return i.role?.includes(authStore.user?.role!)
+        }))
+    }, [authStore.user]);
 
     return (
         <>

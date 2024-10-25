@@ -49,14 +49,49 @@ export const requestReport = async (body : any) : Promise<any> => {
     return res;
 }
 
-export const getRequestReport = async (query : any) : Promise<any> => {
+
+
+export const getRequestReportByQuery = async (query : any, populate : any) : Promise<any> => {
     const res = await axios.get(`${apiUrl}/requested-reports/get-by-query`, {
-        params : query
+        params : {
+            query : JSON.stringify(query),
+            populate : JSON.stringify(populate)
+        }
     });
     return res;
 }
 
 export const delRequestReport = async (id : string) : Promise<any> => {
     const res = await axios.delete(`${apiUrl}/requested-reports/delete/${id}`);
+    return res;
+}
+
+export const addComment = async ({comment, message, reportId}) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/requested-reports/add-log`, {comment, message, reportId});
+    return res;
+}
+
+export const getLogsByQuery = async (query, populate) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/requested-reports/get-logs-by-query`, {
+        params: {
+            query : JSON.stringify(query), 
+            populate : JSON.stringify(populate)
+        }
+    });
+    return res;
+}
+
+export const reviewReport = async (id : string) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/requested-reports/review-report/${id}`);
+    return res;
+}
+
+export const approveReport = async (id : string) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/requested-reports/approve-report/${id}`);
+    return res;
+}
+
+export const rejectReport = async (id : string) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/requested-reports/reject-report/${id}`);
     return res;
 }

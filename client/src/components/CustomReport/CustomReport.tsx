@@ -5,7 +5,7 @@ import { GenericFormFieldV3 } from "../../types/forms/GenericFormTypes";
 import { Button, Drawer, Flex, message, Popconfirm, Space } from "antd";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { useEffect, useRef, useState } from "react";
-import { delRequestReport, formGetByQuery, getRequestReport, requestReport } from "../../services/api/formsApi";
+import { delRequestReport, formGetByQuery, getRequestReportByQuery, requestReport } from "../../services/api/formsApi";
 import { parseResError } from "../../services/errorHandler";
 import CustomReportGenerator from "./GenericFormReportFilter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,7 +13,6 @@ import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { AgGridReact } from "ag-grid-react";
 import { usePreviewReportStore } from "../../stores/useReportStore";
 import { useReactToPrint } from "react-to-print"
-import { wrap } from "module";
 
 interface RequestReportFormProps {
     formName : FormEnum
@@ -71,7 +70,7 @@ interface CustomReportProps {
     colDefs : any[]
 }
 
-const PreviewPrint = () => {
+export const PreviewPrint = () => {
 
     const [gridKey, setGridKey] = useState<string>(`grid-key-${Math.random()}`);
     const [messageApi, contextHandler ] = message.useMessage();
@@ -100,8 +99,6 @@ const PreviewPrint = () => {
         }
     }, [previewReportStore.report]);
 
-
-   
     return (
         
         <Drawer 
@@ -244,10 +241,10 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
         (async () => {
             setLoading(true)
             try {
-                const res = await getRequestReport({
+                const res = await getRequestReportByQuery({
                     requested_by : authStore.user?._id,
                     form_name : formName
-                });
+                }, []);
                 setRowData(res.data)
             } catch (error) {
                 

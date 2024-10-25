@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import SidebarUser from "../SidebarUser";
 import { FormEnum, Sector } from "../../types/forms/formNameEnum";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faList } from "@fortawesome/free-solid-svg-icons";
+import { faFile, faList, faMagnifyingGlass, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -24,6 +24,28 @@ const ReportsSidebar = ({open}) => {
     };
 
     const items: MenuItem[] = [
+        {
+            key: "reports",
+            label : "Reports",
+            icon : <FontAwesomeIcon icon={faFile} />,
+            style: menuStyle1,
+            children : [
+                {
+                    key : "to-review",
+                    label : "To Review",
+                    icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
+                    style: menuStyle2,
+                    onClick : () => navigate(`/reports/to-review`)
+                },
+                {
+                    key : "to-approve",
+                    label : "To Approve",
+                    icon: <FontAwesomeIcon icon={faThumbsUp} />,
+                    style: menuStyle2,
+                    onClick : () => navigate(`/reports/to-approve`)
+                },
+            ]
+        },
         {
             key: Sector.LAND,
             label: "Land Managenent",

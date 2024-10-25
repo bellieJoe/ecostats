@@ -393,3 +393,10 @@ export function getUserIdFromToken(token){
     const decoded = jwt.decode(token)
     return decoded.id;
 }
+
+export async function getUserFromToken(token){
+    const decoded = jwt.decode(token)
+    // decoded.id;
+    const user = await UserModel.findById(decoded.id);
+    return user
+}

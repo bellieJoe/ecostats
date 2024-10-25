@@ -1,10 +1,14 @@
 import { ConfigProvider, Menu } from "antd";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../stores/useAuthStore";
+import { useEffect, useState } from "react";
 
 
 const NavbarMenus = () => {
 
     const navigate  = useNavigate();
+
+    const authStore = useAuthStore();
 
     const configTheme = {
         "token": {
@@ -23,28 +27,38 @@ const NavbarMenus = () => {
         }
     }
 
-    const items  = [
-        {
-            key : "1",
-            label : "Home",
-            onClick: () => navigate("/")
-        },
-        {
-            key : "2",
-            label : "Admin",
-            onClick: () => navigate("/admin")
-        },
-        {
-            key : "3",
-            label : "Reports",
-            onClick: () => navigate("/reports")
-        },
-        {
-            key : "4",
-            label : "Dashboard"
-        },
-    ];
+    const [items, setItems]  = useState<any>([]);
 
+    useEffect(() => {
+        const i = [
+            {
+                key : "1",
+                label : "Home",
+                onClick: () => navigate("/"),
+                role : ["admin", "planning team", "chief", "focal"]
+            },
+            {
+                key : "2",
+                label : "Admin",
+                onClick: () => navigate("/admin"),
+                role : ["admin", "planning officer"]
+            },
+            {
+                key : "3",
+                label : "Reports",
+                onClick: () => navigate("/reports"),
+                role : ["admin", "planning officer", "chief", "focal"]
+            },
+            {
+                key : "4",
+                label : "Dashboard",
+                role : ["admin", "planning officer", "chief", "focal"]
+            },
+        ];
+        setItems(i.filter(i => {
+            return i.role?.includes(authStore.user?.role!)
+        }))
+    }, [authStore.user])
 
     return (
         <ConfigProvider theme={configTheme}>

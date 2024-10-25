@@ -254,4 +254,24 @@ export const updateProgram = async (req, res) => {
     }
 }
 
+export const getByQuery = async (req, res) => {
+    try {
+        
+        const query = JSON.parse(req.query.query);
+        const populate = JSON.parse(req.query.populate);
+
+        const units = await ProgramModel.find(query).populate(populate)
+
+        return res.json(units)
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+}
 

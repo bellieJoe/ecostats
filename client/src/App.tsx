@@ -44,6 +44,8 @@ import Biodiversity_8 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_
 import Biodiversity_9 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_9'
 import ErrorLog from './components/ErrorLog'
 import { useErrorLogStore } from './stores/useErrorLogStore'
+import ToApprove from './pages/Reports/ApprovalWorkFlow/ToApprove'
+import ToReview from './pages/Reports/ApprovalWorkFlow/ToReview'
 
 axios.defaults.withCredentials = true;
 
@@ -104,6 +106,8 @@ function App() {
                 </Route>
 
                 <Route path='reports' element={<Reports />}>
+                    <Route path='to-approve' element={<ToApprove />} />
+                    <Route path='to-review' element={<ToReview />} />
                     <Route path={Sector.LAND} >
                       <Route path='toc' element={<LandTOC />} />
                       <Route path='land_1' element={<Land_1 />} />
