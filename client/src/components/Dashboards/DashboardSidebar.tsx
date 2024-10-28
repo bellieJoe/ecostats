@@ -223,6 +223,43 @@ const DashboardSidebar = ({open}) => {
                         style  : menuStyle2,
                         onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_10}`)
                     },
+                    {
+                        key : FormEnum.BIODIVERSITY_11,
+                        label : "Certificate of Wildlife Registration",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_11}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_12,
+                        label : "Wildlife Import/Export/Re-Export Permit",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_12}`)
+                    },
+
+                    {
+                        key : FormEnum.BIODIVERSITY_15,
+                        label : "Wildlife Collector's Permit (WCP)",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_15}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_16,
+                        label : "Gratuitous Permit (GP)",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_16}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_17,
+                        label : "Wildlife Special Use Permit",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_17}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_19,
+                        label : "Wildlife Farm Permit",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_19}`)
+                    },
                 ]
             },
         ];

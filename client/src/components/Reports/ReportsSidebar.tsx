@@ -237,6 +237,42 @@ const ReportsSidebar = ({open}) => {
                         style  : menuStyle2,
                         onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_10}`)
                     },
+                    {
+                        key : FormEnum.BIODIVERSITY_11,
+                        label : "Table 11. Certificate of Wildlife Registration",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_11}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_12,
+                        label : "Table 12. Wildlife Import/Export/Re-Export Permit",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_12}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_15,
+                        label : "Table 15. Wildlife Collector's Permit (WCP)",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_15}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_16,
+                        label : "Table 16. Gratuitous Permit (GP)",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_16}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_17,
+                        label : "Table 17. Wildlife Special Use Permit",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_17}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_19,
+                        label : "Table 19. Wildlife Farm Permit",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_19}`)
+                    },
                 ]
             },
         ];

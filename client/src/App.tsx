@@ -71,6 +71,18 @@ import Biodiversity_8_Dashboard from './pages/Dashboard/Biodiversity/Biodiversit
 import Biodiversity_9_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_9_dashboard'
 import Biodiversity_10 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_10'
 import Biodiversity_10_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_10_dashboard'
+import Biodiversity_11 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_11'
+import Biodiversity_11_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_11_dashboard'
+import Biodiversity_12 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_12'
+import Biodiversity_12_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_12_dashboard'
+import Biodiversity_15 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_15'
+import Biodiversity_15_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_15_dashboard'
+import Biodiversity_16 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_16'
+import Biodiversity_16_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_16_dashboard'
+import Biodiversity_17 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_17'
+import Biodiversity_17_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_17_dashboard'
+import Biodiversity_19 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_19'
+import Biodiversity_19_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_19_dashboard'
 
 axios.defaults.withCredentials = true;
 
@@ -159,6 +171,14 @@ function App() {
                   <Route path='biodiversity_8' element={<Biodiversity_8_Dashboard />} />
                   <Route path='biodiversity_9' element={<Biodiversity_9_Dashboard />} />
                   <Route path='biodiversity_10' element={<Biodiversity_10_Dashboard />} />
+                  <Route path='biodiversity_11' element={<Biodiversity_11_Dashboard />} />
+                  <Route path='biodiversity_12' element={<Biodiversity_12_Dashboard />} />
+
+                  <Route path='biodiversity_15' element={<Biodiversity_15_Dashboard />} />
+                  <Route path='biodiversity_16' element={<Biodiversity_16_Dashboard />} />
+                  <Route path='biodiversity_17' element={<Biodiversity_17_Dashboard />} />
+
+                  <Route path='biodiversity_19' element={<Biodiversity_19_Dashboard />} />
                 </Route>
 
                 <Route path='reports' element={<Reports />}>
@@ -195,6 +215,14 @@ function App() {
                       <Route path={FormEnum.BIODIVERSITY_8} element={<Biodiversity_8 />} />
                       <Route path={FormEnum.BIODIVERSITY_9} element={<Biodiversity_9 />} />
                       <Route path={FormEnum.BIODIVERSITY_10} element={<Biodiversity_10 />} />
+                      <Route path={FormEnum.BIODIVERSITY_11} element={<Biodiversity_11 />} />
+                      <Route path={FormEnum.BIODIVERSITY_12} element={<Biodiversity_12 />} />
+
+                      <Route path={FormEnum.BIODIVERSITY_15} element={<Biodiversity_15 />} />
+                      <Route path={FormEnum.BIODIVERSITY_16} element={<Biodiversity_16 />} />
+                      <Route path={FormEnum.BIODIVERSITY_17} element={<Biodiversity_17 />} />
+
+                      <Route path={FormEnum.BIODIVERSITY_19} element={<Biodiversity_19 />} />
                     </Route>
                 </Route>
 
