@@ -17,11 +17,10 @@ const Forestry_3 = () => {
     const columns : DataMigratorCol[] = [
         { headerName: 'calendar_year', field: 'calendar_year', type: DataMigratorColTypes.number },
         { headerName: 'province', field: 'province', type: DataMigratorColTypes.string },
+        { headerName: 'municipality', field: 'municipality', type: DataMigratorColTypes.string },
         { headerName: 'total_area', field: 'total_area', type: DataMigratorColTypes.number },
         { headerName: 'production_forest', field: 'production_forest', type: DataMigratorColTypes.number },
         { headerName: 'protection_forest', field: 'protection_forest', type: DataMigratorColTypes.number },
-       
-        
     ]
     
     const errorLogStore = useErrorLogStore();

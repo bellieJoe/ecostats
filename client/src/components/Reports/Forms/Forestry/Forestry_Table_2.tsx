@@ -9,6 +9,7 @@ import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
+import _ from "lodash"
 
 export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -31,31 +32,39 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         type : "input"
     },
     {
-        name : "total_land_cover_area",
-        label : "Total Land Cover Area", 
+        name : "municipality",
+        label : "Municipality", 
         input : (
-            <Input type="number"  />
+            <Input type="text"  />
         ),
         type : "input"
     },
+    // {
+    //     name : "total_land_cover_area",
+    //     label : "Total Land Cover Area", 
+    //     input : (
+    //         <Input type="number"  />
+    //     ),
+    //     type : "input"
+    // },
     {
         name : "title_1",
         label : "Forest Cover", 
         type : "title"
     },
-    {
-        name : "forest_cover.total_forest_cover",
-        label : "Total Forest Cover", 
-        input : (
-            <Input type="number"  />
-        ),
-        type : "input"
-    },
+    // {
+    //     name : "forest_cover.total_forest_cover",
+    //     label : "Total Forest Cover", 
+    //     input : (
+    //         <Input type="number"  />
+    //     ),
+    //     type : "input"
+    // },
     {
         name : "forest_cover.closed_forest",
         label : "Closed Forest", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0}  />
         ),
         type : "input"
     },
@@ -63,7 +72,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "forest_cover.open_forest",
         label : "Open Forest", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -71,7 +80,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "forest_cover.mangrove_forest",
         label : "Mangrove Forest", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -80,19 +89,19 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         label : "Other Land Cover", 
         type : "title"
     },
-    {
-        name : "other_land_cover.total_other_land_cover",
-        label : "Total Other Land Cover", 
-        input : (
-            <Input type="number"  />
-        ),
-        type : "input"
-    },
+    // {
+    //     name : "other_land_cover.total_other_land_cover",
+    //     label : "Total Other Land Cover", 
+    //     input : (
+    //         <Input type="number"  />
+    //     ),
+    //     type : "input"
+    // },
     {
         name : "other_land_cover.brush_shrubs",
         label : "Brush/Shrubs", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -100,7 +109,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "other_land_cover.grassland",
         label : "Grassland", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -108,7 +117,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "other_land_cover.annual_crop",
         label : "Annual Crop", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -116,7 +125,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "other_land_cover.perennial_crop",
         label : "Perennial Crop", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -124,7 +133,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "other_land_cover.open_barren_land",
         label : "Open/Barren Land", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0}  />
         ),
         type : "input"
     },
@@ -132,7 +141,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "other_land_cover.built_up_area",
         label : "Built-up Area", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -140,7 +149,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "other_land_cover.fishpond",
         label : "Fishpond", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -148,7 +157,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "other_land_cover.marshland_swamp",
         label : "Marshland/ Swamp", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -156,7 +165,7 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "other_land_cover.inland_water",
         label : "Inland Water", 
         input : (
-            <Input type="number"  />
+            <Input type="number" min={0} />
         ),
         type : "input"
     },
@@ -177,9 +186,15 @@ export const forestry_2_col_defs = [
         type: "textColumn",
     },
     { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
         headerName: "Total Land Cover Area", 
         field: "total_land_cover_area", 
-        editable : true, 
+        editable : false, 
         type: "numberColumn",
     },
     { 
@@ -188,7 +203,7 @@ export const forestry_2_col_defs = [
             {
                 headerName : "Total Forest Cover",
                 field: "forest_cover.total_forest_cover", 
-                editable : true, 
+                editable : false, 
                 type: "numberColumn",
             },
             {
@@ -217,7 +232,7 @@ export const forestry_2_col_defs = [
             {
                 headerName : "Total Other Land Cover",
                 field: "other_land_cover.total_other_land_cover", 
-                editable : true, 
+                editable : false, 
                 type: "numberColumn",
             },
             {
@@ -309,11 +324,27 @@ const Forestry_Table_2  = () => {
     ]);
 
     const handleOnRowValueChanged = (d) => {
-        d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
-        console.log(d)
+        d.data.forest_cover.total_forest_cover = _.sum([
+            d.data.forest_cover.closed_forest,
+            d.data.forest_cover.open_forest,
+            d.data.forest_cover.mangrove_forest,
+        ]);
+        d.data.other_land_cover.total_other_land_cover = _.sum([
+            d.data.other_land_cover.brush_shrubs,
+            d.data.other_land_cover.grassland,
+            d.data.other_land_cover.annual_crop,
+            d.data.other_land_cover.perennial_crop,
+            d.data.other_land_cover.open_barren_land,
+            d.data.other_land_cover.built_up_area,
+            d.data.other_land_cover.fishpond,
+            d.data.other_land_cover.marshland_swamp,
+            d.data.other_land_cover.inland_water,
+        ]);
+        d.data.total_land_cover_area = d.data.forest_cover.total_forest_cover + d.data.other_land_cover.total_other_land_cover;
         formUpdate(d.data, FormEnum.FORESTRY_2, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully updated.");
+            setRefresh(!refresh)
         })
         .catch(err => {
             console.log(err) 
@@ -343,9 +374,24 @@ const Forestry_Table_2  = () => {
     };
 
     const handleSubmit = async (d) => {
-        console.log(d)
+        d["forest_cover.total_forest_cover"] = _.sum([
+            parseInt(d["forest_cover.closed_forest"]),
+            parseInt(d["forest_cover.open_forest"]),
+            parseInt(d["forest_cover.mangrove_forest"]),
+        ]);
+        d["other_land_cover.total_other_land_cover"] = _.sum([
+            parseInt(d["other_land_cover.brush_shrubs"]),
+            parseInt(d["other_land_cover.grassland"]),
+            parseInt(d["other_land_cover.annual_crop"]),
+            parseInt(d["other_land_cover.perennial_crop"]),
+            parseInt(d["other_land_cover.open_barren_land"]),
+            parseInt(d["other_land_cover.built_up_area"]),
+            parseInt(d["other_land_cover.fishpond"]),
+            parseInt(d["other_land_cover.marshland_swamp"]),
+            parseInt(d["other_land_cover.inland_water"]),
+        ]);
+        d["total_land_cover_area"] = parseInt(d["forest_cover.total_forest_cover"]) + parseInt(d["other_land_cover.total_other_land_cover"]);
         try {
-            d.total_beneficiaries = parseInt(d.male_beneficiaries) + parseInt(d.female_beneficiaries);
             await formCreate(d, FormEnum.FORESTRY_2, Sector.FORESTRY)
             messageApi.success("Data successfully inserted.");
         } catch (err) {

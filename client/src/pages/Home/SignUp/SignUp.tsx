@@ -132,7 +132,7 @@ function SignUp() {
     }
 
     return (
-        <GuestGuard redirectTo="/app">
+        <GuestGuard redirectTo="/">
             <div style={containerStyle}>
                 <Paper style={glassEffectStyle}>
                     <Typography component="h1" variant="h5" style={headingStyle}>Register</Typography>

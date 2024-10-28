@@ -43,6 +43,7 @@ const Biodiversity_7_Schema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
+
 const Biodiversity_7 = mongoose.model('biodiversity_7', Biodiversity_7_Schema);
 
 export default Biodiversity_7;

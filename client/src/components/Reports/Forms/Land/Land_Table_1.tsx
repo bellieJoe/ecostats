@@ -24,6 +24,13 @@ export const land_1_gen_form_fields : GenericFormFieldV3[] = [
 
     },
     {
+        name : "municipality",
+        label : "Municipality", 
+        input : <Input type="text" />,
+        type : "input"
+
+    },
+    {
         name : "contested_area",
         label : "Contested Area (ha)",
         input : <Input type="number" />,
@@ -51,6 +58,13 @@ export const land_1_col_defs : any[] = [
         headerName: "Province", 
         headerClass: "justify-center", 
         field: "province",  
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        headerClass: "justify-center", 
+        field: "municipality",  
         editable : true, 
         type: "textColumn",
     },
@@ -121,6 +135,7 @@ const Land_Table_1  = () => {
             await formCreate(d, FormEnum.LAND_1, Sector.LAND)
             messageApi.success("Data successfully inserted.");
         } catch (err) {
+            messageApi.error(parseResError(err).msg)
             console.log(err)
         }
         setRefresh(!refresh)

@@ -29,28 +29,34 @@ export const land_4_gen_form_fields : GenericFormFieldV3[] = [
         type : "input"
     },
     {
+        name : "municipality",
+        label : "Municipality", 
+        input : <Input type="text" />,
+        type : "input"
+    },
+    {
         name: "For Calendar Year",
         label: "For Calendar Year",
         type : "title"
     },
-    {
-        name : "transmitted_to_RoD",
-        label : "No. of Patents transmitted to RoD", 
-        input : <Input type="number" />,
-        type : "input"
-    },
+    // {
+    //     name : "transmitted_to_RoD",
+    //     label : "No. of Patents transmitted to RoD", 
+    //     input : <Input type="number" />,
+    //     type : "input"
+    // },
     {
         name : "area",
         label : "Area", 
         input : <Input type="number" />,
         type : "input"
     },
-    {
-        name : "beneficiaries.total",
-        label : "Total Beneficiaries", 
-        input : <Input type="number" />,
-        type : "input"
-    },
+    // {
+    //     name : "beneficiaries.total",
+    //     label : "Total Beneficiaries", 
+    //     input : <Input type="number" />,
+    //     type : "input"
+    // },
     {
         name : "beneficiaries.female",
         label : "Female Beneficiaries", 
@@ -90,12 +96,18 @@ export const land_4_col_defs = [
         type: "textColumn",
     },
     { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
         headerName: "For Calendar Year", 
         children : [
             { 
                 headerName: "No. of Patents Transmitted to RoD", 
                 field: "transmitted_to_RoD", 
-                editable : true, 
+                editable : false, 
                 type: "textColumn",
             },
             { 
@@ -111,7 +123,7 @@ export const land_4_col_defs = [
                     { 
                         headerName: "Total Beneficiaries", 
                         field: "beneficiaries.total", 
-                        editable : true, 
+                        editable : false, 
                         type: "textColumn",
                     },
                     { 
@@ -167,9 +179,12 @@ const Land_Table_4  = () => {
     ]);
 
     const handleOnRowValueChanged = (d) => {
+        d.data.beneficiaries.total = d.data.beneficiaries.male + d.data.beneficiaries.female;
+        d.data.transmitted_to_RoD = d.data.beneficiaries.total;
         formUpdate(d.data, FormEnum.LAND_4, Sector.LAND)
         .then(res => {
             messageApi.success("Data successfully updated.");
+            setRefresh(!refresh)
         })
         .catch(err => {
             console.log(err)
@@ -200,7 +215,8 @@ const Land_Table_4  = () => {
     };
 
     const handleSubmit = async (d) => {
-        console.log(d)
+        d["beneficiaries.total"] = parseInt(d["beneficiaries.male"]) + parseInt(d["beneficiaries.female"])
+        d.transmitted_to_RoD = d["beneficiaries.total"];
         try {
             await formCreate(d, FormEnum.LAND_4, Sector.LAND)
             messageApi.success("Data successfully inserted.");

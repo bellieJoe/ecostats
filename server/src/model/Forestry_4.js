@@ -9,6 +9,10 @@ const Forestry_4_Schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  municipality: {
+    type: String,
+    required: true
+  },
   watershed_reservation_name: {
     type: String,
     required: true
@@ -32,6 +36,11 @@ const Forestry_4_Schema = new mongoose.Schema({
 }, {
   timestamps: true // Adds createdAt and updatedAt timestamps
 });
+
+Forestry_4_Schema.index(
+  { calendar_year: 1, province: 1, municipality: 1, watershed_reservation_name : 1 },
+  { unique: true }
+);
 
 // Create a model
 const Forestry_4 = mongoose.model('forestry_4', Forestry_4_Schema);

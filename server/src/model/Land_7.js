@@ -29,6 +29,10 @@ const Land_7_Schema = new mongoose.Schema({
   timestamps: true, // Adds createdAt and updatedAt timestamps
 });
 
+Land_7_Schema.index(
+  { calendar_year: 1, province: 1, municipality: 1 },
+  { unique: true }
+);
 // Create a model
 const Land_7 = mongoose.model('land_7', Land_7_Schema);
 

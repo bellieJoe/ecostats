@@ -51,7 +51,7 @@ router.post("/land_5", land_5_controller.create);
 router.put("/land_5", land_5_controller.update);
 router.delete("/land_5/:id", land_5_controller.delete);
 router.post("/land_5/save-many", land_5_controller.saveMany);
-router.get("/land_2/by-query", land_2_controller.getByQuery);
+router.get("/land_5/by-query", land_5_controller.getByQuery);
 
 router.get("/land_6", land_6_controller.getAll);
 router.post("/land_6", land_6_controller.create);

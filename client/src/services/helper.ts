@@ -7,4 +7,30 @@ export const generateYearOptions = (startYear, endYear) => {
     };
   }).reverse(); // Reverse the array to have the latest year first
 };
-  
+
+export const municipalityOptions : any[] = [
+  {
+    label : "Boac",
+    value : "Boac"
+  },
+  {
+    label : "Mogpog",
+    value : "Mogpog"
+  },
+  {
+    label : "Gasan",
+    value : "Gasan"
+  },
+  {
+    label : "Sta. Cruz",
+    value : "Sta. Cruz"
+  },
+  {
+    label : "Torrijos",
+    value : "Torrijos"
+  },
+  {
+    label : "Buenavista",
+    value : "Buenavista"
+  },
+]

@@ -31,6 +31,14 @@ export const forestry_4_gen_form_fields : GenericFormFieldV3[] = [
         type : "input"
     },
     {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
         name : "watershed_reservation_name",
         label : "Name of Watershed Reservation", 
         input : (
@@ -83,6 +91,12 @@ export const forestry_4_col_defs = [
     { 
         headerName: "Province", 
         field: "province", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
+        headerName: "Municipality", 
+        field: "municipality", 
         editable : true, 
         type: "textColumn",
     },
@@ -157,8 +171,6 @@ const Forestry_Table_4  = () => {
     ]);
 
     const handleOnRowValueChanged = (d) => {
-        d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
-        console.log(d)
         formUpdate(d.data, FormEnum.FORESTRY_4, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully updated.");
@@ -191,7 +203,6 @@ const Forestry_Table_4  = () => {
     };
 
     const handleSubmit = async (d) => {
-        console.log(d)
         try {
             await formCreate(d, FormEnum.FORESTRY_4, Sector.FORESTRY)
             messageApi.success("Data successfully inserted.");

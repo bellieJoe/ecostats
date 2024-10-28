@@ -39,6 +39,7 @@ const Land_6_Schema = new mongoose.Schema({
     }
 });
 
+
 const Land_6 = mongoose.model('land_6', Land_6_Schema);
 
 export default Land_6;

@@ -18,6 +18,7 @@ const Forestry_2 = () => {
     const columns : DataMigratorCol[] = [
         { headerName: 'calendar_year', field: 'calendar_year', type: DataMigratorColTypes.number },
         { headerName: 'province', field: 'province', type: DataMigratorColTypes.string },
+        { headerName: 'municipality', field: 'municipality', type: DataMigratorColTypes.string },
         { headerName: 'total_land_cover_area', field: 'total_land_cover_area', type: DataMigratorColTypes.number },
         { headerName: 'forest_cover.total_forest_cover', field: 'forest_cover.total_forest_cover', type: DataMigratorColTypes.number },
         { headerName: 'forest_cover.closed_forest', field: 'forest_cover.closed_forest', type: DataMigratorColTypes.number },

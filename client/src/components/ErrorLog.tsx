@@ -20,7 +20,7 @@ const ErrorLog = () => {
 
     return (
         <>
-            <Drawer open={open} onClose={() => errorLogStore.setError(null)}>
+            <Drawer size="large" open={open} onClose={() => errorLogStore.setError(null)}>
                 <Title level={4}>Error Log</Title>
                 <ReactJson src={errorLogStore.error} />
             </Drawer>

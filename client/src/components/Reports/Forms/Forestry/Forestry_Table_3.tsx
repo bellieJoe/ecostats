@@ -6,7 +6,7 @@ import { Button, Flex, Input, message, Pagination, Popconfirm, Select } from "an
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
+import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
 
@@ -31,13 +31,21 @@ export const forestry_3_gen_form_fields : GenericFormFieldV3[] = [
         type : "input"
     },
     {
-        name : "total_area",
-        label : "Total Area", 
+        name : "municipality",
+        label : "Municipality", 
         input : (
-            <Input type="number"  />
+            <Input type="text"  />
         ),
         type : "input"
     },
+    // {
+    //     name : "total_area",
+    //     label : "Total Area", 
+    //     input : (
+    //         <Input type="number"  />
+    //     ),
+    //     type : "input"
+    // },
     {
         name : "production_forest",
         label : "Production Forest", 
@@ -70,9 +78,15 @@ export const forestry_3_col_defs = [
         type: "textColumn",
     },
     { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
         headerName: "Total Area", 
         field: "total_area", 
-        editable : true, 
+        editable : false, 
         type: "numberColumn",
     },
     { 
@@ -119,8 +133,7 @@ const Forestry_Table_3  = () => {
     ]);
 
     const handleOnRowValueChanged = (d) => {
-        d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
-        console.log(d)
+        d.data.total_area = d.data.production_forest + d.data.protection_forest;
         formUpdate(d.data, FormEnum.FORESTRY_3, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully updated.");
@@ -153,9 +166,8 @@ const Forestry_Table_3  = () => {
     };
 
     const handleSubmit = async (d) => {
-        console.log(d)
+        d["total_area"] = parseInt(d["production_forest"]) + parseInt(d["protection_forest"]);
         try {
-            d.total_beneficiaries = parseInt(d.male_beneficiaries) + parseInt(d.female_beneficiaries);
             await formCreate(d, FormEnum.FORESTRY_3, Sector.FORESTRY)
             messageApi.success("Data successfully inserted.");
         } catch (err) {

@@ -46,6 +46,31 @@ import ErrorLog from './components/ErrorLog'
 import { useErrorLogStore } from './stores/useErrorLogStore'
 import ToApprove from './pages/Reports/ApprovalWorkFlow/ToApprove'
 import ToReview from './pages/Reports/ApprovalWorkFlow/ToReview'
+import Dashboard from './pages/Dashboard/Dashboard'
+import Overview from './pages/Dashboard/Overview'
+import Land_2_Dashboard from './pages/Dashboard/Land/Land_2_dashboard'
+import Land_1_Dashboard from './pages/Dashboard/Land/land_1_dashboard'
+import Land_3_Dashboard from './pages/Dashboard/Land/Land_3_dashboard'
+import Land_4_Dashboard from './pages/Dashboard/Land/Land_4_dashboard'
+import Land_5_Dashboard from './pages/Dashboard/Land/Land_5_dashboard'
+import Land_6_Dashboard from './pages/Dashboard/Land/Land_6_dashboard'
+import Land_7_Dashboard from './pages/Dashboard/Land/Land_7_dashboard'
+import Forestry_1_Dashboard from './pages/Dashboard/Forestry/Forestry_1_dashboard'
+import Forestry_2_Dashboard from './pages/Dashboard/Forestry/Forestry_2_dashboard'
+import Forestry_3_Dashboard from './pages/Dashboard/Forestry/Forestry_3_dashboard'
+import Forestry_4_Dashboard from './pages/Dashboard/Forestry/Forestry_4_dashboard'
+import Forestry_5_Dashboard from './pages/Dashboard/Forestry/Forestry_5_dashboard'
+import Forestry_24_Dashboard from './pages/Dashboard/Forestry/Forestry_24_dashboard'
+import Biodiversity_3_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_3_dashboard'
+import Biodiversity_2_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_2_dashboard'
+import Biodiversity_4_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_4_dashboard'
+import Biodiversity_5_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_5_dashboard'
+import Biodiversity_6_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_6_dashboard'
+import Biodiversity_7_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_7_dashboard'
+import Biodiversity_8_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_8_dashboard'
+import Biodiversity_9_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_9_dashboard'
+import Biodiversity_10 from './pages/Reports/DataEntry/Biodoversity/Biodiversity_10'
+import Biodiversity_10_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_10_dashboard'
 
 axios.defaults.withCredentials = true;
 
@@ -105,6 +130,37 @@ function App() {
                   <Route path='programs' element={<Programs />} />
                 </Route>
 
+                <Route path='dashboard' element={<Dashboard />}>
+                  <Route path='' element={<Overview />} />
+
+                  <Route path='land_1' element={<Land_1_Dashboard />} />
+                  <Route path='land_2' element={<Land_2_Dashboard />} />
+                  <Route path='land_3' element={<Land_3_Dashboard />} />
+                  <Route path='land_4' element={<Land_4_Dashboard />} />
+                  <Route path='land_5' element={<Land_5_Dashboard />} />
+                  <Route path='land_6' element={<Land_6_Dashboard />} />
+                  <Route path='land_7' element={<Land_7_Dashboard />} />
+
+                  <Route path='forestry_1' element={<Forestry_1_Dashboard />} />
+                  <Route path='forestry_2' element={<Forestry_2_Dashboard />} />
+                  <Route path='forestry_3' element={<Forestry_3_Dashboard />} />
+                  <Route path='forestry_4' element={<Forestry_4_Dashboard />} />
+                  <Route path='forestry_5' element={<Forestry_5_Dashboard />} />
+
+                  <Route path='forestry_24' element={<Forestry_24_Dashboard />} />
+
+
+                  <Route path='biodiversity_2' element={<Biodiversity_2_Dashboard />} />
+                  <Route path='biodiversity_3' element={<Biodiversity_3_Dashboard />} />
+                  <Route path='biodiversity_4' element={<Biodiversity_4_Dashboard />} />
+                  <Route path='biodiversity_5' element={<Biodiversity_5_Dashboard />} />
+                  <Route path='biodiversity_6' element={<Biodiversity_6_Dashboard />} />
+                  <Route path='biodiversity_7' element={<Biodiversity_7_Dashboard />} />
+                  <Route path='biodiversity_8' element={<Biodiversity_8_Dashboard />} />
+                  <Route path='biodiversity_9' element={<Biodiversity_9_Dashboard />} />
+                  <Route path='biodiversity_10' element={<Biodiversity_10_Dashboard />} />
+                </Route>
+
                 <Route path='reports' element={<Reports />}>
                     <Route path='to-approve' element={<ToApprove />} />
                     <Route path='to-review' element={<ToReview />} />
@@ -138,6 +194,7 @@ function App() {
                       <Route path={FormEnum.BIODIVERSITY_7} element={<Biodiversity_7 />} />
                       <Route path={FormEnum.BIODIVERSITY_8} element={<Biodiversity_8 />} />
                       <Route path={FormEnum.BIODIVERSITY_9} element={<Biodiversity_9 />} />
+                      <Route path={FormEnum.BIODIVERSITY_10} element={<Biodiversity_10 />} />
                     </Route>
                 </Route>
 

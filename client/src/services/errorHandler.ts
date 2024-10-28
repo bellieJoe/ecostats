@@ -14,6 +14,18 @@ export const parseResError = (err) : Error => {
                 msg : err.response.data.msg
             }
         }
+        if (err.response?.statusText) {
+            return {
+                error : err.response.data.statusText,
+                msg : err.response.data.statusText
+            }
+        }
+        if (err.message) {
+            return {
+                error : err.message,
+                msg : err.message
+            }
+        }
         return {
             error : "Unknown Error",
             msg : "An unexpected error occured while processing the request"

@@ -34,5 +34,11 @@ const Land_2_Schema = new Schema({
     timestamps  : true
 });
 
+Land_2_Schema.index(
+    { calendar_year: 1, province: 1, municipality: 1 },
+    { unique: true }
+);
+
+
 const Land_2 = model("land_2", Land_2_Schema);
 export default Land_2;

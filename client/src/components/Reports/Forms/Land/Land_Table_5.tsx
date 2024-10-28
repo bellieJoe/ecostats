@@ -29,11 +29,17 @@ export const land_5_gen_form_fields : GenericFormFieldV3[] = [
         type : "input"
     },
     {
-        name : "no_of_transmitted_to_rod",
-        label : "No of Transmitted to RoD", 
-        input : <Input type="number" />,
+        name : "municipality",
+        label : "Municipality", 
+        input : <Input type="text" />,
         type : "input"
     },
+    // {
+    //     name : "no_of_transmitted_to_rod",
+    //     label : "No of Transmitted to RoD", 
+    //     input : <Input type="number" />,
+    //     type : "input"
+    // },
     {
         name : "area_ha",
         label : "Area (ha)", 
@@ -68,9 +74,15 @@ export const land_5_col_defs = [
         type: "textColumn",
     },
     { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
         headerName: "No of Transmitted to RoD", 
         field: "no_of_transmitted_to_rod", 
-        editable : true, 
+        editable : false, 
         type: "numberColumn",
     },
     { 
@@ -135,6 +147,7 @@ const Land_Table_5  = () => {
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
+        d.data.no_of_transmitted_to_rod = d.data.total_beneficiaries;
         console.log(d)
         formUpdate(d.data, FormEnum.LAND_5, Sector.LAND)
         .then(res => {
@@ -168,9 +181,9 @@ const Land_Table_5  = () => {
     };
 
     const handleSubmit = async (d) => {
-        console.log(d)
+        d.total_beneficiaries = parseInt(d.male_beneficiaries) + parseInt(d.female_beneficiaries);
+        d.no_of_transmitted_to_rod = d.total_beneficiaries;
         try {
-            d.total_beneficiaries = parseInt(d.male_beneficiaries) + parseInt(d.female_beneficiaries);
             await formCreate(d, FormEnum.LAND_5, Sector.LAND)
             messageApi.success("Data successfully inserted.");
         } catch (err) {

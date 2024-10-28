@@ -9,6 +9,10 @@ const Land_5_Schema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  municipality: {
+    type: String,
+    required: true,
+  },
   no_of_transmitted_to_rod: {
     type: Number,
     required: true
@@ -32,6 +36,11 @@ const Land_5_Schema = new mongoose.Schema({
 }, {
   timestamps: true, // Adds createdAt and updatedAt timestamps
 });
+
+Land_5_Schema.index(
+  { calendar_year: 1, province: 1, municipality: 1 },
+  { unique: true }
+);
 
 // Create a model
 const Land_5 = mongoose.model('land_5', Land_5_Schema);

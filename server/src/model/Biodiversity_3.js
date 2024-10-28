@@ -47,6 +47,11 @@ const Biodiversity_3_Schema = new mongoose.Schema({
     },
 }, { timestamps: true });
 
+Biodiversity_3_Schema.index(
+    { calendar_year: 1, province: 1, municipality: 1 },
+    { unique: true }
+);
+
 const Biodiversity_3 = mongoose.model('biodiversity_3', Biodiversity_3_Schema);
 
 export default Biodiversity_3;

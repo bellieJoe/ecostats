@@ -19,6 +19,7 @@ const Land_5 = () => {
     const columns : DataMigratorCol[] = [
         { headerName: 'calendar_year', field: 'calendar_year', type: DataMigratorColTypes.number },
         { headerName: 'province', field: 'province', type: DataMigratorColTypes.string },
+        { headerName: 'municipality', field: 'municipality', type: DataMigratorColTypes.string },
         { headerName: 'no_of_transmitted_to_rod', field: 'no_of_transmitted_to_rod', type: DataMigratorColTypes.number },
         { headerName: 'area_ha', field: 'area_ha', type: DataMigratorColTypes.number },
         { headerName: 'total_beneficiaries', field: 'total_beneficiaries', type: DataMigratorColTypes.number },

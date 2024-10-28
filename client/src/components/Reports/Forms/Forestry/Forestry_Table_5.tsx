@@ -8,9 +8,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
-import { generateYearOptions } from "../../../../services/helper";
+import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
+import { Text } from "recharts";
 
 export const forestry_5_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -28,12 +29,7 @@ export const forestry_5_gen_form_fields : GenericFormFieldV3[] = [
         name : "province",
         label : "Province", 
         input : (
-            <Select showSearch virtual options={province.map(val => {
-                return {
-                    value: val.name,
-                    label : val.name
-                }
-            })}  />
+            <Input type="text" />
         ),
         type : "input"
     },
@@ -90,12 +86,7 @@ export const forestry_5_gen_form_fields : GenericFormFieldV3[] = [
         name : "municipalities",
         label : "Municipalities", 
         input : (
-            <Select virtual mode="multiple" options={cities.map(val => {
-                return {
-                    value: val.name,
-                    label : val.name
-                }
-            })}  />
+            <Select virtual mode="multiple" options={municipalityOptions}  />
         ),
         type : "input"
     },

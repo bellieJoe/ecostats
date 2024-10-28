@@ -22,30 +22,35 @@ router.post("/forestry_1", forestry_1_controller.create);
 router.put("/forestry_1", forestry_1_controller.update);
 router.delete("/forestry_1/:id", forestry_1_controller.delete);
 router.post("/forestry_1/save-many", forestry_1_controller.saveMany);
+router.get("/forestry_1/by-query", forestry_1_controller.getByQuery);
 
 router.get("/forestry_2", forestry_2_controller.getAll);
 router.post("/forestry_2", forestry_2_controller.create);
 router.put("/forestry_2", forestry_2_controller.update);
 router.delete("/forestry_2/:id", forestry_2_controller.delete);
 router.post("/forestry_2/save-many", forestry_2_controller.saveMany);
+router.get("/forestry_2/by-query", forestry_2_controller.getByQuery);
 
 router.get("/forestry_3", forestry_3_controller.getAll);
 router.post("/forestry_3", forestry_3_controller.create);
 router.put("/forestry_3", forestry_3_controller.update);
 router.delete("/forestry_3/:id", forestry_3_controller.delete);
 router.post("/forestry_3/save-many", forestry_3_controller.saveMany);
+router.get("/forestry_3/by-query", forestry_3_controller.getByQuery);
 
 router.get("/forestry_4", forestry_4_controller.getAll);
 router.post("/forestry_4", forestry_4_controller.create);
 router.put("/forestry_4", forestry_4_controller.update);
 router.delete("/forestry_4/:id", forestry_4_controller.delete);
 router.post("/forestry_4/save-many", forestry_4_controller.saveMany);
+router.get("/forestry_4/by-query", forestry_4_controller.getByQuery);
 
 router.get("/forestry_5", forestry_5_controller.getAll);
 router.post("/forestry_5", forestry_5_controller.create);
 router.put("/forestry_5", forestry_5_controller.update);
 router.delete("/forestry_5/:id", forestry_5_controller.delete);
 router.post("/forestry_5/save-many", forestry_5_controller.saveMany);
+router.get("/forestry_5/by-query", forestry_5_controller.getByQuery);
 
 
 
@@ -54,5 +59,6 @@ router.post("/forestry_24", forestry_24_controller.create);
 router.put("/forestry_24", forestry_24_controller.update);
 router.delete("/forestry_24/:id", forestry_24_controller.delete);
 router.post("/forestry_24/save-many", forestry_24_controller.saveMany);
+router.get("/forestry_24/by-query", forestry_24_controller.getByQuery);
 
 export default router;

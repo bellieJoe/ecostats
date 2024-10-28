@@ -9,6 +9,7 @@ import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions } from "../../../../services/helper";
+import _ from "lodash"
 
 export const forestry_1_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -31,13 +32,21 @@ export const forestry_1_gen_form_fields : GenericFormFieldV3[] = [
         type : "input"
     },
     {
-        name : "total_land_area",
-        label : "Total Land Area", 
+        name : "municipality",
+        label : "Municipality", 
         input : (
-            <Input type="number"  />
+            <Input type="text"  />
         ),
         type : "input"
     },
+    // {
+    //     name : "total_land_area",
+    //     label : "Total Land Area", 
+    //     input : (
+    //         <Input type="number"  />
+    //     ),
+    //     type : "input"
+    // },
     {
         name : "certified_a_n_d",
         label : "Certified A&D", 
@@ -51,14 +60,14 @@ export const forestry_1_gen_form_fields : GenericFormFieldV3[] = [
         label : "Forestland", 
         type : "title"
     },
-    {
-        name : "forestland.total_forestland",
-        label : "Total Forestland", 
-        input : (
-            <Input type="number"  />
-        ),
-        type : "input"
-    },
+    // {
+    //     name : "forestland.total_forestland",
+    //     label : "Total Forestland", 
+    //     input : (
+    //         <Input type="number"  />
+    //     ),
+    //     type : "input"
+    // },
     {
         name : "forestland.unclassified_forestland_ha",
         label : "Unclassified Forestland", 
@@ -67,14 +76,14 @@ export const forestry_1_gen_form_fields : GenericFormFieldV3[] = [
         ),
         type : "input"
     },
-    {
-        name : "forestland.classified_forestland.total_classified_forestland",
-        label : "Total Classified Forest Land", 
-        input : (
-            <Input type="number"  />
-        ),
-        type : "input"
-    },
+    // {
+    //     name : "forestland.classified_forestland.total_classified_forestland",
+    //     label : "Total Classified Forest Land", 
+    //     input : (
+    //         <Input type="number"  />
+    //     ),
+    //     type : "input"
+    // },
     {
         name : "forestland.classified_forestland.established_forest_reserves",
         label : "Established Forest Reserves", 
@@ -140,9 +149,15 @@ export const forestry_1_col_defs = [
         type: "textColumn",
     },
     { 
+        headerName: "Municipality", 
+        field: "municipality", 
+        editable : true, 
+        type: "textColumn",
+    },
+    { 
         headerName: "Total Land Area", 
         field: "total_land_area", 
-        editable : true, 
+        editable : false, 
         type: "numberColumn",
     },
     { 
@@ -157,7 +172,7 @@ export const forestry_1_col_defs = [
             { 
                 headerName: "Total Forestland", 
                 field: "forestland.total_forestland", 
-                editable : true, 
+                editable : false, 
                 type: "numberColumn",
             },
             { 
@@ -172,12 +187,18 @@ export const forestry_1_col_defs = [
                     { 
                         headerName: "Total Classified Forestland", 
                         field: "forestland.classified_forestland.total_classified_forestland", 
-                        editable : true, 
+                        editable : false, 
                         type: "numberColumn",
                     }, 
                     { 
                         headerName: "Established Forest Reserves", 
                         field: "forestland.classified_forestland.established_forest_reserves", 
+                        editable : true, 
+                        type: "numberColumn",
+                    }, 
+                    { 
+                        headerName: "Established Timberlands", 
+                        field: "forestland.classified_forestland.established_timberland", 
                         editable : true, 
                         type: "numberColumn",
                     }, 
@@ -240,8 +261,19 @@ const Forestry_Table_1  = () => {
     ]);
 
     const handleOnRowValueChanged = (d) => {
-        d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
-        console.log(d)
+        // d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
+        // console.log(d)
+        d.data.forestland.classified_forestland.total_classified_forestland = _.sum([
+            d.data.forestland.classified_forestland.established_forest_reserves,
+            d.data.forestland.classified_forestland.established_timberland,
+            d.data.forestland.classified_forestland.national_parks_and_grbs_wa,
+            d.data.forestland.classified_forestland.military_and_naval_reservations,
+            d.data.forestland.classified_forestland.civil_registration,
+            d.data.forestland.classified_forestland.fishpond,
+        ]);
+        d.data.forestland.total_forestland = d.data.forestland.classified_forestland.total_classified_forestland + d.data.forestland.unclassified_forestland_ha;
+        d.data.total_land_area = d.data.forestland.total_forestland + d.data.certified_a_n_d;
+        console.log(d.data)
         formUpdate(d.data, FormEnum.FORESTRY_1, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully updated.");
@@ -274,9 +306,17 @@ const Forestry_Table_1  = () => {
     };
 
     const handleSubmit = async (d) => {
-        console.log(d)
+        d["forestland.classified_forestland.total_classified_forestland"] = _.sum([
+            parseInt(d["forestland.classified_forestland.established_forest_reserves"]),
+            parseInt(d["forestland.classified_forestland.established_timberland"]),
+            parseInt(d["forestland.classified_forestland.national_parks_and_grbs_wa"]),
+            parseInt(d["forestland.classified_forestland.military_and_naval_reservations"]),
+            parseInt(d["forestland.classified_forestland.civil_registration"]),
+            parseInt(d["forestland.classified_forestland.fishpond"]),
+        ]);
+        d["forestland.total_forestland"] = parseInt(d["forestland.classified_forestland.total_classified_forestland"]) + parseInt(d["forestland.unclassified_forestland_ha"]);
+        d["total_land_area"] = parseInt(d["forestland.total_forestland"]) + parseInt(d["certified_a_n_d"]);
         try {
-            d.total_beneficiaries = parseInt(d.male_beneficiaries) + parseInt(d.female_beneficiaries);
             await formCreate(d, FormEnum.FORESTRY_1, Sector.FORESTRY)
             messageApi.success("Data successfully inserted.");
         } catch (err) {

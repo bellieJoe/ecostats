@@ -11,8 +11,11 @@ import CustomReportGenerator from "./GenericFormReportFilter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { AgGridReact } from "ag-grid-react";
-import { usePreviewReportStore } from "../../stores/useReportStore";
+import { usePreviewReportStore, useViewLogsStore } from "../../stores/useReportStore";
 import { useReactToPrint } from "react-to-print"
+import { ViewLogs } from "../Reports/ApprovalWorkflow/ApprovalComponents";
+import { getUserById } from "../../services/api/userApi";
+import { getFocalPersons, getUnitsByQuery } from "../../services/api/unitApi";
 
 interface RequestReportFormProps {
     formName : FormEnum
@@ -26,14 +29,6 @@ const RequestReportForm = ({ formName,  fields } : RequestReportFormProps) => {
     const [open, setOpen] = useState(false);
 
     const handleSubmit =  async (title, description, filter, inclusions) => {
-        console.log({
-            title : title,
-            description : description,
-            filters : filter,
-            fields : inclusions,
-            form_name : formName,
-            requested_by : authStore.user?._id
-        });
 
         try {
             await requestReport({
@@ -79,7 +74,37 @@ export const PreviewPrint = () => {
     const previewReportStore = usePreviewReportStore();
 
     const printRef = useRef<HTMLDivElement>(null);
-    const reactToPrintFn = useReactToPrint({ contentRef: printRef })
+    const reactToPrintFn = useReactToPrint({ contentRef: printRef });
+
+    const [signatories, setSignatories] = useState<{requestedBy:string, approvedBy:string, reviewedBy : string}>({requestedBy: "", reviewedBy: "", approvedBy: ""})
+
+    const getSignatories = async () => {
+        try {
+            const requestedBy = (await getUserById(previewReportStore.report.requested_by)).data;
+            
+            const unit = (await getUnitsByQuery({
+                _id : previewReportStore.report.unit_id
+            }, [
+                {
+                    path : "unitHead",
+                },
+                {
+                    path : "programId",
+                },
+                {
+                    path : "programId.programHead",
+                }
+            ])).data[0];
+            const approvedBy = (await getUserById(unit.programId.programHead)).data;
+            setSignatories({
+                requestedBy: requestedBy.name,
+                reviewedBy : unit.unitHead.name,
+                approvedBy : approvedBy.name
+            })
+        } catch (error) {
+            messageApi.error(parseResError(error).msg)
+        }   
+    }
 
     useEffect(() => {
         if(previewReportStore.report) {
@@ -93,6 +118,7 @@ export const PreviewPrint = () => {
                 messageApi.error(parseResError(err).msg)
             })
             .finally();
+            getSignatories();
         }
         else {
             setOpen(false)
@@ -139,11 +165,9 @@ export const PreviewPrint = () => {
                             autoHeaderHeight: true
                         }}
                         onGridReady={params => {
-                            console.log(params);
                             params.api.sizeColumnsToFit();
                             const colums : any[] = []
                             previewReportStore.report.fields.forEach(e => {
-                                console.log(e)
                                 if(!e.included){
                                     colums.push(e.name)
                                 }
@@ -155,6 +179,27 @@ export const PreviewPrint = () => {
                             console.log("destroyed")
                         }}
                     />
+                </div>
+                
+                {/* Signatories */}
+                <div className="mx-auto mt-28" style={{width: 800}}  >
+                    <Flex justify="space-between">
+                        <div>
+                            <p>Prepared By:</p>
+                            <hr className="mt-4" />
+                            <p className="font-semibold">{signatories.requestedBy}</p>
+                        </div>
+                        <div>
+                            <p>Reviewed By:</p>
+                            <hr className="mt-4" />
+                            <p className="font-semibold">{signatories.reviewedBy}</p>
+                        </div>
+                        <div>
+                            <p>Approved By:</p>
+                            <hr className="mt-4 " />
+                            <p className="font-semibold">{signatories.approvedBy}</p>
+                        </div>
+                    </Flex>
                 </div>
             </div>
         </Drawer>
@@ -169,6 +214,7 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
     const [loading, setLoading] = useState(false);
     const [rowData, setRowData] = useState([]);
     const authStore = useAuthStore();
+    const viewLogsStore = useViewLogsStore();
     const previewReportStore = usePreviewReportStore();
 
     const handleDelete = (id:string) => {
@@ -192,45 +238,45 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
             headerName : "Description",
             field : "description"
         },
-        {
-            headerName : "Filters",
-            field : "filters",
-            cellRenderer: (params) => {
-                return (
-                    <>
-                        <Space>
-                            {
+        // {
+        //     headerName : "Filters",
+        //     field : "filters",
+        //     cellRenderer: (params) => {
+        //         return (
+        //             <>
+        //                 <Space>
+        //                     {
                                 
-                            }
-                        </Space>
-                    </>
-                )
-            }
-        },
-        {
-            headerName : "Selected Fields",
-            field : "fields",
-            wrapText : true,
-            autoHeight : true,
-            valueFormatter : (params) => {
-                let val = ""
-                params.data.fields.filter(e => e.included).forEach(e => {val += e.name + ", "});
-                return val;
-            }
-        },
+        //                     }
+        //                 </Space>
+        //             </>
+        //         )
+        //     }
+        // },
+        // {
+        //     headerName : "Selected Fields",
+        //     field : "fields",
+        //     wrapText : true,
+        //     autoHeight : true,
+        //     valueFormatter : (params) => {
+        //         let val = ""
+        //         params.data.fields.filter(e => e.included).forEach(e => {val += e.name + ", "});
+        //         return val;
+        //     }
+        // },
         {
             headerName: "Actions",
             headerClass: "justify-center",
+            flex: 1,
             cellRenderer: (params) => {
                 return (
-                    <>
-                        <Space>
-                            <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this request?" onConfirm={() => handleDelete(params.data._id)}>
-                                <Button size="small" color="danger" variant="filled">Delete</Button>
-                            </Popconfirm>
-                            <Button size="small" color="primary" variant="filled" onClick={() => previewReportStore.setStore(colDefs, formName, sector, params.data)}>Preview & Print</Button>
-                        </Space>
-                    </>
+                    <Space className="w-fit">
+                        <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this request?" onConfirm={() => handleDelete(params.data._id)}>
+                            <Button size="small" color="danger" variant="text">Delete</Button>
+                        </Popconfirm>
+                        <Button size="small" color="primary" variant="text" onClick={() => previewReportStore.setStore(colDefs, formName, sector, params.data)}>Preview & Print</Button>
+                        <Button size="small" color="primary" variant="text" onClick={() => viewLogsStore.setReportId(params.data._id)}>Logs</Button>
+                    </Space>
                 )
             }
         }
@@ -268,13 +314,12 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
 
             <div className="ag-theme-alpine" style={{ width: '100%', height: '500px' }}>
                 <AgGridReact
-                    
-                    autoSizeStrategy={{
-                        type: "fitGridWidth"
-                    }}
                     defaultColDef={{
                         wrapText : true,
                         filter : "agTextFilterColumn"
+                    }}
+                    autoSizeStrategy={{
+                        type: "fitGridWidth"
                     }}
                     pagination={true}
                     loading={loading}
@@ -285,7 +330,7 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
             </div>
 
             <PreviewPrint />
-
+            <ViewLogs />
             
         </>
     )

@@ -123,7 +123,7 @@ const Login = () => {
     }
 
     return (
-        <GuestGuard redirectTo="/app">
+        <GuestGuard redirectTo="/">
             {contextHolder}
             <div style={containerStyle}>
                 <Grid>

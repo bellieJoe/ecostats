@@ -3,15 +3,15 @@ import mongoose from "mongoose";
 const Forestry_5_Schema = new mongoose.Schema({
     calendar_year: {
         type: Number,
-        // required : true
+        required : true
     },
     province: {
         type: String,
-        // required : true
+        required : true
     },
     name_of_watershed: {
         type: String,
-        // required : true
+        required : true
     },
     previous_name_of_watershed: {
         type: String,
@@ -19,7 +19,7 @@ const Forestry_5_Schema = new mongoose.Schema({
     },
     area_ha: {
         type: Number,
-        // required : true
+        required : true
     },
     classification: {
         type: String,

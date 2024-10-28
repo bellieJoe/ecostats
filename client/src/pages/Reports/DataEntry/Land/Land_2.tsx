@@ -66,7 +66,7 @@ const Land_2 = () => {
     return (
         <>
             { contextHandler }
-            <Title level={4} >Patrimonial Properties as of CY 2023</Title>
+            <Title level={4} >Patrimonial Properties</Title>
             <Tabs items={items} defaultActiveKey="1" />
         </>
     )
