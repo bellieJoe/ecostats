@@ -13,8 +13,10 @@ const GuestGuard = (props : Props) => {
     const {setTokens} = useAuthStore();
 
     useEffect(() => {
+        console.log()
         const checkAuth = async () => {
             const isAuthenticatedStatus = await isAuthenticated();
+            console.log(isAuthenticatedStatus)
             setIsAuth(isAuthenticatedStatus);
             if(isAuthenticatedStatus){
                 setTokens(getTokensFromCookie())

@@ -8,6 +8,7 @@ import RouteGuard from "../Guards/RouteGuard";
 import { DownOutlined, LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import Cookies from "js-cookie"
 import NavbarMenus from "./NavbarMenus";
+import IsAuth from "../Guards/IsAuth";
 
 const { Header } = Layout;
 
@@ -73,7 +74,7 @@ const Navbar = () => {
                         </Button>
                     </Link>
                 </GuestGuard>
-                <RouteGuard>
+                <IsAuth>
                     {/* <Button variant="contained" style={button} >
                             Logout 
                     </Button> */}
@@ -82,7 +83,7 @@ const Navbar = () => {
                             <Avatar className="cursor-pointer hover:scale-110" src={`https://api.dicebear.com/9.x/thumbs/svg?seed=${user?.name}`} /> 
                         </Space>
                     </Dropdown>
-                </RouteGuard>
+                </IsAuth>
             </Flex>
         </Header>
     );
