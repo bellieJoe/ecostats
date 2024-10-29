@@ -21,7 +21,7 @@ export const create = async (req, res) => {
         const focal = await FocalPerson.findOne({
             userId :requested_by,
             deletedAt : null
-        });
+        }).session(session);
 
         if(!focal) {
             return res.status(404).json({
@@ -44,7 +44,7 @@ export const create = async (req, res) => {
 
         const user = await UserModel.findById(requested_by).session(session);
 
-        new ReportLogModel({
+        await new ReportLogModel({
             message : `${user.name} created the request.`,
             reportId : requestedReport._id
         }).save({session});
