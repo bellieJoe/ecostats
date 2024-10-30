@@ -309,6 +309,18 @@ const ReportsSidebar = ({open}) => {
                         style  : menuStyle2,
                         onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_25}`)
                     },
+                    {
+                        key : FormEnum.BIODIVERSITY_26,
+                        label : "Table 26. Wild Flora Confiscation",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_26}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_27,
+                        label : "Table 27. Wild Fauna Confiscation",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_27}`)
+                    },
                 ]
             },
         ];

@@ -10,8 +10,9 @@ import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 import _ from 'lodash';
+import { ValueFormatterParams } from "ag-grid-community";
 
-export const biodiversity_25_gen_form_fields : GenericFormFieldV3[] = [
+export const biodiversity_26_gen_form_fields : GenericFormFieldV3[] = [
     {
         name : "calendar_year",
         label : "Calendar Year", 
@@ -23,94 +24,161 @@ export const biodiversity_25_gen_form_fields : GenericFormFieldV3[] = [
         ),
         type : "input"
     },
+    // {
+    //     name : "province",
+    //     label : "Province", 
+    //     input : (
+    //         <Input type="text"  />
+    //     ),
+    //     type : "input"
+    // },
+    // {
+    //     name : "municipality",
+    //     label : "Municipality", 
+    //     input : (
+    //         <Select showSearch virtual options={municipalityOptions}  />
+    //     ),
+    //     type : "input"
+    // },
     {
-        name : "province",
-        label : "Province", 
+        name : "species.common_name",
+        label : "Common Name", 
         input : (
-            <Input type="text"  />
+            <Input type="text" />
         ),
         type : "input"
     },
     {
-        name : "municipality",
-        label : "Municipality", 
+        name : "species.scientific_name",
+        label : "Scientific Name", 
         input : (
-            <Select showSearch virtual options={municipalityOptions}  />
+            <Input type="text" />
         ),
         type : "input"
     },
     {
-        name : "taxonomc_group",
-        label : "Taxonomic Group", 
-        input : (
-            <Select options={[
-                {
-                    label : "Angiosperms",
-                    value : "Angiosperms"
-                },
-                {
-                    label : "Pteridophytes",
-                    value : "Pteridophytes"
-                },
-                {
-                    label : "Gymnosperms",
-                    value : "Gymnosperms"
-                },
-                {
-                    label : "Non-vascular Plants (Bryophytes)",
-                    value : "Non-vascular Plants (Bryophytes)"
-                },
-            ]} />
-        ),
-        type : "input"
-    },
-    {
-        name : "no_of_species",
-        label : "No. of Species", 
+        name : "quantity",
+        label : "Quantitty", 
         input : (
             <Input type="number" />
         ),
         type : "input"
     },
+    {
+        name : "physical_condition",
+        label : "Physical Condition", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input",
+        required : false
+    },
+    {
+        name : "action_taken",
+        label : "Action Taken", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+    {
+        name : "date_of_confiscation",
+        label : "Date of Confiscation", 
+        input : (
+            <DatePicker />
+        ),
+        type : "input"
+    },
+    {
+        name : "status",
+        label : "Status", 
+        input : (
+            <Input type="text" />
+        ),
+        type : "input"
+    },
+
 ];
 
-export const biodiversity_25_col_defs = [
+export const biodiversity_26_col_defs = [
     { 
         headerName: "CY", 
         field: "calendar_year", 
         editable : true, 
         type: "numberColumn",
     },
+    // { 
+    //     headerName: "Province", 
+    //     field: "province", 
+    //     editable : true, 
+    //     type: "textColumn",
+    // },
+    // { 
+    //     headerName: "Municipality", 
+    //     field: "municipality", 
+    //     editable : true, 
+    //     type: "textColumn",
+    // },
+    {
+        headerName : "Species",
+        children : [
+            {
+                headerName : "Common Name",
+                field : "species.common_name",
+                editable : true,
+                type: "textColumn"
+            },
+            {
+                headerName : "Scientific Name",
+                field : "species.scientific_name",
+                editable : true,
+                type: "textColumn"
+            },
+        ]
+    },
     { 
-        headerName: "Province", 
-        field: "province", 
+        headerName: "Quantity", 
+        field: "quantity", 
+        editable : true, 
+        type : "textColumn"
+    },
+    { 
+        headerName: "Physical Condition", 
+        field: "physical_condition", 
         editable : true, 
         type: "textColumn",
     },
     { 
-        headerName: "Municipality", 
-        field: "municipality", 
+        headerName: "Action Taken", 
+        field: "action_taken", 
         editable : true, 
         type: "textColumn",
     },
     { 
-        headerName: "Taxonomic Group", 
-        field: "taxonomic_group", 
+        headerName: "Date of Confiscation", 
+        field: "date_of_confiscation", 
         editable : true, 
-        cellEditor : "agSelectCellEditor",
-        cellEditorParams : {
-            values : ["Angiosperms", "Pteridophytes", "Gymnosperms", "Non-vascular Plants (Bryophytes)"]
-        }
+        valueFormatter: (params) => {
+            // val.date_established = new Date(val.date_established);
+            const date = new Date(params.value);
+            console.log(date.toLocaleDateString())
+            return date.toLocaleDateString(); // Display in a user-friendly format
+        },
+        cellEditor: "agDateCellEditor",
+        valueParser: (params) => {
+            console.log(params)
+            return new Date(params.newValue).toISOString(); // Save in ISO format
+        },
     },
     { 
-        headerName: "No. of Species", 
-        field: "no_of_species", 
+        headerName: "Status", 
+        field: "status", 
         editable : true, 
-        type: "numberColumn",
+        type: "textColumn",
     },
 ];
 
-const Biodiversity_Table_25  = () => {
+const Biodiversity_Table_26  = () => {
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
     const [limit, setLimit] = useState(10);
@@ -124,7 +192,7 @@ const Biodiversity_Table_25  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        ...biodiversity_25_col_defs,
+        ...biodiversity_26_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -139,7 +207,7 @@ const Biodiversity_Table_25  = () => {
     ]);
 
     const handleOnRowValueChanged = (d) => {
-        formUpdate(d.data, FormEnum.BIODIVERSITY_25, Sector.BIODIVERSITY)
+        formUpdate(d.data, FormEnum.BIODIVERSITY_26, Sector.BIODIVERSITY)
         .then(res => {
             messageApi.success("Data successfully updated.");
         })
@@ -151,7 +219,7 @@ const Biodiversity_Table_25  = () => {
     }
 
     const handleDelete = (id) => {
-        formDelete(id, FormEnum.BIODIVERSITY_25, Sector.BIODIVERSITY)
+        formDelete(id, FormEnum.BIODIVERSITY_26, Sector.BIODIVERSITY)
         .then(res => {
             messageApi.success("Data successfully deleted.");
         })
@@ -172,7 +240,7 @@ const Biodiversity_Table_25  = () => {
 
     const handleSubmit = async (d) => {
         try {
-            await formCreate(d, FormEnum.BIODIVERSITY_25, Sector.BIODIVERSITY)
+            await formCreate(d, FormEnum.BIODIVERSITY_26, Sector.BIODIVERSITY)
             messageApi.success("Data successfully inserted.");
         } catch (err) {
             messageApi.error(parseResError(err).msg)
@@ -183,12 +251,12 @@ const Biodiversity_Table_25  = () => {
     
     useEffect(() => {
         setLoading(true)
-        formGet(FormEnum.BIODIVERSITY_25, Sector.BIODIVERSITY, limit, page)
+        formGet(FormEnum.BIODIVERSITY_26, Sector.BIODIVERSITY, limit, page)
         .then(res => {
             console.log(res.data)
             setTotal(res.data.total)
             setRowData(res.data.models.map(val => {
-                val.date_established = new Date(val.date_established);
+                
                 return val;
             }));
         })
@@ -242,11 +310,11 @@ const Biodiversity_Table_25  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={biodiversity_25_gen_form_fields} 
+            fields={biodiversity_26_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>
     )
 }
 
-export default Biodiversity_Table_25;
+export default Biodiversity_Table_26;

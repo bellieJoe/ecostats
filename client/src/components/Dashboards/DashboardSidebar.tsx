@@ -296,6 +296,18 @@ const DashboardSidebar = ({open}) => {
                         style  : menuStyle2,
                         onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_25}`)
                     },
+                    {
+                        key : FormEnum.BIODIVERSITY_26,
+                        label : "Wild Flora Confiscation",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_26}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_27,
+                        label : "Wild Fauna Confiscation",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_27}`)
+                    },
                 ]
             },
         ];
