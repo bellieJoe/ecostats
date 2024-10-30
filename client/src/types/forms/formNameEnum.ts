@@ -7,6 +7,11 @@ import { biodiversity_16_col_defs } from "../../components/Reports/Forms/Biodive
 import { biodiversity_17_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_17";
 import { biodiversity_19_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_19";
 import { biodiversity_2_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_2";
+import { biodiversity_20_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_20";
+import { biodiversity_21_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_21";
+import { biodiversity_22_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_22";
+import { biodiversity_23_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_23";
+import { biodiversity_24_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_24";
 import { biodiversity_3_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_3";
 import { biodiversity_4_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_4";
 import { biodiversity_5_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_5";
@@ -66,6 +71,16 @@ export enum FormEnum {
     BIODIVERSITY_18="biodiversity_18",
     BIODIVERSITY_19="biodiversity_19",
     BIODIVERSITY_20="biodiversity_20",
+    BIODIVERSITY_21="biodiversity_21",
+    BIODIVERSITY_22="biodiversity_22",
+    BIODIVERSITY_23="biodiversity_23",
+    BIODIVERSITY_24="biodiversity_24",
+    BIODIVERSITY_25="biodiversity_25",
+    BIODIVERSITY_26="biodiversity_26",
+    BIODIVERSITY_27="biodiversity_27",
+    BIODIVERSITY_28="biodiversity_28",
+    BIODIVERSITY_29="biodiversity_29",
+    BIODIVERSITY_30="biodiversity_30",
 }
 
 export enum Sector {
@@ -106,6 +121,11 @@ export const ColDefsMap = {
     [FormEnum.BIODIVERSITY_16] : biodiversity_16_col_defs,
     [FormEnum.BIODIVERSITY_17] : biodiversity_17_col_defs,
     [FormEnum.BIODIVERSITY_19] : biodiversity_19_col_defs,
+    [FormEnum.BIODIVERSITY_20] : biodiversity_20_col_defs,
+    [FormEnum.BIODIVERSITY_21] : biodiversity_21_col_defs,
+    [FormEnum.BIODIVERSITY_22] : biodiversity_22_col_defs,
+    [FormEnum.BIODIVERSITY_23] : biodiversity_23_col_defs,
+    [FormEnum.BIODIVERSITY_24] : biodiversity_24_col_defs,
 }
 
 export const FormNameMap = {
@@ -140,4 +160,15 @@ export const FormNameMap = {
     [FormEnum.BIODIVERSITY_16] : Sector.BIODIVERSITY,
     [FormEnum.BIODIVERSITY_17] : Sector.BIODIVERSITY,
     [FormEnum.BIODIVERSITY_19] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_20] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_21] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_22] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_23] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_24] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_25] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_26] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_27] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_28] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_29] : Sector.BIODIVERSITY,
+    [FormEnum.BIODIVERSITY_30] : Sector.BIODIVERSITY,
 }

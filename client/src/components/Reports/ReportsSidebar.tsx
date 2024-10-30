@@ -273,6 +273,42 @@ const ReportsSidebar = ({open}) => {
                         style  : menuStyle2,
                         onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_19}`)
                     },
+                    {
+                        key : FormEnum.BIODIVERSITY_20,
+                        label : "Table 20. Wildlife Culture Permit",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_20}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_21,
+                        label : "Table 21. Clearance to Operate (for Zoological Parks and Botanical Gardens)",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_21}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_22,
+                        label : "Table 22. Known Fauna Species by Taxonomic Group",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_22}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_23,
+                        label : "Table 23. Known Flora Species by Taxonomic Group",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_23}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_24,
+                        label : "Table 24. Endemic Fauna Species by Taxonomic Group",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_24}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_25,
+                        label : "Table 25. Endemic Flora Species by Taxonomic Group",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_25}`)
+                    },
                 ]
             },
         ];

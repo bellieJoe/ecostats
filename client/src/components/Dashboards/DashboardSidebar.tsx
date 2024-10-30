@@ -260,6 +260,42 @@ const DashboardSidebar = ({open}) => {
                         style  : menuStyle2,
                         onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_19}`)
                     },
+                    {
+                        key : FormEnum.BIODIVERSITY_20,
+                        label : "Wildlife Culture Permit",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_20}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_21,
+                        label : "Clearance to Operate (for Zoological Parks and Botanical Gardens)",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_21}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_22,
+                        label : "Known Fauna Species by Taxonomic Group",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_22}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_23,
+                        label : "Known Flora Species by Taxonomic Group",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_23}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_24,
+                        label : "Endemic Fauna Species by Taxonomic Group",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_24}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_25,
+                        label : "Endemic Flora Species by Taxonomic Group",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_25}`)
+                    },
                 ]
             },
         ];
