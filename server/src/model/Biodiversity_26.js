@@ -46,10 +46,7 @@ const Biodiversity_26_Schema = new mongoose.Schema({
     timestamps: true // Automatically adds createdAt and updatedAt fields
 });
 
-// Biodiversity_26_Schema.index(
-//     { common_name: 1, scientific_name: 1 },
-//     { unique: true }
-// );
+
 
 const Biodiversity_26 = mongoose.model('biodiversity_26', Biodiversity_26_Schema);
 

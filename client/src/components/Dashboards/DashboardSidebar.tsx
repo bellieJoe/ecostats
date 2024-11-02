@@ -308,6 +308,30 @@ const DashboardSidebar = ({open}) => {
                         style  : menuStyle2,
                         onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_27}`)
                     },
+                    {
+                        key : FormEnum.BIODIVERSITY_28,
+                        label : "Wild Fauna Retrieval and Donation",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_28}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_29,
+                        label : "Wild Flora Retrieval and Donation",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_29}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_30,
+                        label : "Inventory of Wildlife at DENR Established Wildlife Rescue Centers",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_30}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_31,
+                        label : "Population of Threatened Species",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_31}`)
+                    },
                 ]
             },
         ];

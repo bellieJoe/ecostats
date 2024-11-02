@@ -99,6 +99,14 @@ import Biodiversity_26 from './pages/Reports/DataEntry/Biodiversity/Biodiversity
 import Biodiversity_26_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_26_dashboard'
 import Biodiversity_27 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_27'
 import Biodiversity_27_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_27_dashboard'
+import Biodiversity_28 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_28'
+import Biodiversity_28_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_28_dashboard'
+import Biodiversity_29 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_29'
+import Biodiversity_29_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_29_dashboard'
+import Biodiversity_30 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_30'
+import Biodiversity_30_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_30_dashboard'
+import Biodiversity_31 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_31'
+import Biodiversity_31_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_31_dashboard'
 
 axios.defaults.withCredentials = true;
 
@@ -203,6 +211,10 @@ function App() {
                   <Route path='biodiversity_25' element={<Biodiversity_25_Dashboard />} />
                   <Route path='biodiversity_26' element={<Biodiversity_26_Dashboard />} />
                   <Route path='biodiversity_27' element={<Biodiversity_27_Dashboard />} />
+                  <Route path='biodiversity_28' element={<Biodiversity_28_Dashboard />} />
+                  <Route path='biodiversity_29' element={<Biodiversity_29_Dashboard />} />
+                  <Route path='biodiversity_30' element={<Biodiversity_30_Dashboard />} />
+                  <Route path='biodiversity_31' element={<Biodiversity_31_Dashboard />} />
                 </Route>
 
                 <Route path='reports' element={<Reports />}>
@@ -256,6 +268,10 @@ function App() {
                       <Route path={FormEnum.BIODIVERSITY_25} element={<Biodiversity_25 />} />
                       <Route path={FormEnum.BIODIVERSITY_26} element={<Biodiversity_26 />} />
                       <Route path={FormEnum.BIODIVERSITY_27} element={<Biodiversity_27 />} />
+                      <Route path={FormEnum.BIODIVERSITY_28} element={<Biodiversity_28 />} />
+                      <Route path={FormEnum.BIODIVERSITY_29} element={<Biodiversity_29 />} />
+                      <Route path={FormEnum.BIODIVERSITY_30} element={<Biodiversity_30 />} />
+                      <Route path={FormEnum.BIODIVERSITY_31} element={<Biodiversity_31 />} />
                     </Route>
                 </Route>
 

@@ -16,6 +16,7 @@ import { useReactToPrint } from "react-to-print"
 import { ViewLogs } from "../Reports/ApprovalWorkflow/ApprovalComponents";
 import { getUserById } from "../../services/api/userApi";
 import { getFocalPersons, getUnitsByQuery } from "../../services/api/unitApi";
+import "./CustomReport.css";
 
 interface RequestReportFormProps {
     formName : FormEnum
@@ -144,16 +145,16 @@ export const PreviewPrint = () => {
                 <Title className="text-center my-4" level={4}>{previewReportStore.report && previewReportStore.report.title}</Title>
                 <p className="text-center my-2">{previewReportStore.report && previewReportStore.report.description}</p>
 
-                <div className="ag-theme-alpine w-fit mx-auto my-4" style={{width: 800}}  >
+                <div className="report-table ag-theme-alpine w-fit mx-auto my-4" style={{width: 800}}  >
                     <AgGridReact
+                        columnDefs={previewReportStore.colDefs}
+                        rowData={rowData}
                         key={gridKey}
                         autoSizeStrategy={{
                             type : "fitProvidedWidth",
                             width : 800
                         }}
                         suppressClickEdit={true}
-                        columnDefs={previewReportStore.colDefs}
-                        rowData={rowData}
                         domLayout="autoHeight"
                         suppressHorizontalScroll={true}
                         defaultColDef={{
@@ -162,7 +163,7 @@ export const PreviewPrint = () => {
                             wrapText : true,
                             editable : false,
                             wrapHeaderText : true,
-                            autoHeaderHeight: true
+                            // autoHeaderHeight: true
                         }}
                         onGridReady={params => {
                             params.api.sizeColumnsToFit();

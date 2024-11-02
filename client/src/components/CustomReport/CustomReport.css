@@ -1,0 +1,58 @@
+
+/* .ag-theme-alpine  {
+    border: 1px solid black;
+}
+.ag-theme-alpine .ag-cell {
+    border-bottom: 1px solid black;
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+}
+
+.ag-theme-alpine .ag-header-cell {
+    border: 1px solid black;
+}
+
+.ag-theme-alpine .ag-header {
+    font-weight: bold; 
+} */
+
+.report-table *{
+    border : none;
+}
+.report-table .ag-root-wrapper  {
+    border: 1px solid black;
+    border-radius: 0px !important;
+}
+.report-table .ag-header {
+    border-bottom: 1px solid black;
+    background-color: white !important;
+} 
+.report-table .ag-header-group-cell-with-group {
+    border-bottom: 1px solid black;
+    border-top: none;
+    background-color: white !important;
+} 
+
+.report-table .ag-header-cell{
+    text-align: center;
+}
+
+.report-table .ag-header-cell-label, .report-table .ag-header-cell-comp-wrapper{
+    justify-content: center;
+}
+
+.report-table .ag-header-cell:not(:last-child) {
+    border-right: 1px solid black;
+} 
+
+.report-table .ag-cell:not(:last-child) {
+    border-right: 1px solid black;
+} 
+
+.report-table .ag-row     {
+    border-bottom: 1px solid black;
+}
+
+.report-table .ag-cell {
+    border-right: none;
+}

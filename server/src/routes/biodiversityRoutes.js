@@ -23,6 +23,10 @@ import Biodiversity_24 from "../model/Biodiversity_24.js";
 import Biodiversity_25 from "../model/Biodiversity_25.js";
 import Biodiversity_26 from "../model/Biodiversity_26.js";
 import Biodiversity_27 from "../model/Biodiversity_27.js";
+import Biodiversity_28 from "../model/Biodiversity_28.js";
+import Biodiversity_29 from "../model/Biodiversity_29.js";
+import Biodiversity_30 from "../model/Biodiversity_30.js";
+import Biodiversity_31 from "../model/Biodiversity_31.js";
 
 const biodiversity_2_controller = createCRUDController(Biodiversity_2);
 const biodiversity_3_controller = createCRUDController(Biodiversity_3);
@@ -49,6 +53,10 @@ const biodiversity_24_controller = createCRUDController(Biodiversity_24);
 const biodiversity_25_controller = createCRUDController(Biodiversity_25);
 const biodiversity_26_controller = createCRUDController(Biodiversity_26);
 const biodiversity_27_controller = createCRUDController(Biodiversity_27);
+const biodiversity_28_controller = createCRUDController(Biodiversity_28);
+const biodiversity_29_controller = createCRUDController(Biodiversity_29);
+const biodiversity_30_controller = createCRUDController(Biodiversity_30);
+const biodiversity_31_controller = createCRUDController(Biodiversity_31);
 
 const router = express.Router();
 
@@ -212,5 +220,33 @@ router.put("/biodiversity_27", biodiversity_27_controller.update);
 router.delete("/biodiversity_27/:id", biodiversity_27_controller.delete);
 router.post("/biodiversity_27/save-many", biodiversity_27_controller.saveMany);
 router.get("/biodiversity_27/by-query", biodiversity_27_controller.getByQuery);
+
+router.get("/biodiversity_28", biodiversity_28_controller.getAll);
+router.post("/biodiversity_28", biodiversity_28_controller.create);
+router.put("/biodiversity_28", biodiversity_28_controller.update);
+router.delete("/biodiversity_28/:id", biodiversity_28_controller.delete);
+router.post("/biodiversity_28/save-many", biodiversity_28_controller.saveMany);
+router.get("/biodiversity_28/by-query", biodiversity_28_controller.getByQuery);
+
+router.get("/biodiversity_29", biodiversity_29_controller.getAll);
+router.post("/biodiversity_29", biodiversity_29_controller.create);
+router.put("/biodiversity_29", biodiversity_29_controller.update);
+router.delete("/biodiversity_29/:id", biodiversity_29_controller.delete);
+router.post("/biodiversity_29/save-many", biodiversity_29_controller.saveMany);
+router.get("/biodiversity_29/by-query", biodiversity_29_controller.getByQuery);
+
+router.get("/biodiversity_30", biodiversity_30_controller.getAll);
+router.post("/biodiversity_30", biodiversity_30_controller.create);
+router.put("/biodiversity_30", biodiversity_30_controller.update);
+router.delete("/biodiversity_30/:id", biodiversity_30_controller.delete);
+router.post("/biodiversity_30/save-many", biodiversity_30_controller.saveMany);
+router.get("/biodiversity_30/by-query", biodiversity_30_controller.getByQuery);
+
+router.get("/biodiversity_31", biodiversity_31_controller.getAll);
+router.post("/biodiversity_31", biodiversity_31_controller.create);
+router.put("/biodiversity_31", biodiversity_31_controller.update);
+router.delete("/biodiversity_31/:id", biodiversity_31_controller.delete);
+router.post("/biodiversity_31/save-many", biodiversity_31_controller.saveMany);
+router.get("/biodiversity_31/by-query", biodiversity_31_controller.getByQuery);
 
 export default router;
