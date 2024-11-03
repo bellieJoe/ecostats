@@ -3,6 +3,7 @@ import AuthToken from "../../types/AuthToken";
 import Cookies from "js-cookie"
 import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "../../stores/useAuthStore";
+import { Email } from "@mui/icons-material";
 
 const apiUrl : string = import.meta.env.VITE_API_URL;
 
@@ -129,5 +130,15 @@ export const getByQuery = async (query : any) : Promise<any> => {
         params: {
             query : query
         }
+    });
+}
+
+export const forgotPassword = async (body) : Promise<any> => {
+    return await axios.post(`${apiUrl}/users/forgot-password`, body);
+}
+
+export const resetPassword = async (password, token) : Promise<any> => {
+    return await axios.post(`${apiUrl}/users/reset-password/${token}`, {
+        password
     });
 }

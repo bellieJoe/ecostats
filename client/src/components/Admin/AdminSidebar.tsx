@@ -5,6 +5,8 @@ import { FolderOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import SidebarUser from "../SidebarUser";
 import { useAuthStore } from "../../stores/useAuthStore";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCoins } from "@fortawesome/free-solid-svg-icons";
 
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -17,6 +19,10 @@ const AdminSidebar = ({open}) => {
 
     const menuStyle1 : React.CSSProperties = {
         fontWeight: "bold",
+    };
+
+    const menuStyle2 : React.CSSProperties = {
+        fontWeight: "normal",
     };
 
     const [items, setItems] = useState<any[]>([]);
@@ -65,7 +71,29 @@ const AdminSidebar = ({open}) => {
                 style: menuStyle1,
                 onClick: () => navigate("programs"),
                 role : ["admin", "planning officer"]
-            }
+            },
+            {
+                key: "budget",
+                label: "Budget Analytics",
+                icon: <FontAwesomeIcon icon={faCoins} />,
+                style: menuStyle1,
+                role : ["admin", "planning officer"],
+                
+                children : [
+                    {
+                        key : "analytics",
+                        label : "Analytics",
+                        style: menuStyle2,
+                        onClick: () => navigate("budgets"),
+                    },
+                    {
+                        key : "Data",
+                        label : "Data",
+                        style: menuStyle2,
+                        onClick: () => navigate("budgets/data"),
+                    }
+                ]
+            },
     
         ];
 

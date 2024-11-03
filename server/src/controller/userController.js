@@ -8,6 +8,7 @@ import mongoose from "mongoose";
 // import ProgramHeadModel from "../model/ProgramHead.js";
 // import UnitHeadModel from "../model/UnitHead.js";
 import ProgramModel from "../model/Program.js";
+import nodemailer from "nodemailer"
 
 dotenv.config()
 
@@ -66,10 +67,12 @@ export const signup = async (req, res)  => {
             email,
             passwordHash : await bcrypt.hash(password, 10),
             name,
-            isActive: true,
+            isActive: false,
             role
         });
         await user.save({session});
+
+        // add registration activation mechanism
 
         await session.commitTransaction();
 
@@ -353,15 +356,137 @@ export const assignUserToUnitOrProgram = async (req, res)  => {
         return res.status(200).send("Ok")
 
     } catch (error) {
-        await session.abortTransaction();
+        
+    } finally {
+        session.endSession();
+    }
+}
+
+export const forgotPassword = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await UserModel.findOne({ email });
+
+        if (!user) return res.status(404).send({
+            error : "Not Found",
+            msg : "User not found."
+        });
+
+        // Generate a token with a short expiration time
+        const token = await generateJWTToken(user._id);
+
+        // Send the email
+        const transporter = nodemailer.createTransport({
+            service: 'gmail', // Choose your email provider or use a custom SMTP service
+            auth: {
+                user: process.env.MAIL_EMAIL,
+                pass: process.env.MAIL_PASS, // Use environment variables for production
+            },
+        });
+
+        // return res.json(transporter)
+
+        const resetLink = `${process.env.FRONTEND_URL}/reset-password/${token}`;
+        await transporter.sendMail({
+            to: email,
+            subject: 'Password Reset',
+            html: 
+            `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Password Reset</title>
+            <style>
+                body {
+                font-family: Arial, sans-serif;
+                color: #333333;
+                background-color: #f9f9f9;
+                margin: 0;
+                padding: 20px;
+                }
+                .container {
+                max-width: 600px;
+                margin: auto;
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                .button {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 5px;
+                font-weight: bold;
+                }
+                .footer {
+                font-size: 0.9em;
+                color: #666666;
+                margin-top: 20px;
+                }
+            </style>
+            </head>
+            <body>
+            <div class="container">
+                <h2>Password Reset Request</h2>
+                <p>Hi ${user.name},</p>
+                <p>We received a request to reset your password for your account. If you didn’t make this request, please ignore this email.</p>
+                <p>To reset your password, click the button below:</p>
+                <p>
+                <a href="${resetLink}" class="button">Reset Password</a>
+                </p>
+                <p>This link will expire in 1 hour. After that, you’ll need to submit a new request to reset your password.</p>
+                <p>If you have any questions or need further assistance, please feel free to contact our support team.</p>
+                <div class="footer">
+                <p>Thank you,</p>
+                <p>Ecostats Support Team</p>
+                </div>
+            </div>
+            </body>
+            </html>
+            `,
+        });
+
+        return res.send("Password reset link sent to email");
+        
+    } catch (error) {
         return res.status(500).json(
             { 
                 error: 'Server error.',
                 details : error
             }   
         );
-    } finally {
-        session.endSession();
+    }
+}
+
+export const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+    console.log(password)
+
+    try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        console.log(decoded)
+        const user = await UserModel.findById(decoded.id);
+        if (!user) return res.status(404).send("User not found");
+
+        // Hash and update the new password
+        const hashedPassword = await bcrypt.hash(password, 10);
+        user.passwordHash = hashedPassword;
+        await user.save();
+
+        res.send("Password has been reset successfully");
+    } catch (error) {
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        );
     }
 }
 

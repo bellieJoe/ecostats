@@ -111,6 +111,10 @@ import Biodiversity_32 from './pages/Reports/DataEntry/Biodiversity/Biodiversity
 import Biodiversity_32_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_32_dashboard'
 import Biodiversity_33 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_33'
 import Biodiversity_33_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_33_dashboard'
+import ForgotPassword from './pages/Home/ForgotPassword.tsx/ForgotPassword'
+import ResetPassword from './pages/Home/ForgotPassword.tsx/ResetPassword'
+import Data from './pages/Admin/Budget/Data'
+import BudgetAnalytics from './pages/Admin/Budget/BudgetAnalytics'
 
 axios.defaults.withCredentials = true;
 
@@ -162,12 +166,18 @@ function App() {
                   <Route path="" element={<LandingPage />} />
                   <Route path="login" element={<Login />} />
                   <Route path="signup" element={<SignUp />} />
+                  <Route path="forgot-password" element={<ForgotPassword />} />
+                  <Route path="reset-password/:token" element={<ResetPassword />} />
                 </Route>
 
                 <Route path='admin' element={<Admin />}>
                   {/* <Route path='' element={<Users />} /> */}
                   <Route path='users' element={<Users />} />
                   <Route path='programs' element={<Programs />} />
+                  <Route path='budgets'  > 
+                    <Route path='data' element={<Data />} />
+                    <Route path='' element={<BudgetAnalytics />} />
+                  </Route>
                 </Route>
 
                 <Route path='dashboard' element={<Dashboard />}>

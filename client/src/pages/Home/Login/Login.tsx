@@ -127,7 +127,7 @@ const Login = () => {
             {contextHolder}
             <div style={containerStyle}>
                 <Grid>
-                    <Paper style={paperStyle} sx={{ width: { xs: '80vw', sm: '50vw', md: '40vw', lg: '30vw', xl: '20vw' }, height: { lg: '50vh' } }}>
+                    <Paper style={paperStyle} sx={{ width: { xs: '80vw', sm: '50vw', md: '40vw', lg: '30vw', xl: '20vw' },  }}>
                         <Typography component="h1" variant="h5" style={heading}>Login</Typography>
                         <form onSubmit={handleLogin}>
                             <span style={row}>
@@ -142,6 +142,7 @@ const Login = () => {
                             <Button style={btnStyle} variant="contained" type="submit">Login</Button>
                         </form>
                         <p style={linkStyle}>Don't have an account? <Link href="/signup" style={{ color: "#fff", textDecoration: "underline" }}>SignUp</Link></p>
+                        <p style={linkStyle}>Forgot Password? <Link href="/forgot-password" style={{ color: "#fff", textDecoration: "underline" }}>Reset Password</Link></p>
                     </Paper>
                 </Grid>
             </div>

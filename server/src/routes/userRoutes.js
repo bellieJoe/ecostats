@@ -18,7 +18,9 @@ import {
     deactivate,
     update,
     searchByName,
-    assignUserToUnitOrProgram
+    assignUserToUnitOrProgram,
+    forgotPassword,
+    resetPassword
 } from "../controller/userController.js";
 import UserModel from "../model/User.js";
 
@@ -41,6 +43,10 @@ router.get('/search/:name', searchByName);
 router.get('/get-by-id/:id', getUserById);
 
 router.post('/assign-to', assignToUntOrPrgrmValidation, assignUserToUnitOrProgram);
+
+router.post('/forgot-password', forgotPassword);
+
+router.post('/reset-password/:token', resetPassword);
 
 router.get("/query", async (req, res) => {
     const users = await UserModel.find(req.query.query);

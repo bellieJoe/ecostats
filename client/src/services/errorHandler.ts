@@ -16,8 +16,8 @@ export const parseResError = (err) : Error => {
         }
         if (err.response?.statusText) {
             return {
-                error : err.response.data.statusText,
-                msg : err.response.data.statusText
+                error : err.response.statusText,
+                msg : err.response.statusText
             }
         }
         if (err.message) {
