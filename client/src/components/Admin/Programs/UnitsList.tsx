@@ -292,7 +292,7 @@ const UnitsList = () => {
             {contextHolder}
             <Title level={5} >Units</Title>
             {
-                viewUnitStore.programId && <div className="mb-2"><span className="font-semibold">Program :</span> {viewUnitStore.programName}</div> 
+                viewUnitStore.programId && <div className="mb-2"><span className="font-semibold">Division :</span> {viewUnitStore.programName}</div> 
             }
             <Flex justify="right" className="mb-2">
                 <Button variant="text" color="primary" type="text" size="small" icon={<FontAwesomeIcon icon={faArrowsRotate} />} onClick={() => setRefresh(!refresh)}>Refresh</Button>

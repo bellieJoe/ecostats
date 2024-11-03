@@ -146,7 +146,7 @@ const AssignHeads = () => {
         <>
             {contextHolder}
             <Card >
-                <Title level={4}>Assign Heads upon User Account RegistrationRegister Program/Division</Title>
+                <Title level={4}>Assign Heads upon User Account RegistrationRegister Division</Title>
                 <div className="mb-2">
                     <Title level={5}>User Account</Title>
                     <Select 

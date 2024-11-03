@@ -61,7 +61,7 @@ const UpdateProgram = ({onUpdated} : Props) => {
             loading={loading}
             
             open={!!store.programId}>
-                <Title level={5} >Update Program</Title>
+                <Title level={5} >Update Division</Title>
                 
                 <Form   
                 onFinish={submitForm}
@@ -71,14 +71,14 @@ const UpdateProgram = ({onUpdated} : Props) => {
                     rules={[{required: true}]}
                     name="id"
                     hidden>
-                        <Input placeholder="Program Name"   />
+                        <Input placeholder="Division Name"   />
                     </Form.Item>
 
                     <Form.Item 
-                    label="Program Name" 
+                    label="Division Name" 
                     rules={[{required: true}]}
                     name="name">
-                        <Input placeholder="Program Name"    />
+                        <Input placeholder="Division Name"    />
                     </Form.Item>
 
                     <Form.Item 
@@ -89,9 +89,9 @@ const UpdateProgram = ({onUpdated} : Props) => {
                         className="w-full" 
                         placeholder="Assign Management"
                         options={[
-                            { value: Sector.LAND, label: "Land Management" },
-                            { value: Sector.FORESTRY, label: "Forestry Management" },
-                            { value: Sector.BIODIVERSITY, label: "Biodiversity Management" },
+                            { value: Sector.LAND, label: "Land" },
+                            { value: Sector.FORESTRY, label: "Forestry" },
+                            { value: Sector.BIODIVERSITY, label: "Biodiversity" },
                         ]} />
                     </Form.Item>
 

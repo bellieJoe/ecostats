@@ -107,6 +107,10 @@ import Biodiversity_30 from './pages/Reports/DataEntry/Biodiversity/Biodiversity
 import Biodiversity_30_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_30_dashboard'
 import Biodiversity_31 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_31'
 import Biodiversity_31_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_31_dashboard'
+import Biodiversity_32 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_32'
+import Biodiversity_32_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_32_dashboard'
+import Biodiversity_33 from './pages/Reports/DataEntry/Biodiversity/Biodiversity_33'
+import Biodiversity_33_Dashboard from './pages/Dashboard/Biodiversity/Biodiversity_33_dashboard'
 
 axios.defaults.withCredentials = true;
 
@@ -215,6 +219,8 @@ function App() {
                   <Route path='biodiversity_29' element={<Biodiversity_29_Dashboard />} />
                   <Route path='biodiversity_30' element={<Biodiversity_30_Dashboard />} />
                   <Route path='biodiversity_31' element={<Biodiversity_31_Dashboard />} />
+                  <Route path='biodiversity_32' element={<Biodiversity_32_Dashboard />} />
+                  <Route path='biodiversity_33' element={<Biodiversity_33_Dashboard />} />
                 </Route>
 
                 <Route path='reports' element={<Reports />}>
@@ -272,6 +278,8 @@ function App() {
                       <Route path={FormEnum.BIODIVERSITY_29} element={<Biodiversity_29 />} />
                       <Route path={FormEnum.BIODIVERSITY_30} element={<Biodiversity_30 />} />
                       <Route path={FormEnum.BIODIVERSITY_31} element={<Biodiversity_31 />} />
+                      <Route path={FormEnum.BIODIVERSITY_32} element={<Biodiversity_32 />} />
+                      <Route path={FormEnum.BIODIVERSITY_33} element={<Biodiversity_33 />} />
                     </Route>
                 </Route>
 

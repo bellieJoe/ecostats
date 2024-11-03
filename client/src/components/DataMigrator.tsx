@@ -3,8 +3,10 @@ import { AgGridReact } from 'ag-grid-react';
 import * as XLSX from 'xlsx';
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-alpine.css';
-import { Button, Space, Upload, message } from 'antd';
+import { Button, Flex, Space, Upload, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faDownload } from '@fortawesome/free-solid-svg-icons';
 
 export interface DataMigratorCol {
     headerName: string;
@@ -99,9 +101,7 @@ const DataMigrator = ({ columns, onSave }: { columns: DataMigratorCol[], onSave:
   return (
     <div className="excel-upload">
       <Space align="center">
-        <Button onClick={downloadTemplate}>
-          Download Excel Template
-        </Button>
+        
         <Upload
           accept=".xlsx, .xls"
           beforeUpload={handleFileUpload}
@@ -120,6 +120,11 @@ const DataMigrator = ({ columns, onSave }: { columns: DataMigratorCol[], onSave:
           defaultColDef={{ sortable: true, filter: true, resizable: true }}
         />
       </div>
+      <Flex className="mt-4" justify='end'>
+        <Button onClick={downloadTemplate} icon={<FontAwesomeIcon icon={faDownload} />}>
+            Download Excel Template
+        </Button>
+      </Flex>
     </div>
   );
 };

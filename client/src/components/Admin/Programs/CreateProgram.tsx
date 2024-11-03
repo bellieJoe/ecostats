@@ -91,9 +91,9 @@ const CreateProgram = () => {
         <>
             {contextHolder}
             <Card >
-                <Title level={4}>Register Program/Division</Title>
+                <Title level={4}>Register Division</Title>
                 <div className="mb-2">
-                    <Title level={5}>Program/Division Name</Title>
+                    <Title level={5}>Division Name</Title>
                     <Input placeholder="Enter Division Name" onChange={(e)=>setFormData({...formData, name:e.target.value})} value={formData.name} />
                     <FieldError errors={validationErrors} name={"name"} />
                 </div>
@@ -107,9 +107,9 @@ const CreateProgram = () => {
                         value={formData.management}
                         onChange={(e)=>setFormData({...formData, management: e})}
                         options={[
-                            { value: Sector.LAND, label: "Land Management" },
-                            { value: Sector.FORESTRY, label: "Forestry Management" },
-                            { value: Sector.BIODIVERSITY, label: "Biodiversity Management" },
+                            { value: Sector.LAND, label: "Land" },
+                            { value: Sector.FORESTRY, label: "Forestry" },
+                            { value: Sector.BIODIVERSITY, label: "Biodiversity" },
                         ]} />
                     <FieldError errors={validationErrors} name={"management"} />
                 </div>

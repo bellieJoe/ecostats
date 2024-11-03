@@ -40,7 +40,7 @@ const ProgramLists = () => {
             key: 'name',
         },
         {
-            title: 'Program Head',
+            title: 'Division Head',
             key: 'programHead',
             render : (record : DataSource) => {
                 return (
@@ -55,11 +55,11 @@ const ProgramLists = () => {
             key: 'management',
             render : (record : DataSource) => {
                 if(record.management == Sector.LAND)
-                    return "Land Management";
+                    return "Land";
                 if(record.management == Sector.BIODIVERSITY)
-                    return "Biodiversity Management";
+                    return "Biodiversity";
                 if(record.management == Sector.FORESTRY)
-                    return "Forestry Management";
+                    return "Forestry";
             }
         },
         {
@@ -89,7 +89,7 @@ const ProgramLists = () => {
                         placement="right" 
                         description={
                             <>
-                                Are you sure you want to delete this program?<br /> <br />
+                                Are you sure you want to delete this division?<br /> <br />
                                 <Alert type="warning" description="Note that this will also delete all associated units and program heads.." />
                             </>}>
                             <Button size="small" variant="text" color="danger">Delete</Button>
@@ -143,7 +143,7 @@ const ProgramLists = () => {
     return (
         <>
             {contextHolder}
-            <Title level={5} >Programs</Title>
+            <Title level={5} >Divisions</Title>
             <Flex justify="right" className="mb-2">
                 <Button variant="link" color="primary" size="small" icon={<FontAwesomeIcon icon={faArrowsRotate} />} onClick={() => setRefresh(!refresh)}>Refresh</Button>
             </Flex>

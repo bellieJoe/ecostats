@@ -345,6 +345,18 @@ const ReportsSidebar = ({open}) => {
                         style  : menuStyle2,
                         onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_31}`)
                     },
+                    {
+                        key : FormEnum.BIODIVERSITY_32,
+                        label : "Table 32. Marine Turtles Tagged and Released",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_32}`)
+                    },
+                    {
+                        key : FormEnum.BIODIVERSITY_33,
+                        label : "Table 33. Stranded Marine Turtle",
+                        style  : menuStyle2,
+                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_33}`)
+                    },
                 ]
             },
         ];

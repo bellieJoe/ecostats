@@ -59,8 +59,8 @@ const AdminSidebar = ({open}) => {
                 role : ["admin"]
             },
             {
-                key: "programs",
-                label: "Programs",
+                key: "divisions",
+                label: "Divisions",
                 icon: <FolderOutlined />,
                 style: menuStyle1,
                 onClick: () => navigate("programs"),

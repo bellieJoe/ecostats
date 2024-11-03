@@ -47,14 +47,14 @@ const Programs = () => {
     return (
         <RoleGuard role={["admin", "planning officer"]}>
             { contextHolder }
-            <Title level={3} >Programs/Division</Title>
+            <Title level={3} >Division</Title>
             <div className="">
                 <Layout>
                     <Layout>
                         <Space>
                             <Card bordered={false}>
                                 <Statistic
-                                title="Programs"
+                                title="Divisions"
                                 value={count.programs}
                                 valueStyle={{ color: '#3f8600' }}
                                 />
@@ -71,7 +71,7 @@ const Programs = () => {
                     <br />
                     <Layout>
                         <Space className="mb-4">
-                            <Button  type="primary" className="w-fit" onClick={() => setDraweStates({...drawerStates, newProgram:true})}>Create Program</Button>
+                            <Button  type="primary" className="w-fit" onClick={() => setDraweStates({...drawerStates, newProgram:true})}>Create Division</Button>
                             <Button type="primary" className="w-fit" onClick={() => setDraweStates({...drawerStates, newUnit:true})}>Create Unit</Button>
                             <Button className="w-fit" onClick={() => setDraweStates({...drawerStates, assignHead:true})}>Assign Head</Button>
                         </Space>
