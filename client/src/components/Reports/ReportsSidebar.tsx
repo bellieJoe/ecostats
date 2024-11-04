@@ -4,10 +4,14 @@ import { useEffect, useState } from "react";
 import { FolderOutlined, HomeOutlined, PlusSquareOutlined, PushpinOutlined, UserOutlined } from '@ant-design/icons';
 import { useNavigate } from "react-router-dom";
 import SidebarUser from "../SidebarUser";
-import { FormEnum, Sector } from "../../types/forms/formNameEnum";
+import { FormEnum, FormNameMap, Sector } from "../../types/forms/formNameEnum";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFile, faList, faMagnifyingGlass, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { useAuthStore } from "../../stores/useAuthStore";
+import { getProgramByQuery } from "../../services/api/programApi";
+import { getUnitsByQuery } from "../../services/api/unitApi";
+import { getByQuery } from "../../services/api/userApi";
+import _ from "lodash";
 
 const ReportsSidebar = ({open}) => {
     const navigate = useNavigate();
@@ -53,14 +57,14 @@ const ReportsSidebar = ({open}) => {
 
     useEffect(() => setCollapsed(open), [open]);
 
-    useEffect(()=>{
-        const i = [
-            {
+    const initSidebar = async () => {
+        const it : any[] = [];
+        if(["planning officer", "chief"].includes(authStore.user?.role!)){
+            it.push({
                 key: "reports",
                 label : "Reports",
                 icon : <FontAwesomeIcon icon={faFile} />,
                 style: menuStyle1,
-                role : ["admin", "planning officer", "chief"],
                 children : [
                     {
                         key : "to-review",
@@ -77,319 +81,346 @@ const ReportsSidebar = ({open}) => {
                         onClick : () => navigate(`/reports/to-approve`)
                     },
                 ]
-            },
-            {
-                key: Sector.LAND,
-                label: "Land Managenent",
-                icon: <FontAwesomeIcon icon={faList} />,
-                style: menuStyle1,
-                role : ["admin", "planning officer", "chief", "focal"],
-                children : [
-                    {
-                        key : FormEnum.LAND_1,
-                        label : "Table 1. Land Area",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_1}`)
-                    },
-                    {
-                        key : FormEnum.LAND_2,
-                        label : "Table 2. Patrimonial Properties as of CY 2023",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_2}`)
-                    },
-                    {
-                        key : FormEnum.LAND_3,
-                        label : "Table 3. Residential Free Patent Issued",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_3}`)
-                    },
-                    {
-                        key : FormEnum.LAND_4,
-                        label : "Table 4. Agricultural Free Patent Issued",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_4}`)
-                    },
-                    {
-                        key : FormEnum.LAND_5,
-                        label : "Table 5. Homestead",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_5}`)
-                    },
-                    {
-                        key : FormEnum.LAND_6,
-                        label : "Table 6. List of Special Patent of LGUs and NGAs",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_6}`)
-                    },
-                    {
-                        key : FormEnum.LAND_7,
-                        label : "Table 7. Management of Foreshore Areas",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_7}`)
-                    },
-                ]
-            },
-            {
-                key: Sector.FORESTRY,
-                label: "Forestry Management",
-                icon: <FontAwesomeIcon icon={faList} />,
-                style: menuStyle1,
-                role : ["admin", "planning officer", "chief", "focal"],
-                children: [
-                    {
-                        key : FormEnum.FORESTRY_1,
-                        label : "Table 1. Land Classification",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_1}`)
-                    },
-                    {
-                        key : FormEnum.FORESTRY_2,
-                        label : "Table 2. Land Cover",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_2}`)
-                    },
-                    {
-                        key : FormEnum.FORESTRY_3,
-                        label : "Table 3. Production and Protection Forest (Hectares)",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_3}`)
-                    },
-                    {
-                        key : FormEnum.FORESTRY_4,
-                        label : "Table 4. Proclaimed Watershed Forest Reserve",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_4}`)
-                    },
-                    {
-                        key : FormEnum.FORESTRY_5,
-                        label : "Table 5. Priority Critical Watershed Supporting National Irrigation System",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_5}`)
-                    },
-    
-    
-                    {
-                        key : FormEnum.FORESTRY_24,
-                        label : "Table 24. Issued Chainsaw Registration",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_24}`)
-                    },
-                ]
-            },
-            {
-                key: Sector.BIODIVERSITY,
-                label: "Biodiversity Management",
-                icon: <FontAwesomeIcon icon={faList} />,
-                style: menuStyle1,
-                role : ["admin", "planning officer", "chief", "focal"],
-                children: [
-                    {
-                        key : FormEnum.BIODIVERSITY_2,
-                        label : "Table 2. Area Distribution of Coastal Resources",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_2}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_3,
-                        label : "Table 3. Inventory of Coral Reef",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_3}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_4,
-                        label : "Table 4. Inventory of Seagrass",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_4}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_5,
-                        label : "Table 5. Mangrove Assessment",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_5}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_6,
-                        label : "Table 6. Mangrove Area Rehabilitated",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_6}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_7,
-                        label : "Table 7. Livelihood Projects Implemented in Coastal Areas",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_7}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_8,
-                        label : "Table 8. Inland Wetland in the Region",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_8}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_9,
-                        label : "Table 9. Classified Caves",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_9}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_10,
-                        label : "Table 10. Identified/Assessed Critical Habitats",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_10}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_11,
-                        label : "Table 11. Certificate of Wildlife Registration",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_11}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_12,
-                        label : "Table 12. Wildlife Import/Export/Re-Export Permit",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_12}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_15,
-                        label : "Table 15. Wildlife Collector's Permit (WCP)",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_15}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_16,
-                        label : "Table 16. Gratuitous Permit (GP)",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_16}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_17,
-                        label : "Table 17. Wildlife Special Use Permit",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_17}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_19,
-                        label : "Table 19. Wildlife Farm Permit",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_19}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_20,
-                        label : "Table 20. Wildlife Culture Permit",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_20}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_21,
-                        label : "Table 21. Clearance to Operate (for Zoological Parks and Botanical Gardens)",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_21}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_22,
-                        label : "Table 22. Known Fauna Species by Taxonomic Group",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_22}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_23,
-                        label : "Table 23. Known Flora Species by Taxonomic Group",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_23}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_24,
-                        label : "Table 24. Endemic Fauna Species by Taxonomic Group",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_24}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_25,
-                        label : "Table 25. Endemic Flora Species by Taxonomic Group",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_25}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_26,
-                        label : "Table 26. Wild Flora Confiscation",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_26}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_27,
-                        label : "Table 27. Wild Fauna Confiscation",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_27}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_28,
-                        label : "Table 28. Wild Fauna Retrieval and Donation",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_28}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_29,
-                        label : "Table 29. Wild Flora Retrieval and Donation",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_29}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_30,
-                        label : "Table 30. Inventory of Wildlife at DENR Established Wildlife Rescue Centers",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_30}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_31,
-                        label : "Table 31. Population of Threatened Species",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_31}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_32,
-                        label : "Table 32. Marine Turtles Tagged and Released",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_32}`)
-                    },
-                    {
-                        key : FormEnum.BIODIVERSITY_33,
-                        label : "Table 33. Stranded Marine Turtle",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_33}`)
-                    },
-                ]
-            },
-        ];
-        setItems([...i.filter(i => i.role.includes(authStore.user?.role!))])
+            });
+        }
+
+        if(["planning officer", "admin", "chief"].includes(authStore.user?.role!)){
+            const programs = await getProgramByQuery({programHead : authStore.user?._id!}, []);
+            const units = await getUnitsByQuery({unitHead : authStore.user?._id!}, ["programId"]);
+
+            const sectorAccess = [...programs.data.map(a => a.management), ...units.data.map(a => a.programId.management)]
+            if(sectorAccess.includes(Sector.LAND) || ["planning officer", "admin"].includes(authStore.user?.role!)){
+                it.push({
+                    key: Sector.LAND,
+                    label: "Land Managenent",
+                    icon: <FontAwesomeIcon icon={faList} />,
+                    style: menuStyle1,
+                    role : ["admin", "planning officer", "chief", "focal"],
+                    // canview :  () => {
+                    //     return true;
+                    // },
+                    children : [
+                        {
+                            key : FormEnum.LAND_1,
+                            label : "Table 1. Land Area",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_1}`)
+                        },
+                        {
+                            key : FormEnum.LAND_2,
+                            label : "Table 2. Patrimonial Properties as of CY 2023",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_2}`)
+                        },
+                        {
+                            key : FormEnum.LAND_3,
+                            label : "Table 3. Residential Free Patent Issued",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_3}`)
+                        },
+                        {
+                            key : FormEnum.LAND_4,
+                            label : "Table 4. Agricultural Free Patent Issued",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_4}`)
+                        },
+                        {
+                            key : FormEnum.LAND_5,
+                            label : "Table 5. Homestead",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_5}`)
+                        },
+                        {
+                            key : FormEnum.LAND_6,
+                            label : "Table 6. List of Special Patent of LGUs and NGAs",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_6}`)
+                        },
+                        {
+                            key : FormEnum.LAND_7,
+                            label : "Table 7. Management of Foreshore Areas",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_7}`)
+                        },
+                    ]
+                })
+            }
+            if(sectorAccess.includes(Sector.FORESTRY) || ["planning officer", "admin"].includes(authStore.user?.role!)){
+                it.push({
+                    key: Sector.FORESTRY,
+                    label: "Forestry Management",
+                    icon: <FontAwesomeIcon icon={faList} />,
+                    style: menuStyle1,
+                    role : ["admin", "planning officer", "chief", "focal"],
+                    // canview :  () => {
+                    //     return true;
+                    // },
+                    children: [
+                        {
+                            key : FormEnum.FORESTRY_1,
+                            label : "Table 1. Land Classification",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_1}`)
+                        },
+                        {
+                            key : FormEnum.FORESTRY_2,
+                            label : "Table 2. Land Cover",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_2}`)
+                        },
+                        {
+                            key : FormEnum.FORESTRY_3,
+                            label : "Table 3. Production and Protection Forest (Hectares)",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_3}`)
+                        },
+                        {
+                            key : FormEnum.FORESTRY_4,
+                            label : "Table 4. Proclaimed Watershed Forest Reserve",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_4}`)
+                        },
+                        {
+                            key : FormEnum.FORESTRY_5,
+                            label : "Table 5. Priority Critical Watershed Supporting National Irrigation System",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_5}`)
+                        },
         
+        
+                        {
+                            key : FormEnum.FORESTRY_24,
+                            label : "Table 24. Issued Chainsaw Registration",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_24}`)
+                        },
+                    ]
+                })
+            }
+            if(sectorAccess.includes(Sector.BIODIVERSITY) || ["planning officer", "admin"].includes(authStore.user?.role!)){
+                it.push({
+                    key: Sector.BIODIVERSITY,
+                    label: "Biodiversity Management",
+                    icon: <FontAwesomeIcon icon={faList} />,
+                    style: menuStyle1,
+                    role : ["admin", "planning officer", "chief", "focal"],
+                    // canview :  () => {
+                    //     return false;
+                    // },
+                    children: [
+                        {
+                            key : FormEnum.BIODIVERSITY_2,
+                            label : "Table 2. Area Distribution of Coastal Resources",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_2}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_3,
+                            label : "Table 3. Inventory of Coral Reef",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_3}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_4,
+                            label : "Table 4. Inventory of Seagrass",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_4}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_5,
+                            label : "Table 5. Mangrove Assessment",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_5}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_6,
+                            label : "Table 6. Mangrove Area Rehabilitated",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_6}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_7,
+                            label : "Table 7. Livelihood Projects Implemented in Coastal Areas",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_7}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_8,
+                            label : "Table 8. Inland Wetland in the Region",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_8}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_9,
+                            label : "Table 9. Classified Caves",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_9}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_10,
+                            label : "Table 10. Identified/Assessed Critical Habitats",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_10}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_11,
+                            label : "Table 11. Certificate of Wildlife Registration",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_11}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_12,
+                            label : "Table 12. Wildlife Import/Export/Re-Export Permit",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_12}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_15,
+                            label : "Table 15. Wildlife Collector's Permit (WCP)",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_15}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_16,
+                            label : "Table 16. Gratuitous Permit (GP)",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_16}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_17,
+                            label : "Table 17. Wildlife Special Use Permit",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_17}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_19,
+                            label : "Table 19. Wildlife Farm Permit",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_19}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_20,
+                            label : "Table 20. Wildlife Culture Permit",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_20}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_21,
+                            label : "Table 21. Clearance to Operate (for Zoological Parks and Botanical Gardens)",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_21}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_22,
+                            label : "Table 22. Known Fauna Species by Taxonomic Group",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_22}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_23,
+                            label : "Table 23. Known Flora Species by Taxonomic Group",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_23}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_24,
+                            label : "Table 24. Endemic Fauna Species by Taxonomic Group",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_24}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_25,
+                            label : "Table 25. Endemic Flora Species by Taxonomic Group",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_25}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_26,
+                            label : "Table 26. Wild Flora Confiscation",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_26}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_27,
+                            label : "Table 27. Wild Fauna Confiscation",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_27}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_28,
+                            label : "Table 28. Wild Fauna Retrieval and Donation",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_28}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_29,
+                            label : "Table 29. Wild Flora Retrieval and Donation",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_29}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_30,
+                            label : "Table 30. Inventory of Wildlife at DENR Established Wildlife Rescue Centers",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_30}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_31,
+                            label : "Table 31. Population of Threatened Species",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_31}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_32,
+                            label : "Table 32. Marine Turtles Tagged and Released",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_32}`)
+                        },
+                        {
+                            key : FormEnum.BIODIVERSITY_33,
+                            label : "Table 33. Stranded Marine Turtle",
+                            style  : menuStyle2,
+                            onClick : () => navigate(`/reports/${Sector.BIODIVERSITY}/${FormEnum.BIODIVERSITY_33}`)
+                        },
+                    ]
+                })
+            }
+        }
+
+        setItems(it);
+    }
+
+    useEffect(()=>{
+        
+        initSidebar();
     }, [authStore.user]);
 
     return (
         <>
-        <ConfigProvider
-            theme={theme}
-            >
-            <Sider 
-            theme="dark" 
-            width="300" 
-            className="overflow-y-scroll"
-            collapsedWidth={0}
-            collapsible
-            collapsed={collapsed}
-            trigger={null}>
-                <div style={{padding: "0.5rem"}} >
-                    <SidebarUser />
-                    <Menu
-                        mode="inline"
-                        defaultSelectedKeys={['1']}
-                        defaultOpenKeys={['sub1']}
-                        style={{ borderRight: 0 }}
-                        items={items}
-                    />
-                </div>
-            </Sider>
-        </ConfigProvider>
-</>
+            <ConfigProvider
+                theme={theme}
+                >
+                <Sider 
+                theme="dark" 
+                width="300" 
+                className="overflow-y-scroll"
+                collapsedWidth={0}
+                collapsible
+                collapsed={collapsed}
+                trigger={null}>
+                    <div style={{padding: "0.5rem"}} >
+                        <SidebarUser />
+                        <Menu
+                            mode="inline"
+                            defaultSelectedKeys={['1']}
+                            defaultOpenKeys={['sub1']}
+                            style={{ borderRight: 0 }}
+                            items={items}
+                        />
+                    </div>
+                </Sider>
+            </ConfigProvider>
+        </>
     )
 }
 
