@@ -84,12 +84,12 @@ const ReportsSidebar = ({open}) => {
             });
         }
 
-        if(["planning officer", "admin", "chief"].includes(authStore.user?.role!)){
-            const programs = await getProgramByQuery({programHead : authStore.user?._id!}, []);
-            const units = await getUnitsByQuery({unitHead : authStore.user?._id!}, ["programId"]);
+        if(["planning officer", "admin", "chief", "focal"].includes(authStore.user?.role!)){
+            const programs = await getProgramByQuery({programHead : authStore.user?._id!, deletedAt : null}, []);
+            const units = await getUnitsByQuery({unitHead : authStore.user?._id!, deletedAt : null}, ["programId"]);
 
             const sectorAccess = [...programs.data.map(a => a.management), ...units.data.map(a => a.programId.management)]
-            if(sectorAccess.includes(Sector.LAND) || ["planning officer", "admin"].includes(authStore.user?.role!)){
+            if(sectorAccess.includes(Sector.LAND) || ["planning officer", "admin", "focal"].includes(authStore.user?.role!)){
                 it.push({
                     key: Sector.LAND,
                     label: "Land Managenent",
@@ -145,7 +145,7 @@ const ReportsSidebar = ({open}) => {
                     ]
                 })
             }
-            if(sectorAccess.includes(Sector.FORESTRY) || ["planning officer", "admin"].includes(authStore.user?.role!)){
+            if(sectorAccess.includes(Sector.FORESTRY) || ["planning officer", "admin", "focal"].includes(authStore.user?.role!)){
                 it.push({
                     key: Sector.FORESTRY,
                     label: "Forestry Management",
@@ -197,7 +197,7 @@ const ReportsSidebar = ({open}) => {
                     ]
                 })
             }
-            if(sectorAccess.includes(Sector.BIODIVERSITY) || ["planning officer", "admin"].includes(authStore.user?.role!)){
+            if(sectorAccess.includes(Sector.BIODIVERSITY) || ["planning officer", "admin", "focal"].includes(authStore.user?.role!)){
                 it.push({
                     key: Sector.BIODIVERSITY,
                     label: "Biodiversity Management",
@@ -385,6 +385,12 @@ const ReportsSidebar = ({open}) => {
                     ]
                 })
             }
+        }
+        else {
+            const units  = await getUnitsByQuery({
+                deletedAt : null
+            }, []);
+            console.log(units.data);
         }
 
         setItems(it);

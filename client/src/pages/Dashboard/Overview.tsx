@@ -1,5 +1,5 @@
 import Title from "antd/es/typography/Title";
-import Land_1_Dashboard from "./Land/land_1_dashboard";
+// import Land_1_Dashboard from "./Land/land_1_dashboard";
 import { Flex } from "antd";
 
 
@@ -8,9 +8,9 @@ const Overview = () => {
         <>
             <Title level={4}>Overview</Title>
 
-            <Flex>
+            {/* <Flex>
                 <Land_1_Dashboard />
-            </Flex>
+            </Flex> */}
         </>
     )
 }
