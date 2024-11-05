@@ -2,7 +2,7 @@
 import Title from "antd/es/typography/Title";
 import { FormEnum, reportTitles, Sector } from "../../types/forms/formNameEnum";
 import { GenericFormFieldV3 } from "../../types/forms/GenericFormTypes";
-import { Button, Drawer, Flex, message, Popconfirm, Space, Tooltip } from "antd";
+import { Alert, Button, Drawer, Flex, message, Popconfirm, Space, Tooltip } from "antd";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { useEffect, useRef, useState } from "react";
 import { delRequestReport, formGetByQuery, getRequestReportByQuery, requestReport } from "../../services/api/formsApi";
@@ -115,6 +115,13 @@ export const PreviewPrint = () => {
         }   
     }
 
+    const renderStatus = () => {
+        if(previewReportStore.report?.reviewed_at && previewReportStore.report?.approved_at && !previewReportStore.report?.rejected_by){
+            return <Alert className="w-fit mx-auto" message="Approved" type="success" />
+        }
+        return <Alert className="w-fit mx-auto" message="Not yet Approved" type="error" />
+    }
+
     useEffect(() => {
         if(previewReportStore.report) {
             setOpen(true);
@@ -139,7 +146,8 @@ export const PreviewPrint = () => {
         
         <Drawer 
         footer={
-             <Flex align="end" justify="end">
+             <Flex align="center" justify="end" gap={4}>
+                
                 <Button color="primary" variant="solid" onClick={() => reactToPrintFn()} disabled={previewReportStore.report?.reviewed_at && previewReportStore.report?.approved_at && !previewReportStore.report?.rejected_by ? false : true}>Print</Button>
             </Flex>
             }
@@ -148,6 +156,7 @@ export const PreviewPrint = () => {
         onClose={() => previewReportStore.clear()}
         size="large">
             {contextHandler}
+            { renderStatus() }
             {/* Printable area  */}
             <div className="" ref={printRef}> 
 
