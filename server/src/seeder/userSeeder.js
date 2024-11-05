@@ -1,16 +1,16 @@
 import UserModel from "../model/User.js"
 import bcrypt, { genSalt } from "bcrypt"
-import UserRoleModel from "../model/UserRole.js";
-import RoleModel from "../model/Role.js";
+// import UserRoleModel from "../model/UserRole.js";
+// import RoleModel from "../model/Role.js";
 import dotenv from "dotenv"
 
 dotenv.config()
 
 export default async function SeedUsers(){
-    await UserRoleModel.deleteMany();
+    // await UserRoleModel.deleteMany();
     await UserModel.deleteMany();
 
-    const roles = await RoleModel.find();
+    // const roles = await RoleModel.find();
     
 
     // setup admin
