@@ -3,9 +3,9 @@ import { useForm } from "antd/es/form/Form";
 import Title from "antd/es/typography/Title";
 import { parseResError } from "../../services/errorHandler";
 import { resendEmailVerification } from "../../services/api/userApi";
-import { useParams } from "react-router-dom";
-import { useState } from "react";
-import { set } from "lodash";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 
 const SendVerification = () => {
@@ -13,7 +13,8 @@ const SendVerification = () => {
     const [messageApi, contextHandler] = message.useMessage();
     const [loading, setLoading] = useState(false);
     const {email} = useParams();
-    console.log(email)
+    const authStore = useAuthStore();
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         setLoading(true);
@@ -26,6 +27,12 @@ const SendVerification = () => {
             setLoading(false);
         }
     }   
+
+    useEffect(() => {
+        if(authStore.user?.verifiedAt != null) {
+            navigate("/");
+        };
+    }, [authStore.user]);
 
     return (
         <>
