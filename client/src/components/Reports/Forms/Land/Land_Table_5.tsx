@@ -20,7 +20,8 @@ export const land_5_gen_form_fields : GenericFormFieldV3[] = [
             options={generateYearOptions(2000, new Date().getFullYear())}
             />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",
@@ -32,7 +33,8 @@ export const land_5_gen_form_fields : GenericFormFieldV3[] = [
         name : "municipality",
         label : "Municipality", 
         input : <Input type="text" />,
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     // {
     //     name : "no_of_transmitted_to_rod",

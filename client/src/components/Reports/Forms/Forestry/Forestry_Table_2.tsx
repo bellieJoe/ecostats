@@ -21,7 +21,8 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
             options={generateYearOptions(2000, new Date().getFullYear())}
             />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",
@@ -37,7 +38,8 @@ export const forestry_2_gen_form_fields : GenericFormFieldV3[] = [
         input : (
             <Input type="text"  />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     // {
     //     name : "total_land_cover_area",

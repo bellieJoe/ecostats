@@ -2,6 +2,12 @@ import mongoose from "mongoose"
 
 // Define the Species schema
 const Biodiversity_28_Schema = new mongoose.Schema({
+    // calendar_year: {
+    //     type: Number,
+    //     required: true,
+    //     min: 0,
+    //     default : "2024"
+    // },
     species : {
         common_name: {
             type: String,

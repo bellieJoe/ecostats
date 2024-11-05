@@ -19,7 +19,10 @@ const CustomReportGenerator: React.FC<{
   fields: GenericFormFieldV3[];
   onClose: () => void;
   onSubmit: (reportTitle: string, description : string, filters: Record<string, any>, fieldSelections: { name: string; included: boolean }[]) => Promise<void>;
-}> = ({ visible, fields, onClose, onSubmit }) => {
+  isCustom : boolean
+  title : string
+}> = ({ visible, fields, onClose, onSubmit, isCustom, title  }) => {
+  
   const [form] = Form.useForm();
   const [selectionForm] = Form.useForm();
 
@@ -35,14 +38,15 @@ const CustomReportGenerator: React.FC<{
   // Handle form submission
   const handleFinish = async () => {
     try {
-      await selectionForm.validateFields(); // Validate the selection form before proceeding
+      if(isCustom)
+        await selectionForm.validateFields(); // Validate the selection form before proceeding
       await form.validateFields(); // Ensure this is called for the report title validation
 
       const filterValues = form.getFieldsValue();
       const selectionValues = selectionForm.getFieldsValue();
       
       // Extract report title and description separately
-      const reportTitle = filterValues.reportTitle;
+      const reportTitle = isCustom && filterValues.reportTitle;
       const description = filterValues.reportDescription;
       
 
@@ -52,13 +56,20 @@ const CustomReportGenerator: React.FC<{
       );
 
       // Create the array of field selections based on the checkbox values
-      const fieldSelections = fields.map(({ name }) => ({
-        name,
-        included: selectionValues[name] || false,
-      }));
+      const fieldSelections = isCustom
+        ? fields.map(({ name }) => ({
+            name,
+            included: selectionValues[name] || false,
+          }))
+        : fields
+            .filter(({ type }) => type !== 'title' && type !== 'divider')
+            .map(({ name, notDefault }) => ({
+              name,
+              included: notDefault ? false : true,
+            }));
 
       // Submit report title, description, filter values, and field selections
-      await onSubmit(reportTitle, description, filledFilterValues, fieldSelections); // Await the async onSubmit
+      await onSubmit(reportTitle, description, filledFilterValues, fieldSelections); 
       form.resetFields();
       selectionForm.resetFields();
     } catch (error) {
@@ -69,7 +80,7 @@ const CustomReportGenerator: React.FC<{
 
   return (
     <Drawer
-      title="Generate Custom Report"
+      title={title}
       width={400}
       onClose={onClose}
       open={visible}
@@ -85,22 +96,27 @@ const CustomReportGenerator: React.FC<{
       }
     >
       <Form form={form} layout="vertical">
-        <Form.Item
-          key="reportTitle"
-          label="Report Title"
-          name="reportTitle"
-          rules={[{ required: true, message: 'Report title is required.' }]} // Make report title required
-        >
-          <Input placeholder="Enter report title" />
-        </Form.Item>
+        {isCustom && (
+          <Form.Item
+            key="reportTitle"
+            label="Report Title"
+            name="reportTitle"
+            rules={[{ required: true, message: 'Report title is required.' }]} // Make report title required
+          >
+            <Input placeholder="Enter report title" />
+          </Form.Item>
+        )}
 
-        <Form.Item
-          key="reportDescription"
-          label="Description"
-          name="reportDescription"
-        >
-          <TextArea placeholder="Enter report description" />
-        </Form.Item>
+        {isCustom && (
+          <Form.Item
+            key="reportDescription"
+            label="Description"
+            name="reportDescription"
+          >
+            <TextArea placeholder="Enter report description" />
+          </Form.Item>
+        )}
+
 
         <Typography.Title level={4}>Filter Data</Typography.Title>
 
@@ -109,7 +125,7 @@ const CustomReportGenerator: React.FC<{
 
           if (type === 'input') {
             return (
-              <Form.Item key={name} label={label} name={name} rules={rules}>
+              <Form.Item key={name} label={label} name={name} rules={!isCustom && name=='calendar_year' ? [{ required: true, message: 'Calendar year is required.' }] : rules}>
                 {input}
               </Form.Item>
             );
@@ -135,25 +151,30 @@ const CustomReportGenerator: React.FC<{
         })}
       </Form>
       <Divider />
-      <Form form={selectionForm} layout="vertical">
-        <Typography.Title level={4}>Select Fields to Display</Typography.Title>
-        <Form.Item
-          name="selection"
-          rules={[{ validator: validateSelection }]} // Custom validation rule
-        >
-          <Row>
-            {fields.filter(e => e.type != 'title' && e.type != 'divider').map(({ name, label }) => (
-              <Col span={24} key={name}>
-                <Form.Item name={name} valuePropName="checked" noStyle>
-                  <Checkbox>{label}</Checkbox>
-                </Form.Item>
-              </Col>
-            ))}
-          </Row>
-        </Form.Item>
-      </Form>
+
+      {isCustom && (
+        <Form form={selectionForm} layout="vertical">
+          <Typography.Title level={4}>Select Fields to Display</Typography.Title>
+          <Form.Item
+            name="selection"
+            rules={[{ validator: validateSelection }]} // Custom validation rule
+          >
+            <Row>
+              {fields.filter(e => e.type != 'title' && e.type != 'divider').map(({ name, label }) => (
+                <Col span={24} key={name}>
+                  <Form.Item name={name} valuePropName="checked" noStyle>
+                    <Checkbox>{label}</Checkbox>
+                  </Form.Item>
+                </Col>
+              ))}
+            </Row>
+          </Form.Item>
+        </Form>
+      )}
     </Drawer>
   );
 };
 
 export default CustomReportGenerator;
+
+

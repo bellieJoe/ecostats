@@ -9,9 +9,6 @@ import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
-import cities from "philippines/cities.json"
-import province from "philippines/provinces.json"
-import {barangays, municipalities} from "psgc";
 import _ from 'lodash';
 
 export const biodiversity_10_gen_form_fields : GenericFormFieldV3[] = [
@@ -24,7 +21,8 @@ export const biodiversity_10_gen_form_fields : GenericFormFieldV3[] = [
             options={generateYearOptions(2000, new Date().getFullYear())}
             />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",

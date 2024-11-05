@@ -112,6 +112,7 @@ export const land_3_col_defs = [
         field: "calendar_year", 
         editable : true, 
         type: "textColumn",
+        notDefault : true
     },
     { 
         headerName: "Province", 
@@ -124,6 +125,7 @@ export const land_3_col_defs = [
         field: "municipality", 
         editable : true, 
         type: "textColumn",
+        notDefault : true
     },
     { 
         headerName: "For Calendar Year", 

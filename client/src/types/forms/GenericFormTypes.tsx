@@ -13,4 +13,5 @@ export interface GenericFormFieldV3 {
   input?: ReactNode; // The input element or other component
   type: 'input' | 'title' | 'divider' | 'checkbox'; // Specify the type of field
   required? : boolean
+  notDefault? : boolean
 }

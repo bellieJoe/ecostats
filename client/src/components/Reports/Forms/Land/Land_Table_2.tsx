@@ -71,7 +71,8 @@ export const land_2_gen_form_fields : GenericFormFieldV3[] = [
         name : "calendar_year",
         label : "CY", 
         input : <Input type="number" />,
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",

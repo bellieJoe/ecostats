@@ -14,7 +14,8 @@ export const land_1_gen_form_fields : GenericFormFieldV3[] = [
         name : "calendar_year",
         label : "Calendar Year", 
         input : <Input type="Number" />,
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",
@@ -27,8 +28,8 @@ export const land_1_gen_form_fields : GenericFormFieldV3[] = [
         name : "municipality",
         label : "Municipality", 
         input : <Input type="text" />,
-        type : "input"
-
+        type : "input",
+        notDefault : true
     },
     {
         name : "contested_area",

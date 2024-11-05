@@ -24,7 +24,8 @@ export const biodiversity_9_gen_form_fields : GenericFormFieldV3[] = [
             options={generateYearOptions(2000, new Date().getFullYear())}
             />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",

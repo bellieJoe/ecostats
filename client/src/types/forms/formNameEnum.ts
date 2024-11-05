@@ -19,6 +19,9 @@ import { biodiversity_28_col_defs } from "../../components/Reports/Forms/Biodive
 import { biodiversity_29_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_29";
 import { biodiversity_3_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_3";
 import { biodiversity_30_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_30";
+import { biodiversity_31_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_31";
+import { biodiversity_32_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_32";
+import { biodiversity_33_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_33";
 import { biodiversity_4_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_4";
 import { biodiversity_5_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_5";
 import { biodiversity_6_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_6";
@@ -144,6 +147,9 @@ export const ColDefsMap = {
     [FormEnum.BIODIVERSITY_28] : biodiversity_28_col_defs,
     [FormEnum.BIODIVERSITY_29] : biodiversity_29_col_defs,
     [FormEnum.BIODIVERSITY_30] : biodiversity_30_col_defs,
+    [FormEnum.BIODIVERSITY_31] : biodiversity_31_col_defs,
+    [FormEnum.BIODIVERSITY_32] : biodiversity_32_col_defs,
+    [FormEnum.BIODIVERSITY_33] : biodiversity_33_col_defs,
 }
 
 export const FormNameMap = {
@@ -195,4 +201,97 @@ export const FormNameMap = {
     [FormEnum.BIODIVERSITY_34] : Sector.BIODIVERSITY,
     [FormEnum.BIODIVERSITY_35] : Sector.BIODIVERSITY,
     [FormEnum.BIODIVERSITY_36] : Sector.BIODIVERSITY,
+}
+
+
+export const reportTitles = {
+    // LAND SECTOR
+    [FormEnum.LAND_1]: "Table 1. Land Area",
+    [FormEnum.LAND_2]: "Table 2. Patrimonial Properties",
+    [FormEnum.LAND_3]: "Table 3. Residential Free Patent issued",
+    [FormEnum.LAND_4]: "Table 4. Agricultural Free Patent issued",
+    [FormEnum.LAND_5]: "Table 5. Homestead",
+    [FormEnum.LAND_6]: "Table 6. List of Special Patent of LGUs and NGAs",
+    [FormEnum.LAND_7]: "Table 7. Management of Foreshore Areas",
+    // [FormEnum.LAND_8]: "Table 8. Inspection, Verification and Approval by Month (for the calendar year)",
+
+    // FORESTRY SECTOR
+    [FormEnum.FORESTRY_1]: "Table 1. Land Classification (Area in hectares)",
+    [FormEnum.FORESTRY_2]: "Table 2. Land Cover (Area in hectares)",
+    [FormEnum.FORESTRY_3]: "Table 3. Production and Protection Forest (Area in Hectares)",
+    [FormEnum.FORESTRY_4]: "Table 4. Proclaimed Watershed Forest Reserve (Area in hectare)",
+    [FormEnum.FORESTRY_5]: "Table 5. Priority Critical Watershed Supporting National Irrigation System",
+    [FormEnum.FORESTRY_6]: "Table 6. Existing Community-Based Forest Management Agreement",
+    [FormEnum.FORESTRY_7]: "Table 7. Existing Community Forest Stewardship Agreement",
+    [FormEnum.FORESTRY_8]: "Table 8. Existing Agroforestry Land Management Agreement",
+    // [FormEnum.FORESTRY_9]: "Table 9. Existing Integrated Social Forestry (ISF)",
+    // [FormEnum.FORESTRY_10]: "Table 10. Existing Forest Land Grazing Lease Agreement (FLGLA)",
+    // [FormEnum.FORESTRY_11]: "Table 11. Existing Forest Land Grazing Management Agreement (FLGMA)",
+    // [FormEnum.FORESTRY_12]: "Table 12. Existing Forest Land Management Agreement (FLMA)",
+    // [FormEnum.FORESTRY_13]: "Table 13. Existing Forest Land Use Agreement (FLAg)",
+    // [FormEnum.FORESTRY_14]: "Table 14. Existing Forest Land Use Agreement for Tourism Purposes (FLAgT)",
+    // [FormEnum.FORESTRY_15]: "Table 15. Existing Integrated Forest Management Agreement (IFMA)",
+    // [FormEnum.FORESTRY_16]: "Table 16. Existing Industrial Tree Plantation Lease Agreement (ITPLA)",
+    // [FormEnum.FORESTRY_17]: "Table 17. Gratuitous Permit for the Special Uses of Forest Lands (GSUP)",
+    // [FormEnum.FORESTRY_18]: "Table 18. Existing Socialized Industrial Forest Management Agreement (SIFMA)",
+    // [FormEnum.FORESTRY_19]: "Table 19. Existing Special Land Use Permit (SLUP)",
+    // [FormEnum.FORESTRY_20]: "Table 20. Existing Private Forest Development Agreement",
+    // [FormEnum.FORESTRY_21]: "Table 21. Existing Tree Farm Lease Agreement",
+    // [FormEnum.FORESTRY_22]: "Table 22. Registered Lumber Dealers",
+    // [FormEnum.FORESTRY_23]: "Table 23. Certificate of Registration as Importer/Dealer of Imported Wood Products: (Year)",
+    // [FormEnum.FORESTRY_24]: "Table 24. Issued Chainsaw Registration",
+    // [FormEnum.FORESTRY_25]: "Table 25. Registered Wood Processing Plants",
+    // [FormEnum.FORESTRY_26]: "Table 26. Forest Land Use Plan (FLUP) of LGUs",
+    // [FormEnum.FORESTRY_27]: "Table 27. Summary of DENR NGP Accomplishment",
+    // [FormEnum.FORESTRY_28]: "Table 28. Summary of Community-Based Employment Program under NGP Implementation",
+    // [FormEnum.FORESTRY_29]: "Table 29. Adopted Graduated NGP Sites",
+    // [FormEnum.FORESTRY_30]: "Table 30. Apprehended/Confiscated/Forfeited Natural Resource Products",
+    // [FormEnum.FORESTRY_31]: "Table 31. Forest Disturbance by Cause",
+    // [FormEnum.FORESTRY_32]: "Table 32. Forest Disturbance within NGP Sites",
+    // [FormEnum.FORESTRY_33]: "Table 33. Cutting Permits",
+    // [FormEnum.FORESTRY_34]: "Table 34. Permit for Private Tree Plantations",
+    // [FormEnum.FORESTRY_35]: "Table 35. Permit for Non-Timber Forest Products",
+    // [FormEnum.FORESTRY_36]: "Table 36. Rattan Cutting Contract",
+    // [FormEnum.FORESTRY_37]: "Table 37. Co-Management related to Forest Conservation",
+    // [FormEnum.FORESTRY_38]: "Table 38. Monthly Log Production",
+    // [FormEnum.FORESTRY_39]: "Table 39. Monthly Lumber Production",
+    // [FormEnum.FORESTRY_40]: "Table 40. Monthly Veneer Production",
+    // [FormEnum.FORESTRY_41]: "Table 41. Monthly Plywood Production",
+    // [FormEnum.FORESTRY_42]: "Table 42. Non-Timber Forest Products (NTFP) Production",
+    // [FormEnum.FORESTRY_43]: "Table 43. Employment",
+
+    // BIODIVERSITY SECTOR
+    // [FormEnum.BIODIVERSITY_1]: "Table 1. Profile of Protected Area within the Region",
+    [FormEnum.BIODIVERSITY_2]: "Table 2. Area Distribution of Coastal Resources",
+    [FormEnum.BIODIVERSITY_3]: "Table 3. Inventory of Coral Reef",
+    [FormEnum.BIODIVERSITY_4]: "Table 4. Inventory of Seagrass",
+    [FormEnum.BIODIVERSITY_5]: "Table 5. Mangrove Assessment",
+    [FormEnum.BIODIVERSITY_6]: "Table 6. Mangrove Area Rehabilitated",
+    [FormEnum.BIODIVERSITY_7]: "Table 7. Livelihood Projects Implemented in Coastal Areas",
+    [FormEnum.BIODIVERSITY_8]: "Table 8. Inland wetland in the Region",
+    [FormEnum.BIODIVERSITY_9]: "Table 9. Classified Caves in the Region",
+    [FormEnum.BIODIVERSITY_10]: "Table 10. Identified/Assessed Critical Habitats",
+    [FormEnum.BIODIVERSITY_11]: "Table 11. Certificate of Wildlife Registration",
+    [FormEnum.BIODIVERSITY_12]: "Table 12. Wildlife Import/Export/Re-Export Permit",
+    [FormEnum.BIODIVERSITY_13]: "Table 13. CITES Import/Export/Re-export Permit",
+    [FormEnum.BIODIVERSITY_14]: "Table 14. Wildlife Local Transport Permit",
+    [FormEnum.BIODIVERSITY_15]: "Table 15. Wildlife Collector's Permit (WCP)",
+    [FormEnum.BIODIVERSITY_16]: "Table 16. Gratuitous Permit (GP)",
+    [FormEnum.BIODIVERSITY_17]: "Table 17. Wildlife Special Use Permit",
+    [FormEnum.BIODIVERSITY_18]: "Table 18. Special Local Transport Permit",
+    [FormEnum.BIODIVERSITY_19]: "Table 19. Wildlife Farm Permit",
+    [FormEnum.BIODIVERSITY_20]: "Table 20. Wildlife Culture Permit",
+    [FormEnum.BIODIVERSITY_21]: "Table 21. Clearance to Operate (for zoological parks and botanical gardens)",
+    [FormEnum.BIODIVERSITY_22]: "Table 22. Known Fauna Species by Taxonomic Group",
+    [FormEnum.BIODIVERSITY_23]: "Table 23. Known Flora Species by Taxonomic Group",
+    [FormEnum.BIODIVERSITY_24]: "Table 24. Endemic Fauna Species by Taxonomic Group",
+    [FormEnum.BIODIVERSITY_25]: "Table 25. Endemic Flora Species by Taxonomic Group",
+    [FormEnum.BIODIVERSITY_26]: "Table 26. Wild Flora Confiscation",
+    [FormEnum.BIODIVERSITY_27]: "Table 27. Wild Fauna Confiscation",
+    [FormEnum.BIODIVERSITY_28]: "Table 28. Wild Fauna Retrieval and Donation",
+    [FormEnum.BIODIVERSITY_29]: "Table 29. Wild Flora Retrieval and Donation",
+    [FormEnum.BIODIVERSITY_30]: "Table 30. Inventory of Wildlife at DENR Established Wildlife Rescue Centers",
+    [FormEnum.BIODIVERSITY_31]: "Table 31. Population of Threatened Species",
+    [FormEnum.BIODIVERSITY_32]: "Table 32. Marine Turtles Tagged and Released",
+    [FormEnum.BIODIVERSITY_33]: "Table 33. Stranded Marine Turtle",
 }

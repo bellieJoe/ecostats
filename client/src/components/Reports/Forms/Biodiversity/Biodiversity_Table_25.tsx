@@ -21,7 +21,8 @@ export const biodiversity_25_gen_form_fields : GenericFormFieldV3[] = [
             options={generateYearOptions(2000, new Date().getFullYear())}
             />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",
@@ -37,7 +38,8 @@ export const biodiversity_25_gen_form_fields : GenericFormFieldV3[] = [
         input : (
             <Select showSearch virtual options={municipalityOptions}  />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "taxonomc_group",

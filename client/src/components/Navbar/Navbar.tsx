@@ -33,6 +33,9 @@ const Navbar = () => {
             label: 'Profile',
             key: '1',
             icon: (<UserOutlined />),
+            onClick: () => {
+                navigate('/profile')
+            }
           },
         {
           type: 'divider',

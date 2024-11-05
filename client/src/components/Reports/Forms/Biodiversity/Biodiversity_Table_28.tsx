@@ -13,6 +13,14 @@ import _ from 'lodash';
 import { ValueFormatterParams } from "ag-grid-community";
 
 export const biodiversity_28_gen_form_fields : GenericFormFieldV3[] = [
+    // {
+    //     name : "calendar_year",
+    //     label : "Calendar Year", 
+    //     input : (
+    //         <Select options={generateYearOptions(2000, new Date().getFullYear())} />
+    //     ),
+    //     type : "input"
+    // },
     {
         name : "species.common_name",
         label : "Common Name", 
@@ -31,7 +39,7 @@ export const biodiversity_28_gen_form_fields : GenericFormFieldV3[] = [
     },
     {
         name : "quantity",
-        label : "Quantitty", 
+        label : "Quantity", 
         input : (
             <Input type="number" />
         ),
@@ -90,6 +98,12 @@ export const biodiversity_28_gen_form_fields : GenericFormFieldV3[] = [
 ];
 
 export const biodiversity_28_col_defs = [
+    // { 
+    //     headerName: "Calendar Year", 
+    //     field: "calendar_year", 
+    //     editable : true, 
+    //     type : "numberColumn"
+    // },
     {
         headerName : "Species",
         children : [

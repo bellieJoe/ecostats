@@ -19,7 +19,8 @@ export const biodiversity_31_gen_form_fields : GenericFormFieldV3[] = [
         input : (
             <Select options={generateYearOptions(2000, new Date().getFullYear())}/>
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "name_of_conservation_area",

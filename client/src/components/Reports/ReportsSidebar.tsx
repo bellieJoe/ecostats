@@ -122,7 +122,7 @@ const ReportsSidebar = ({open}) => {
                             },
                             {
                                 key : FormEnum.LAND_2,
-                                label : "Table 2. Patrimonial Properties as of CY 2023",
+                                label : "Table 2. Patrimonial Properties",
                                 style  : menuStyle2,
                                 onClick : () => navigate(`/reports/${Sector.LAND}/${FormEnum.LAND_2}`)
                             },

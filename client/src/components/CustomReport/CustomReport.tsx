@@ -1,15 +1,15 @@
 
 import Title from "antd/es/typography/Title";
-import { FormEnum, Sector } from "../../types/forms/formNameEnum";
+import { FormEnum, reportTitles, Sector } from "../../types/forms/formNameEnum";
 import { GenericFormFieldV3 } from "../../types/forms/GenericFormTypes";
-import { Button, Drawer, Flex, message, Popconfirm, Space } from "antd";
+import { Button, Drawer, Flex, message, Popconfirm, Space, Tooltip } from "antd";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { useEffect, useRef, useState } from "react";
 import { delRequestReport, formGetByQuery, getRequestReportByQuery, requestReport } from "../../services/api/formsApi";
 import { parseResError } from "../../services/errorHandler";
 import CustomReportGenerator from "./GenericFormReportFilter";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faRefresh } from "@fortawesome/free-solid-svg-icons";
+import { faCircleInfo, faInfo, faRefresh } from "@fortawesome/free-solid-svg-icons";
 import { AgGridReact } from "ag-grid-react";
 import { usePreviewReportStore, useViewLogsStore } from "../../stores/useReportStore";
 import { useReactToPrint } from "react-to-print"
@@ -20,26 +20,32 @@ import "./CustomReport.css";
 
 interface RequestReportFormProps {
     formName : FormEnum
-    fields : GenericFormFieldV3[]
+    fields : GenericFormFieldV3[],
+    isCustom : boolean
+    title : string
+    btnLabel : string
 }
 
-const RequestReportForm = ({ formName,  fields } : RequestReportFormProps) => {
+const RequestReportForm = ({ formName,  fields, isCustom, title, btnLabel } : RequestReportFormProps) => {
 
     const [messageApi, contextHandler] = message.useMessage();
     const authStore = useAuthStore();
     const [open, setOpen] = useState(false);
 
-    const handleSubmit =  async (title, description, filter, inclusions) => {
+    const handleSubmit =  async (title_, description, filter, inclusions) => {
 
         try {
-            await requestReport({
-                title : title,
+            const data = {
+                title : isCustom ? title_ : `${reportTitles[formName]} as of CY ${filter.calendar_year}`,
                 description : description,
                 filters : filter,
                 fields : inclusions,
                 form_name : formName,
+                isCustom : isCustom,
                 requested_by : authStore.user?._id
-            });
+            }
+            console.log(data ,formName)
+            await requestReport(data);
             messageApi.success("New report request successfully submitted.")
         } catch (error) {
             messageApi.error(parseResError(error).msg)
@@ -49,10 +55,12 @@ const RequestReportForm = ({ formName,  fields } : RequestReportFormProps) => {
     return (
         <>
             { contextHandler }
-            <Button onClick={() => setOpen(true)}>Request Custom Report</Button>
+            <Button onClick={() => setOpen(true)}>{btnLabel}</Button>
             <CustomReportGenerator 
+            title={title}
             visible={open} 
             fields={fields} 
+            isCustom={isCustom}
             onClose={() => setOpen(false)} 
             onSubmit={handleSubmit}/>
         </>
@@ -213,6 +221,7 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
     const [messageApi, contextHandler] = message.useMessage();
     const [refresh, setRefresh] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [customRowData, setCustomRowData] = useState([]);
     const [rowData, setRowData] = useState([]);
     const authStore = useAuthStore();
     const viewLogsStore = useViewLogsStore();
@@ -239,32 +248,6 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
             headerName : "Description",
             field : "description"
         },
-        // {
-        //     headerName : "Filters",
-        //     field : "filters",
-        //     cellRenderer: (params) => {
-        //         return (
-        //             <>
-        //                 <Space>
-        //                     {
-                                
-        //                     }
-        //                 </Space>
-        //             </>
-        //         )
-        //     }
-        // },
-        // {
-        //     headerName : "Selected Fields",
-        //     field : "fields",
-        //     wrapText : true,
-        //     autoHeight : true,
-        //     valueFormatter : (params) => {
-        //         let val = ""
-        //         params.data.fields.filter(e => e.included).forEach(e => {val += e.name + ", "});
-        //         return val;
-        //     }
-        // },
         {
             headerName: "Actions",
             headerClass: "justify-center",
@@ -288,9 +271,16 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
         (async () => {
             setLoading(true)
             try {
+                const custom = await getRequestReportByQuery({
+                    requested_by : authStore.user?._id,
+                    form_name : formName,
+                    isCustom : true
+                }, []);
+                setCustomRowData(custom.data)
                 const res = await getRequestReportByQuery({
                     requested_by : authStore.user?._id,
-                    form_name : formName
+                    form_name : formName,
+                    isCustom : false
                 }, []);
                 setRowData(res.data)
             } catch (error) {
@@ -305,13 +295,23 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
     return (
         <>
             { contextHandler }
-            <RequestReportForm fields={fields} formName={formName} /><br /><br />
 
-            <Title level={4} className="mb-2">
-                Custom Reports  
+            <Title level={5} className="mb-2">
+                <Tooltip title="Generate Reports using the default template">
+                    <FontAwesomeIcon className="text-blue-500 me-2" icon={faCircleInfo} />
+                </Tooltip>
+                Default  
                 <Button className="ml-2" variant="text" color="primary" onClick={() => setRefresh(!refresh)} size="small" icon={<FontAwesomeIcon icon={faRefresh} />}></Button>
             </Title>
-            
+
+            <div className="mb-4">
+                <RequestReportForm 
+                btnLabel="Generate Report"
+                title="Generate Report"
+                isCustom={false} 
+                fields={fields} 
+                formName={formName} />
+            </div>
 
             <div className="ag-theme-alpine" style={{ width: '100%', height: '500px' }}>
                 <AgGridReact
@@ -326,6 +326,43 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
                     loading={loading}
                     columnDefs={columnDefs}
                     rowData={rowData}
+                    onGridReady={(ev) => ev.api.sizeColumnsToFit()}
+                />
+            </div>
+            
+            <hr className="my-4" />
+
+            <Title level={5} className="mb-2">
+                <Tooltip title="Customize Reports by selecting fields">
+                    <FontAwesomeIcon className="text-blue-500 me-2" icon={faCircleInfo} />
+                </Tooltip>
+                Custom Reports  
+                <Button className="ml-2" variant="text" color="primary" onClick={() => setRefresh(!refresh)} size="small" icon={<FontAwesomeIcon icon={faRefresh} />}></Button>
+            </Title>
+
+            <div className="mb-4">
+                <RequestReportForm 
+                btnLabel="Generate Custom Report"
+                title="Generate Custom Report" 
+                isCustom={true} 
+                fields={fields} 
+                formName={formName} />
+            </div>
+            
+
+            <div className="ag-theme-alpine" style={{ width: '100%', height: '500px' }}>
+                <AgGridReact
+                    defaultColDef={{
+                        wrapText : true,
+                        filter : "agTextFilterColumn"
+                    }}
+                    autoSizeStrategy={{
+                        type: "fitGridWidth"
+                    }}
+                    pagination={true}
+                    loading={loading}
+                    columnDefs={columnDefs}
+                    rowData={customRowData}
                     onGridReady={(ev) => ev.api.sizeColumnsToFit()}
                 />
             </div>

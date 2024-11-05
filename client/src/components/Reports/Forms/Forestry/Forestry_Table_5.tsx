@@ -10,8 +10,6 @@ import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 import cities from "philippines/cities.json"
-import province from "philippines/provinces.json"
-import { Text } from "recharts";
 
 export const forestry_5_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -23,7 +21,8 @@ export const forestry_5_gen_form_fields : GenericFormFieldV3[] = [
             options={generateYearOptions(2000, new Date().getFullYear())}
             />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",

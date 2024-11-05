@@ -117,6 +117,7 @@ import Data from './pages/Admin/Budget/Data'
 import BudgetAnalytics from './pages/Admin/Budget/BudgetAnalytics'
 import EmailVerifiedResult from './pages/Home/EmailVerifiedResult'
 import SendVerification from './pages/Home/SendVerification'
+import Profile from './pages/Profile'
 
 axios.defaults.withCredentials = true;
 
@@ -166,6 +167,7 @@ function App() {
               <Routes >
                 <Route path='/' element={<HomePage />} >
                   <Route path="" element={<LandingPage />} />
+                  <Route path="profile" element={<Profile />} />
                   <Route path="login" element={<Login />} />
                   <Route path="signup" element={<SignUp />} />
                   <Route path="forgot-password" element={<ForgotPassword />} />

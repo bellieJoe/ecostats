@@ -43,6 +43,10 @@ const RequestedReportSchema = new mongoose.Schema({
     type : Schema.Types.ObjectId,
     default : null,
     ref : "users"
+  },
+  isCustom : {
+    type : Boolean,
+    default : true
   }
 }, {
   timestamps: true, // Adds createdAt and updatedAt timestamps
