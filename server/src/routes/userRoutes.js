@@ -20,7 +20,9 @@ import {
     searchByName,
     assignUserToUnitOrProgram,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    verifyAccount,
+    resendEmail
 } from "../controller/userController.js";
 import UserModel from "../model/User.js";
 
@@ -47,6 +49,10 @@ router.post('/assign-to', assignToUntOrPrgrmValidation, assignUserToUnitOrProgra
 router.post('/forgot-password', forgotPassword);
 
 router.post('/reset-password/:token', resetPassword);
+
+router.get('/verify-account/:token', verifyAccount);
+
+router.post('/resend-verification/:email', resendEmail);
 
 router.get("/query", async (req, res) => {
     const users = await UserModel.find(req.query.query);

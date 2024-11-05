@@ -124,8 +124,8 @@ function SignUp() {
             const res = await signup({ email, password, name, role });
             navigate("/login")
         } catch (error : any) {
+            console.log(error)
             if(error.response.status = 422){
-                console.log(error.response.data.errors)
                 setErrors([...error.response.data.errors])
             }
         }

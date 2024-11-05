@@ -18,31 +18,12 @@ export default async function SeedUsers(){
         name: "Admin User",
         email: "admin@gmail.com",
         passwordHash: await bcrypt.hash("password", 10),
+        verifiedAt: new Date(),
         isActive: true,
         role : "admin"
     })
     await admin.save();
-    // await new UserRoleModel({
-    //     user: admin,
-    //     role: roles.filter(role => role.value == "admin")[0]
-    // })
-    // .save();
+    
     console.log("User seeded successfuly")
 
-    // for(let i = 1; i<=23; i++){
-    //     // setup admin
-    //     const _admin = new UserModel({
-    //         name: `Admin User ${i}`,
-    //         email: `admin${i}@gmail.com`,
-    //         passwordHash: await bcrypt.hash("password", 10),
-    //         isActive: true
-    //     })
-    //     await _admin.save();
-    //     await new UserRoleModel({
-    //         user: _admin,
-    //         role: roles.filter(role => role.value == "admin")[0]
-    //     })
-    //     .save();
-    //     console.log("User seeded successfuly")
-    // }
 }

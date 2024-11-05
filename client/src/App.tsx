@@ -115,6 +115,8 @@ import ForgotPassword from './pages/Home/ForgotPassword.tsx/ForgotPassword'
 import ResetPassword from './pages/Home/ForgotPassword.tsx/ResetPassword'
 import Data from './pages/Admin/Budget/Data'
 import BudgetAnalytics from './pages/Admin/Budget/BudgetAnalytics'
+import EmailVerifiedResult from './pages/Home/EmailVerifiedResult'
+import SendVerification from './pages/Home/SendVerification'
 
 axios.defaults.withCredentials = true;
 
@@ -168,6 +170,8 @@ function App() {
                   <Route path="signup" element={<SignUp />} />
                   <Route path="forgot-password" element={<ForgotPassword />} />
                   <Route path="reset-password/:token" element={<ResetPassword />} />
+                  <Route path="email-verified" element={<EmailVerifiedResult />} />
+                  <Route path="verify-email/:email" element={<SendVerification />} />
                 </Route>
 
                 <Route path='admin' element={<Admin />}>

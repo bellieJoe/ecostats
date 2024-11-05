@@ -72,7 +72,7 @@ export const signup = async (req, res)  => {
         });
         await user.save({session});
 
-        // add registration activation mechanism
+        await sendVerificationEmail(user);
 
         await session.commitTransaction();
 
@@ -490,6 +490,37 @@ export const resetPassword = async (req, res) => {
     }
 }
 
+export const resendEmail = async (req, res) => {
+    const { email } = req.params;
+
+    try {
+        const user = await UserModel.findOne({email : email});
+        await sendVerificationEmail(user)
+        return res.send("Email sent successfully");
+    } catch (error) {
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        );
+    }
+}
+
+export const verifyAccount = async (req, res) => {
+    const { token } = req.params;
+    try {
+        const { id } = jwt.verify(token, process.env.JWT_SECRET);
+        await UserModel.findOneAndUpdate({ _id: id }, { verifiedAt: new Date() });
+        return res.redirect(`${process.env.FRONTEND_URL}/email-verified`);
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Server error.',
+            details: error
+        });
+    }
+}
+
 
 // helpers
 async function validatePassword(password, passwordHash ){
@@ -524,4 +555,90 @@ export async function getUserFromToken(token){
     // decoded.id;
     const user = await UserModel.findById(decoded.id);
     return user
+}
+
+async function sendVerificationEmail(user){
+    try {
+        
+        // Generate a token with a short expiration time
+        const token = await generateJWTToken(user._id);
+    
+        // Send the email
+        const transporter = nodemailer.createTransport({
+            service: 'gmail', // Choose your email provider or use a custom SMTP service
+            auth: {
+                user: process.env.MAIL_EMAIL,
+                pass: process.env.MAIL_PASS, // Use environment variables for production
+            },
+        });
+    
+        // return res.json(transporter)
+    
+        const link = `${process.env.URL}/users/verify-account/${token}`;
+        await transporter.sendMail({
+            to: user.email,
+            subject: 'Account Verification',
+            html: 
+            `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Password Reset</title>
+            <style>
+                body {
+                font-family: Arial, sans-serif;
+                color: #333333;
+                background-color: #f9f9f9;
+                margin: 0;
+                padding: 20px;
+                }
+                .container {
+                max-width: 600px;
+                margin: auto;
+                background-color: #ffffff;
+                padding: 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                .button {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: #007bff;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 5px;
+                font-weight: bold;
+                }
+                .footer {
+                font-size: 0.9em;
+                color: #666666;
+                margin-top: 20px;
+                }
+            </style>
+            </head>
+            <body>
+            <div class="container">
+                <h2>Email Verification</h2>
+                <p>Hi ${user.name},</p>
+                <p>Thank you for signing up to Ecostats. If you didn’t make this registration, please ignore this email.</p>
+                <p>To verify your email, click the button below:</p>
+                <p>
+                <a href="${link}" class="button">Verify</a>
+                </p>
+                <p>This link will expire in 1 hour. After that, you’ll need to submit a new request to verify your email.</p>
+                <p>If you have any questions or need further assistance, please feel free to contact our support team.</p>
+                <div class="footer">
+                <p>Thank you,</p>
+                <p>Ecostats Support Team</p>
+                </div>
+            </div>
+            </body>
+            </html>
+            `,
+        });
+    } catch (error) {
+        console.log(error)
+    }
 }

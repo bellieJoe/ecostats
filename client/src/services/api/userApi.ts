@@ -142,3 +142,6 @@ export const resetPassword = async (password, token) : Promise<any> => {
         password
     });
 }
+export const resendEmailVerification = async (email) : Promise<any> => {
+    return await axios.post(`${apiUrl}/users/resend-verification/${email}`);
+}

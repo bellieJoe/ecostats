@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { getTokensFromCookie, isAuthenticated } from "../../services/api/userApi";
 import { Navigate } from "react-router-dom";
 import { useAuthStore } from "../../stores/useAuthStore";
 
 interface Props {
-    children : any
-    redirectTo? : string
+    children: ReactNode;
+    redirectTo?: string;
 }
 
 const GuestGuard = (props : Props) => {
@@ -13,10 +13,8 @@ const GuestGuard = (props : Props) => {
     const {setTokens} = useAuthStore();
 
     useEffect(() => {
-        console.log()
         const checkAuth = async () => {
             const isAuthenticatedStatus = await isAuthenticated();
-            console.log(isAuthenticatedStatus)
             setIsAuth(isAuthenticatedStatus);
             if(isAuthenticatedStatus){
                 setTokens(getTokensFromCookie())

@@ -6,7 +6,7 @@ dotenv.config()
 
 const seedDatabase = async () => {
     try {
-        await mongoose.connect("mongodb+srv://jandusayjoe14:1VpIMPNLXd2YLlMd@cluster0.g1x9p.mongodb.net/ecostats_db_new?retryWrites=true&w=majority&appName=Cluster0")
+        await mongoose.connect("mongodb+srv://jandusayjoe14:1VpIMPNLXd2YLlMd@cluster0.g1x9p.mongodb.net?retryWrites=true&w=majority&appName=Cluster0")
         .then(() => console.log('Connected to MongoDB'))
         .catch(err => console.error('Failed to connect to MongoDB', err));
 

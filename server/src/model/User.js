@@ -18,6 +18,10 @@ const UserSchema = new Schema({
         type: Boolean, 
         required: true,
     },
+    verifiedAt : {
+        type : Date,
+        default : null
+    },
     refreshToken : {
         type: String
     },

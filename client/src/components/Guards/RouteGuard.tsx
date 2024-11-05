@@ -11,7 +11,7 @@ interface Props {
 
 const RouteGuard = (props : Props) => {
     const [isAuth, setIsAuth] = useState(true);
-    const {setTokens, refreshToken} = useAuthStore();
+    const {setTokens, refreshToken, user} = useAuthStore();
 
     const [isIdle, setIsIdle] = useState(false);
 
@@ -42,22 +42,15 @@ const RouteGuard = (props : Props) => {
         checkAuth();
     }, []);
 
-    if(isAuth){
+    if(isAuth && user?.verifiedAt){
         return <div className="h-full" onClick={() => setIsIdle(false)}>{props.children}</div>
+    }
+    else if(isAuth && !user?.verifiedAt){
+        return <Navigate to={`/verify-email/${user?.email}`} />;
     }
     else{
         return <Navigate to="/login" />
     }
-    // return (
-    //     <div className="h-full" onClick={() => setIsIdle(false)}>
-    //         {
-    //             isAuth && props.redirectTo ? props.children  : (<Navigate to={props.redirectTo!} />)
-    //         }
-    //         {
-    //             isAuth && !props.redirectTo && props.children 
-    //         }
-    //     </div>
-    // )
 }
 
 export default RouteGuard;
