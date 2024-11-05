@@ -132,6 +132,7 @@ export const PreviewPrint = () => {
         else {
             setOpen(false)
         }
+        console.log(previewReportStore.report)
     }, [previewReportStore.report]);
 
     return (
@@ -139,7 +140,7 @@ export const PreviewPrint = () => {
         <Drawer 
         footer={
              <Flex align="end" justify="end">
-                <Button color="primary" variant="solid" onClick={() => reactToPrintFn()}>Print</Button>
+                <Button color="primary" variant="solid" onClick={() => reactToPrintFn()} disabled={previewReportStore.report?.reviewed_at && previewReportStore.report?.approved_at && !previewReportStore.report?.rejected_by ? false : true}>Print</Button>
             </Flex>
             }
         width={"100%"}
