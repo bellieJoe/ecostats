@@ -30,8 +30,8 @@ const SendVerification = () => {
 
     useEffect(() => {
         if(authStore.user?.verifiedAt != null) {
-            navigate("/");
-        };
+            navigate(-1);
+        }
     }, [authStore.user]);
 
     return (

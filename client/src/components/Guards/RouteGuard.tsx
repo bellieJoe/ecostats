@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { getTokensFromCookie, isAuthenticated } from "../../services/api/userApi";
-import { Navigate, redirect } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { refreshToken as _refreshToken } from "../../services/api/userApi";
 
@@ -14,6 +14,8 @@ const RouteGuard = (props : Props) => {
     const {setTokens, refreshToken, user} = useAuthStore();
 
     const [isIdle, setIsIdle] = useState(false);
+
+    const location = useLocation();
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -40,17 +42,24 @@ const RouteGuard = (props : Props) => {
         };
 
         checkAuth();
-    }, []);
+    }, [user]);
 
-    if(isAuth && user?.verifiedAt){
-        return <div className="h-full" onClick={() => setIsIdle(false)}>{props.children}</div>
+    if (!isAuth) {
+        return <Navigate to="/login" />;
     }
-    else if(isAuth && !user?.verifiedAt){
+
+    if (user?.verifiedAt) {
+        return (
+            <div className="h-full" onClick={() => setIsIdle(false)}>
+                {props.children}
+            </div>
+        );
+    }
+
+    if (user && !user?.verifiedAt) {
         return <Navigate to={`/verify-email/${user?.email}`} />;
     }
-    else{
-        return <Navigate to="/login" />
-    }
+    
 }
 
 export default RouteGuard;
