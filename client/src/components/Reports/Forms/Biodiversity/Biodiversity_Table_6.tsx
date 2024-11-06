@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
-import { generateYearOptions } from "../../../../services/helper";
+import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 import cities from "philippines/cities.json"
 import province from "philippines/provinces.json"
 import TextArea from "antd/es/input/TextArea";
@@ -30,25 +30,16 @@ export const biodiversity_6_gen_form_fields : GenericFormFieldV3[] = [
         name : "province",
         label : "Province", 
         input : (
-            <Select showSearch virtual options={province.map(val => {
-                return {
-                    value: val.name,
-                    label : val.name
-                }
-            })}  />
+            <Input type="text" readOnly />
         ),
-        type : "input"
+        type : "input",
+        initialValue : "Marinduque"
     },
     {
         name : "municipality",
         label : "Municipality", 
         input : (
-            <Select showSearch virtual options={cities.map(val => {
-                return {
-                    value: val.name,
-                    label : val.name
-                }
-            })}  />
+            <Select showSearch virtual options={municipalityOptions}  />
         ),
         type : "input"
     },
@@ -187,94 +178,94 @@ const Biodiversity_Table_6  = () => {
         }
     ]);
 
-    const genericFormFields : GenericFormFieldV3[] = [
-        {
-            name : "calendar_year",
-            label : "Calendar Year", 
-            input : (
-                <Select 
-                showSearch 
-                options={generateYearOptions(2000, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "province",
-            label : "Province", 
-            input : (
-                <Select showSearch virtual options={province.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "municipality",
-            label : "Municipality", 
-            input : (
-                <Select showSearch virtual options={cities.map(val => {
-                    return {
-                        value: val.name,
-                        label : val.name
-                    }
-                })}  />
-            ),
-            type : "input"
-        },
-        {
-            name : "date_established",
-            label : "Date Established", 
-            input : (
-                <Select 
-                showSearch 
-                allowClear
-                options={generateYearOptions(1800, new Date().getFullYear())}
-                />
-            ),
-            type : "input",
-            required : false
-        },
-        {
-            name : "date_rehabilitated",
-            label : "Date Rehabilitated", 
-            input : (
-                <Select 
-                showSearch 
-                allowClear
-                options={generateYearOptions(1800, new Date().getFullYear())}
-                />
-            ),
-            type : "input"
-        },
-        {
-            name : "rehabilitated_area",
-            label : "Rehabilitated Area", 
-            input : (
-                <Input type="number" />
-            ),
-            type : "input"
-        },
-        {
-            name : "species_identified",
-            label : "Species Identified", 
-            input : (
-                <TextArea  />
-            ),
-            type : "input"
-        },
-        {
-            name : "fund_source",
-            label : "Fund Source", 
-            input : (
-                <Input type="string" />
-            ),
-            type : "input"
-        },
-    ];
+    // const genericFormFields : GenericFormFieldV3[] = [
+    //     {
+    //         name : "calendar_year",
+    //         label : "Calendar Year", 
+    //         input : (
+    //             <Select 
+    //             showSearch 
+    //             options={generateYearOptions(2000, new Date().getFullYear())}
+    //             />
+    //         ),
+    //         type : "input"
+    //     },
+    //     {
+    //         name : "province",
+    //         label : "Province", 
+    //         input : (
+    //             <Select showSearch virtual options={province.map(val => {
+    //                 return {
+    //                     value: val.name,
+    //                     label : val.name
+    //                 }
+    //             })}  />
+    //         ),
+    //         type : "input"
+    //     },
+    //     {
+    //         name : "municipality",
+    //         label : "Municipality", 
+    //         input : (
+    //             <Select showSearch virtual options={cities.map(val => {
+    //                 return {
+    //                     value: val.name,
+    //                     label : val.name
+    //                 }
+    //             })}  />
+    //         ),
+    //         type : "input"
+    //     },
+    //     {
+    //         name : "date_established",
+    //         label : "Date Established", 
+    //         input : (
+    //             <Select 
+    //             showSearch 
+    //             allowClear
+    //             options={generateYearOptions(1800, new Date().getFullYear())}
+    //             />
+    //         ),
+    //         type : "input",
+    //         required : false
+    //     },
+    //     {
+    //         name : "date_rehabilitated",
+    //         label : "Date Rehabilitated", 
+    //         input : (
+    //             <Select 
+    //             showSearch 
+    //             allowClear
+    //             options={generateYearOptions(1800, new Date().getFullYear())}
+    //             />
+    //         ),
+    //         type : "input"
+    //     },
+    //     {
+    //         name : "rehabilitated_area",
+    //         label : "Rehabilitated Area", 
+    //         input : (
+    //             <Input type="number" />
+    //         ),
+    //         type : "input"
+    //     },
+    //     {
+    //         name : "species_identified",
+    //         label : "Species Identified", 
+    //         input : (
+    //             <TextArea  />
+    //         ),
+    //         type : "input"
+    //     },
+    //     {
+    //         name : "fund_source",
+    //         label : "Fund Source", 
+    //         input : (
+    //             <Input type="string" />
+    //         ),
+    //         type : "input"
+    //     },
+    // ];
 
     const handleOnRowValueChanged = (d) => {
         d.data.total_beneficiaries = d.data.male_beneficiaries + d.data.female_beneficiaries;
@@ -384,7 +375,7 @@ const Biodiversity_Table_6  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={genericFormFields} 
+            fields={biodiversity_6_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>

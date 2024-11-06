@@ -2,25 +2,72 @@ import { useEffect, useState } from "react";
 import { parseResError } from "../../../../services/errorHandler";
 import { formCreate, formDelete, formGet, formUpdate } from "../../../../services/api/formsApi";
 import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
-import { Button, Flex, Input, message, Pagination, Popconfirm, Select } from "antd";
+import { Button, DatePicker, Flex, Input, message, Pagination, Popconfirm, Select } from "antd";
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
+import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
-import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
-import { municipalityOptions } from "../../../../services/helper";
+import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
+import cities from "philippines/cities.json"
 
-export const land_2_col_defs = [
+export const forestry_7_gen_form_fields : GenericFormFieldV3[] = [
+    {
+        name : "calendar_year",
+        label : "Calendar Year", 
+        input : (
+            <Select 
+            showSearch 
+            options={generateYearOptions(2000, new Date().getFullYear())}
+            />
+        ),
+        type : "input",
+        notDefault : true
+    },
+    {
+        name : "province",
+        label : "Province", 
+        input : (
+            <Input type="text" readOnly />
+        ),
+        type : "input",
+        initialValue : "Marinduque"
+    },
+    {
+        name : "municipality",
+        label : "Municipality", 
+        input : (
+            <Select showSearch virtual options={municipalityOptions}  />
+        ),
+        type : "input"
+    },
+    {
+        name : "location",
+        label : "Location", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+    {
+        name : "area",
+        label : "Area (in ha)", 
+        input : (
+            <Input type="text"  />
+        ),
+        type : "input"
+    },
+];
+
+export const forestry_7_col_defs  = [
     { 
         headerName: "CY", 
-        headerClass: "justify-center", 
         field: "calendar_year", 
         editable : true, 
         type: "numberColumn",
     },
     { 
         headerName: "Province", 
-        headerClass: "justify-center", 
         field: "province", 
         editable : true, 
         type: "textColumn",
@@ -29,97 +76,26 @@ export const land_2_col_defs = [
         headerName: "Municipality", 
         field: "municipality", 
         editable : true, 
-        type: "textColumn",
-        headerClass: "justify-center" 
-
+        cellEditor : "agSelectCellEditor",
+        cellEditorParams : {
+            values : ["Boac", "Mogpog", "Gasan", "Sta. Cruz", "Torrijos", "Buenavista"]
+        }
     },
     { 
-        headerName: "No. of Lots", 
-        field: "no_of_lots", 
-        editable : true, 
-        type: "textColumn",
-
-    },
-    { 
-        headerName: "Total Land Area", 
-        field: "total_land_area", 
+        headerName: "Location", 
+        field: "location", 
         editable : true, 
         type: "textColumn",
     },
-    {
-        headerName: "Income (Php)", 
-        children : [
-            { 
-                headerName: "Sale", 
-                field: "sale", 
-                editable : true, 
-                type: "numberColumn" 
-    
-            },
-            { 
-                headerName: "Lease", 
-                field: "lease", 
-                editable : true, 
-                type: "numberColumn" 
-    
-            },
-        ]
+    { 
+        headerName: "Area (in ha)", 
+        field: "area", 
+        editable : true, 
+        type: "numberColumn",
     },
 ];
 
-export const land_2_gen_form_fields : GenericFormFieldV3[] = [
-    {
-        name : "calendar_year",
-        label : "CY", 
-        input : <Input type="number" />,
-        type : "input",
-        notDefault : true
-    },
-    {
-        name : "province",
-        label : "Province", 
-        input : (
-            <Input type="text" readOnly  />
-        ),
-        type : "input",
-        initialValue : "Marinduque"
-    },
-    {
-        name : "municipality",
-        label : "City/Municipality",
-        input : (
-            <Select showSearch virtual options={municipalityOptions}  />
-        ),
-        type : "input"
-    },
-    {
-        name : "no_of_lots",
-        label : "No. of Lots",
-        input : <Input type="number" />,
-        type : "input"
-    },
-    {
-        name : "total_land_area",
-        label : "Total Land Area",
-        input : <Input type="number" />,
-        type : "input"
-    },
-    {
-        name : "sale",
-        label : "Sale",
-        input : <Input type="number" />,
-        type : "input"
-    },
-    {
-        name : "lease",
-        label : "Lease",
-        input : <Input type="number" />,
-        type : "input"
-    },
-];
-
-
-const Land_Table_2  = () => {
+const Forestry_Table_7  = () => {
 
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
@@ -134,37 +110,34 @@ const Land_Table_2  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        ...land_2_col_defs,
+        ...forestry_7_col_defs,
         {
             headerName: "Actions",
-            headerClass: "justify-center",
+            pinned:"right",
             cellRenderer: (params) => {
                 return (
                     <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this row?" onConfirm={() => handleDelete(params.data._id)}>
                         <Button color="danger" variant="filled">Delete</Button>
                     </Popconfirm>
-                )
+                );
             }
         }
     ]);
 
-    
-
     const handleOnRowValueChanged = (d) => {
-        formUpdate(d.data, FormEnum.LAND_2, Sector.LAND)
+        formUpdate(d.data, FormEnum.FORESTRY_7, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully updated.");
         })
         .catch(err => {
-            console.log(err)
-            setRefresh(!refresh)
+            console.log(err) 
             messageApi.error(parseResError(err).msg)
         })
-        .finally();
+        .finally(() => setRefresh(!refresh));
     }
 
     const handleDelete = (id) => {
-        formDelete(id, FormEnum.LAND_2, Sector.LAND)
+        formDelete(id, FormEnum.FORESTRY_7, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully deleted.");
         })
@@ -184,9 +157,8 @@ const Land_Table_2  = () => {
     };
 
     const handleSubmit = async (d) => {
-        console.log(d)
         try {
-            await formCreate(d, FormEnum.LAND_2, Sector.LAND)
+            await formCreate(d, FormEnum.FORESTRY_7, Sector.FORESTRY)
             messageApi.success("Data successfully inserted.");
         } catch (err) {
             messageApi.error(parseResError(err).msg)
@@ -197,11 +169,14 @@ const Land_Table_2  = () => {
     
     useEffect(() => {
         setLoading(true)
-        formGet(FormEnum.LAND_2, Sector.LAND, limit, page)
+        formGet(FormEnum.FORESTRY_7, Sector.FORESTRY, limit, page)
         .then(res => {
             console.log(res.data)
             setTotal(res.data.total)
-            setRowData(res.data.models);
+            setRowData(res.data.models.map(val => {
+                val.proclamation_date = new Date(val.proclamation_date);
+                return val;
+            }));
         })
         .catch(err => {
             console.log(err);
@@ -226,7 +201,13 @@ const Land_Table_2  = () => {
                     <Button onClick={() => setAddRecord(true)} color="primary" variant="solid">Add Data</Button>
                     <Button onClick={() => setRefresh(!refresh)} variant="text" color="primary"><FontAwesomeIcon icon={faArrowsRotate} /></Button>
                 </Flex>
+
                 <AgGridReact
+                    gridOptions={{
+                        defaultColDef: {
+                            headerClass: "justify-center align-center text-center"
+                        }
+                    }}
                     loading={loading}
                     editType={'fullRow'}
                     rowData={rowData}
@@ -247,12 +228,11 @@ const Land_Table_2  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={land_2_gen_form_fields} 
+            fields={forestry_7_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>
     )
 }
 
-
-export default Land_Table_2;
+export default Forestry_Table_7;

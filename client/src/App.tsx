@@ -118,6 +118,16 @@ import BudgetAnalytics from './pages/Admin/Budget/BudgetAnalytics'
 import EmailVerifiedResult from './pages/Home/EmailVerifiedResult'
 import SendVerification from './pages/Home/SendVerification'
 import Profile from './pages/Profile'
+import Forestry_6 from './pages/Reports/DataEntry/Forestry/Forestry_6'
+import Forestry_6_Dashboard from './pages/Dashboard/Forestry/Forestry_6_dashboard'
+import Forestry_7 from './pages/Reports/DataEntry/Forestry/Forestry_7'
+import Forestry_7_Dashboard from './pages/Dashboard/Forestry/Forestry_7_dashboard'
+import Forestry_8 from './pages/Reports/DataEntry/Forestry/Forestry_8'
+import Forestry_8_Dashboard from './pages/Dashboard/Forestry/Forestry_8_dashboard'
+import Forestry_9 from './pages/Reports/DataEntry/Forestry/Forestry_9'
+import Forestry_9_Dashboard from './pages/Dashboard/Forestry/Forestry_9_dashboard'
+import Forestry_10 from './pages/Reports/DataEntry/Forestry/Forestry_10'
+import Forestry_10_Dashboard from './pages/Dashboard/Forestry/Forestry_10_dashboard'
 
 axios.defaults.withCredentials = true;
 
@@ -202,6 +212,12 @@ function App() {
                   <Route path='forestry_3' element={<Forestry_3_Dashboard />} />
                   <Route path='forestry_4' element={<Forestry_4_Dashboard />} />
                   <Route path='forestry_5' element={<Forestry_5_Dashboard />} />
+                  <Route path='forestry_6' element={<Forestry_6_Dashboard />} />
+                  <Route path='forestry_7' element={<Forestry_7_Dashboard />} />
+                  <Route path='forestry_8' element={<Forestry_8_Dashboard />} />
+                  <Route path='forestry_9' element={<Forestry_9_Dashboard />} />
+                  <Route path='forestry_10' element={<Forestry_10_Dashboard />} />
+
 
                   <Route path='forestry_24' element={<Forestry_24_Dashboard />} />
 
@@ -259,6 +275,12 @@ function App() {
                       <Route path={FormEnum.FORESTRY_3} element={<Forestry_3 />} />
                       <Route path={FormEnum.FORESTRY_4} element={<Forestry_4 />} />
                       <Route path={FormEnum.FORESTRY_5} element={<Forestry_5 />} />
+                      <Route path={FormEnum.FORESTRY_6} element={<Forestry_6 />} />
+                      <Route path={FormEnum.FORESTRY_7} element={<Forestry_7 />} />
+                      <Route path={FormEnum.FORESTRY_8} element={<Forestry_8 />} />
+                      <Route path={FormEnum.FORESTRY_9} element={<Forestry_9 />} />
+                      <Route path={FormEnum.FORESTRY_10} element={<Forestry_10 />} />
+
                       
                       <Route path={FormEnum.FORESTRY_24} element={<Forestry_24 />} />
                     </Route>

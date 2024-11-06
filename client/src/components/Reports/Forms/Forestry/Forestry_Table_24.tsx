@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
-import { generateYearOptions } from "../../../../services/helper";
+import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 
 export const forestry_24_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -27,15 +27,16 @@ export const forestry_24_gen_form_fields : GenericFormFieldV3[] = [
         name : "province",
         label : "Province", 
         input : (
-            <Input type="text"  />
+            <Input type="text" readOnly  />
         ),
-        type : "input"
+        type : "input",
+        initialValue : "Marinduque"
     },
     {
         name : "municipality",
         label : "Municipality", 
         input : (
-            <Input type="text"  />
+            <Select showSearch virtual options={municipalityOptions}  />
         ),
         type : "input"
     },

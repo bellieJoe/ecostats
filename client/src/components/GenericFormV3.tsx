@@ -44,7 +44,7 @@ const GenericFormDrawer: React.FC<{
       }
     >
       <Form form={form} layout="vertical" onFinish={handleFinish}>
-        {fields.map(({ name, label, input, type, required = true }) => {
+        {fields.map(({ name, label, input, type, required = true, initialValue }) => {
           // Default the 'required' property to true if not set
           const rules = required
             ? [{ required: true, message: `Please input your ${label}!` }]
@@ -52,7 +52,7 @@ const GenericFormDrawer: React.FC<{
 
           if (type === 'input') {
             return (
-              <Form.Item key={name} label={label} name={name} rules={rules}>
+              <Form.Item key={name} label={label} name={name} rules={rules} initialValue={initialValue || ''}>
                 {input}
               </Form.Item>
             );

@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
-import { generateYearOptions } from "../../../../services/helper";
+import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 
 export const land_3_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -20,19 +20,26 @@ export const land_3_gen_form_fields : GenericFormFieldV3[] = [
             options={generateYearOptions(2000, new Date().getFullYear())}
             />
         ),
-        type : "input"
+        type : "input",
+        notDefault : true
     },
     {
         name : "province",
         label : "Province", 
-        input : <Input type="text" />,
-        type : "input"
+        input : (
+            <Input type="text" readOnly  />
+        ),
+        type : "input",
+        initialValue : "Marinduque"
     },
     {
         name : "municipality",
         label : "Municipality", 
-        input : <Input type="text" />,
-        type : "input"
+        input :  (
+            <Select showSearch virtual options={municipalityOptions}  />
+        ),
+        type : "input",
+        notDefault : true
     },
     {
         name: "For Calendar Year",
@@ -112,7 +119,6 @@ export const land_3_col_defs = [
         field: "calendar_year", 
         editable : true, 
         type: "textColumn",
-        notDefault : true
     },
     { 
         headerName: "Province", 
@@ -125,7 +131,6 @@ export const land_3_col_defs = [
         field: "municipality", 
         editable : true, 
         type: "textColumn",
-        notDefault : true
     },
     { 
         headerName: "For Calendar Year", 

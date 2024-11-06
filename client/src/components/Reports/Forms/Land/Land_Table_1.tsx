@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { parseResError } from "../../../../services/errorHandler";
 import { formCreate, formDelete, formGet, formUpdate } from "../../../../services/api/formsApi";
 import { FormEnum, Sector } from "../../../../types/forms/formNameEnum";
-import { Button, Checkbox, DatePicker, Flex, Input, message, Pagination, Popconfirm } from "antd";
+import { Button, Checkbox, DatePicker, Flex, Input, message, Pagination, Popconfirm, Select } from "antd";
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import GenericFormDrawerV3 from "../../../GenericFormV3";
 import { GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
+import { municipalityOptions } from "../../../../services/helper";
 
 export const land_1_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -20,14 +21,18 @@ export const land_1_gen_form_fields : GenericFormFieldV3[] = [
     {
         name : "province",
         label : "Province", 
-        input : <Input type="text" />,
-        type : "input"
-
+        input : (
+            <Input type="text" readOnly  />
+        ),
+        type : "input",
+        initialValue : "Marinduque"
     },
     {
         name : "municipality",
         label : "Municipality", 
-        input : <Input type="text" />,
+        input : (
+            <Select showSearch virtual options={municipalityOptions} />
+        ),
         type : "input",
         notDefault : true
     },

@@ -6,12 +6,24 @@ import Forestry_2 from "../model/Forestry_2.js";
 import Forestry_3 from "../model/Forestry_3.js";
 import Forestry_4 from "../model/Forestry_4.js";
 import Forestry_5 from "../model/Forestry_5.js";
+import Forestry_6 from "../model/Forestry_6.js";
+import Forestry_7 from "../model/Forestry_7.js";
+import Forestry_8 from "../model/Forestry_8.js";
+import Forestry_9 from "../model/Forestry_9.js";
+import Forestry_10 from "../model/Forestry_10.js";
 
 const forestry_1_controller = createCRUDController(Forestry_1);
 const forestry_2_controller = createCRUDController(Forestry_2);
 const forestry_3_controller = createCRUDController(Forestry_3);
 const forestry_4_controller = createCRUDController(Forestry_4);
 const forestry_5_controller = createCRUDController(Forestry_5);
+const forestry_6_controller = createCRUDController(Forestry_6);
+const forestry_7_controller = createCRUDController(Forestry_7);
+const forestry_8_controller = createCRUDController(Forestry_8);
+const forestry_9_controller = createCRUDController(Forestry_9);
+const forestry_10_controller = createCRUDController(Forestry_10);
+
+
 
 const forestry_24_controller = createCRUDController(Forestry_24);
 
@@ -51,6 +63,43 @@ router.put("/forestry_5", forestry_5_controller.update);
 router.delete("/forestry_5/:id", forestry_5_controller.delete);
 router.post("/forestry_5/save-many", forestry_5_controller.saveMany);
 router.get("/forestry_5/by-query", forestry_5_controller.getByQuery);
+
+router.get("/forestry_6", forestry_6_controller.getAll);
+router.post("/forestry_6", forestry_6_controller.create);
+router.put("/forestry_6", forestry_6_controller.update);
+router.delete("/forestry_6/:id", forestry_6_controller.delete);
+router.post("/forestry_6/save-many", forestry_6_controller.saveMany);
+router.get("/forestry_6/by-query", forestry_6_controller.getByQuery);
+
+
+router.get("/forestry_7", forestry_7_controller.getAll);
+router.post("/forestry_7", forestry_7_controller.create);
+router.put("/forestry_7", forestry_7_controller.update);
+router.delete("/forestry_7/:id", forestry_7_controller.delete);
+router.post("/forestry_7/save-many", forestry_7_controller.saveMany);
+router.get("/forestry_7/by-query", forestry_7_controller.getByQuery);
+
+router.get("/forestry_8", forestry_8_controller.getAll);
+router.post("/forestry_8", forestry_8_controller.create);
+router.put("/forestry_8", forestry_8_controller.update);
+router.delete("/forestry_8/:id", forestry_8_controller.delete);
+router.post("/forestry_8/save-many", forestry_8_controller.saveMany);
+router.get("/forestry_8/by-query", forestry_8_controller.getByQuery);
+
+router.get("/forestry_9", forestry_9_controller.getAll);
+router.post("/forestry_9", forestry_9_controller.create);
+router.put("/forestry_9", forestry_9_controller.update);
+router.delete("/forestry_9/:id", forestry_9_controller.delete);
+router.post("/forestry_9/save-many", forestry_9_controller.saveMany);
+router.get("/forestry_9/by-query", forestry_9_controller.getByQuery);
+
+router.get("/forestry_10", forestry_10_controller.getAll);
+router.post("/forestry_10", forestry_10_controller.create);
+router.put("/forestry_10", forestry_10_controller.update);
+router.delete("/forestry_10/:id", forestry_10_controller.delete);
+router.post("/forestry_10/save-many", forestry_10_controller.saveMany);
+router.get("/forestry_10/by-query", forestry_10_controller.getByQuery);
+
 
 
 

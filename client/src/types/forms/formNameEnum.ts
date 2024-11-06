@@ -34,6 +34,10 @@ import { forestry_24_col_defs } from "../../components/Reports/Forms/Forestry/Fo
 import { forestry_3_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_3";
 import { forestry_4_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_4";
 import { forestry_5_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_5";
+import { forestry_6_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_6";
+import { forestry_7_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_7";
+import { forestry_8_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_8";
+import { forestry_9_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_9";
 import { land_1_col_defs } from "../../components/Reports/Forms/Land/Land_Table_1";
 import { land_2_col_defs } from "../../components/Reports/Forms/Land/Land_Table_2";
 import { land_3_col_defs } from "../../components/Reports/Forms/Land/Land_Table_3";
@@ -59,6 +63,8 @@ export enum FormEnum {
     FORESTRY_6="forestry_6",
     FORESTRY_7="forestry_7",
     FORESTRY_8="forestry_8",
+    FORESTRY_9="forestry_9",
+    FORESTRY_10="forestry_10",
     FORESTRY_24="forestry_24",
 
     BIODIVERSITY_2="biodiversity_2",
@@ -118,6 +124,11 @@ export const ColDefsMap = {
     [FormEnum.FORESTRY_3] : forestry_3_col_defs,
     [FormEnum.FORESTRY_4] : forestry_4_col_defs,
     [FormEnum.FORESTRY_5] : forestry_5_col_defs,
+    [FormEnum.FORESTRY_6] : forestry_6_col_defs,
+    [FormEnum.FORESTRY_7] : forestry_7_col_defs,
+    [FormEnum.FORESTRY_8] : forestry_8_col_defs,
+    [FormEnum.FORESTRY_9] : forestry_9_col_defs,
+    // [FormEnum.FORESTRY_10] : forestry_10_col_defs,
     [FormEnum.FORESTRY_24] : forestry_24_col_defs,
 
     [FormEnum.BIODIVERSITY_2] : biodiversity_2_col_defs,
@@ -166,6 +177,11 @@ export const FormNameMap = {
     [FormEnum.FORESTRY_3] : Sector.FORESTRY,
     [FormEnum.FORESTRY_4] : Sector.FORESTRY,
     [FormEnum.FORESTRY_5] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_6] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_7] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_8] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_9] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_10] : Sector.FORESTRY,
     [FormEnum.FORESTRY_24] : Sector.FORESTRY,
 
     [FormEnum.BIODIVERSITY_2] : Sector.BIODIVERSITY,
@@ -224,8 +240,8 @@ export const reportTitles = {
     [FormEnum.FORESTRY_6]: "Table 6. Existing Community-Based Forest Management Agreement",
     [FormEnum.FORESTRY_7]: "Table 7. Existing Community Forest Stewardship Agreement",
     [FormEnum.FORESTRY_8]: "Table 8. Existing Agroforestry Land Management Agreement",
-    // [FormEnum.FORESTRY_9]: "Table 9. Existing Integrated Social Forestry (ISF)",
-    // [FormEnum.FORESTRY_10]: "Table 10. Existing Forest Land Grazing Lease Agreement (FLGLA)",
+    [FormEnum.FORESTRY_9]: "Table 9. Existing Integrated Social Forestry (ISF)",
+    [FormEnum.FORESTRY_10]: "Table 10. Existing Forest Land Grazing Lease Agreement (FLGLA)",
     // [FormEnum.FORESTRY_11]: "Table 11. Existing Forest Land Grazing Management Agreement (FLGMA)",
     // [FormEnum.FORESTRY_12]: "Table 12. Existing Forest Land Management Agreement (FLMA)",
     // [FormEnum.FORESTRY_13]: "Table 13. Existing Forest Land Use Agreement (FLAg)",

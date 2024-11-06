@@ -225,6 +225,43 @@ const ReportsSidebar = ({open}) => {
                             },
                         ]
                     },
+                    {
+                        key: "Tenural Instruments",
+                        label: "B. Tenural Instruments",
+                        style  : menuStyle2,
+                        children: [
+                            {
+                                key: FormEnum.FORESTRY_6,
+                                label: "Table 6. Existing Community-Based Forest Management Agreement",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_6}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_7,
+                                label: "Table 7. Community Forest Stewardship Agreement",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_7}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_8,
+                                label: "Table 8. Existing Agroforestry Land Management Agreement",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_8}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_9,
+                                label: "Table 9. Existing Integrated Social Forestry (ISF)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_9}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_10,
+                                label: "Table 10. Forest land Grazing Lease Agreement (FLGLA)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_10}`)
+                            },
+                        ]
+                    },
                     
                     {
                         key : FormEnum.FORESTRY_24,

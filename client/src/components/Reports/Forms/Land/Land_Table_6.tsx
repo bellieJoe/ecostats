@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
-import { generateYearOptions } from "../../../../services/helper";
+import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 import CellDateEditor from "../../../CellDateEditor";
 import { ValueFormatterParams } from "ag-grid-community";
 
@@ -51,7 +51,7 @@ export const land_6_gen_form_fields : GenericFormFieldV3[] = [
     {
         name : "location.municipality",
         label : "Municipality", 
-        input : <Input type="text" />,
+        input : <Select showSearch virtual options={municipalityOptions}  />,
         type : "input"
     },
     {

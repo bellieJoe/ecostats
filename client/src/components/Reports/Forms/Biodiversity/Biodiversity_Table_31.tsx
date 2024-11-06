@@ -34,9 +34,10 @@ export const biodiversity_31_gen_form_fields : GenericFormFieldV3[] = [
         name : "province",
         label : "Province", 
         input : (
-            <Input type="text" />
+            <Input type="text" readOnly  />
         ),
-        type : "input"
+        type : "input",
+        initialValue : "Marinduque"
     },
     {
         name : "municipality",

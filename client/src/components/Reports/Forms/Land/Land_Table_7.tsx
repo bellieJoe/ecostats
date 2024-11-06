@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
 import { GenericFormField, GenericFormFieldV3 } from "../../../../types/forms/GenericFormTypes";
 import GenericFormDrawer from "../../../GenericFormV3";
-import { generateYearOptions } from "../../../../services/helper";
+import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 
 export const land_7_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -26,13 +26,18 @@ export const land_7_gen_form_fields : GenericFormFieldV3[] = [
     {
         name : "province",
         label : "Province", 
-        input : <Input type="text" />,
-        type : "input"
+        input : (
+            <Input type="text" readOnly  />
+        ),
+        type : "input",
+        initialValue : "Marinduque"
     },
     {
         name : "municipality",
         label : "Municipality", 
-        input : <Input type="text" />,
+        input : (
+            <Select showSearch virtual options={municipalityOptions}  />
+        ),
         type : "input"
     },
     {
