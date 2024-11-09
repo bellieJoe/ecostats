@@ -15,6 +15,8 @@ import biodiversityRoutes from "./routes/biodiversityRoutes.js"
 import requestedReportRoutes from "./routes/requestedReportRoutes.js"
 import budgetRoutes from "./routes/budgetRoutes.js"
 import focalPersonRoutes from "./routes/focalPersonRoutes.js"
+import sectorRoutes from "./routes/sectorRoutes.js"
+import reportConfigRoutes from "./routes/reportConfigRoutes.js"
 
 
 dotenv.config(); // Load environment variables from .env file
@@ -68,4 +70,6 @@ app.use("/forestry", forestryRoutes);
 app.use("/biodiversity", biodiversityRoutes);
 app.use("/budgets", budgetRoutes);
 app.use("/focal-persons", focalPersonRoutes);
+app.use("/sectors", sectorRoutes);
+app.use("/report-configs", reportConfigRoutes);
 

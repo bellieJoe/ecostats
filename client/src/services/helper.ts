@@ -8,6 +8,8 @@ export const generateYearOptions = (startYear, endYear) => {
   }).reverse(); // Reverse the array to have the latest year first
 };
 
+export const generateYearOptionsFixed = generateYearOptions(2010, new Date().getFullYear());
+
 export const municipalityOptions : any[] = [
   {
     label : "Boac",
