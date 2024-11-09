@@ -11,7 +11,7 @@ import GenericFormDrawer from "../../../GenericFormV3";
 import { generateYearOptions, municipalityOptions } from "../../../../services/helper";
 import cities from "philippines/cities.json"
 
-export const forestry_7_gen_form_fields : GenericFormFieldV3[] = [
+export const forestry_11_gen_form_fields : GenericFormFieldV3[] = [
     {
         name : "calendar_year",
         label : "Calendar Year", 
@@ -59,7 +59,7 @@ export const forestry_7_gen_form_fields : GenericFormFieldV3[] = [
     },
 ];
 
-export const forestry_7_col_defs  = [
+export const forestry_11_col_defs  = [
     { 
         headerName: "CY", 
         field: "calendar_year", 
@@ -95,7 +95,7 @@ export const forestry_7_col_defs  = [
     },
 ];
 
-const Forestry_Table_7  = () => {
+const Forestry_Table_11  = () => {
 
     const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
@@ -110,7 +110,7 @@ const Forestry_Table_7  = () => {
     
     // Column Definitions: Defines the columns to be displayed.
     const [colDefs, setColDefs] = useState<any>([
-        ...forestry_7_col_defs,
+        ...forestry_11_col_defs,
         {
             headerName: "Actions",
             pinned:"right",
@@ -125,7 +125,7 @@ const Forestry_Table_7  = () => {
     ]);
 
     const handleOnRowValueChanged = (d) => {
-        formUpdate(d.data, FormEnum.FORESTRY_7, Sector.FORESTRY)
+        formUpdate(d.data, FormEnum.FORESTRY_11, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully updated.");
         })
@@ -137,7 +137,7 @@ const Forestry_Table_7  = () => {
     }
 
     const handleDelete = (id) => {
-        formDelete(id, FormEnum.FORESTRY_7, Sector.FORESTRY)
+        formDelete(id, FormEnum.FORESTRY_11, Sector.FORESTRY)
         .then(res => {
             messageApi.success("Data successfully deleted.");
         })
@@ -158,7 +158,7 @@ const Forestry_Table_7  = () => {
 
     const handleSubmit = async (d) => {
         try {
-            await formCreate(d, FormEnum.FORESTRY_7, Sector.FORESTRY)
+            await formCreate(d, FormEnum.FORESTRY_11, Sector.FORESTRY)
             messageApi.success("Data successfully inserted.");
         } catch (err) {
             messageApi.error(parseResError(err).msg)
@@ -169,7 +169,7 @@ const Forestry_Table_7  = () => {
     
     useEffect(() => {
         setLoading(true)
-        formGet(FormEnum.FORESTRY_7, Sector.FORESTRY, limit, page)
+        formGet(FormEnum.FORESTRY_11, Sector.FORESTRY, limit, page)
         .then(res => {
             console.log(res.data)
             setTotal(res.data.total)
@@ -228,11 +228,11 @@ const Forestry_Table_7  = () => {
 
             <GenericFormDrawer
             visible={addRecord} 
-            fields={forestry_7_gen_form_fields} 
+            fields={forestry_11_gen_form_fields} 
             onClose={() => setAddRecord(false)} 
             onSubmit={handleSubmit} />
         </>
     )
 }
 
-export default Forestry_Table_7;
+export default Forestry_Table_11;

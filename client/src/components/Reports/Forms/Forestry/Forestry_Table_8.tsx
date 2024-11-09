@@ -45,7 +45,7 @@ export const forestry_8_gen_form_fields : GenericFormFieldV3[] = [
         name : "area",
         label : "Area (in ha)", 
         input : (
-            <Input type="text"  />
+            <Input type="number"  />
         ),
         type : "input"
     },

@@ -29,6 +29,12 @@ import { biodiversity_7_col_defs } from "../../components/Reports/Forms/Biodiver
 import { biodiversity_8_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_8";
 import { biodiversity_9_col_defs } from "../../components/Reports/Forms/Biodiversity/Biodiversity_Table_9";
 import { forestry_1_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_1";
+import { forestry_10_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_10";
+import { forestry_11_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_11";
+import { forestry_12_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_12";
+import { forestry_13_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_13";
+import { forestry_15_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_15";
+import { forestry_16_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_16";
 import { forestry_2_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_2";
 import { forestry_24_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_24";
 import { forestry_3_col_defs } from "../../components/Reports/Forms/Forestry/Forestry_Table_3";
@@ -65,6 +71,18 @@ export enum FormEnum {
     FORESTRY_8="forestry_8",
     FORESTRY_9="forestry_9",
     FORESTRY_10="forestry_10",
+    FORESTRY_11="forestry_11",
+    FORESTRY_12="forestry_12",
+    FORESTRY_13="forestry_13",
+    FORESTRY_14="forestry_14",
+    FORESTRY_15="forestry_15",
+    FORESTRY_16="forestry_16",
+    FORESTRY_17="forestry_17",
+    FORESTRY_18="forestry_18",
+    FORESTRY_19="forestry_19",
+    FORESTRY_20="forestry_20",
+    
+
     FORESTRY_24="forestry_24",
 
     BIODIVERSITY_2="biodiversity_2",
@@ -128,7 +146,12 @@ export const ColDefsMap = {
     [FormEnum.FORESTRY_7] : forestry_7_col_defs,
     [FormEnum.FORESTRY_8] : forestry_8_col_defs,
     [FormEnum.FORESTRY_9] : forestry_9_col_defs,
-    // [FormEnum.FORESTRY_10] : forestry_10_col_defs,
+    [FormEnum.FORESTRY_10] : forestry_10_col_defs,
+    [FormEnum.FORESTRY_11] : forestry_11_col_defs,
+    [FormEnum.FORESTRY_12] : forestry_12_col_defs,
+    [FormEnum.FORESTRY_13] : forestry_13_col_defs,
+    [FormEnum.FORESTRY_14] : forestry_15_col_defs,
+    [FormEnum.FORESTRY_15] : forestry_16_col_defs,
     [FormEnum.FORESTRY_24] : forestry_24_col_defs,
 
     [FormEnum.BIODIVERSITY_2] : biodiversity_2_col_defs,
@@ -182,6 +205,11 @@ export const FormNameMap = {
     [FormEnum.FORESTRY_8] : Sector.FORESTRY,
     [FormEnum.FORESTRY_9] : Sector.FORESTRY,
     [FormEnum.FORESTRY_10] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_11] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_12] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_13] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_14] : Sector.FORESTRY,
+    [FormEnum.FORESTRY_15] : Sector.FORESTRY,
     [FormEnum.FORESTRY_24] : Sector.FORESTRY,
 
     [FormEnum.BIODIVERSITY_2] : Sector.BIODIVERSITY,
@@ -242,20 +270,20 @@ export const reportTitles = {
     [FormEnum.FORESTRY_8]: "Table 8. Existing Agroforestry Land Management Agreement",
     [FormEnum.FORESTRY_9]: "Table 9. Existing Integrated Social Forestry (ISF)",
     [FormEnum.FORESTRY_10]: "Table 10. Existing Forest Land Grazing Lease Agreement (FLGLA)",
-    // [FormEnum.FORESTRY_11]: "Table 11. Existing Forest Land Grazing Management Agreement (FLGMA)",
-    // [FormEnum.FORESTRY_12]: "Table 12. Existing Forest Land Management Agreement (FLMA)",
-    // [FormEnum.FORESTRY_13]: "Table 13. Existing Forest Land Use Agreement (FLAg)",
-    // [FormEnum.FORESTRY_14]: "Table 14. Existing Forest Land Use Agreement for Tourism Purposes (FLAgT)",
-    // [FormEnum.FORESTRY_15]: "Table 15. Existing Integrated Forest Management Agreement (IFMA)",
-    // [FormEnum.FORESTRY_16]: "Table 16. Existing Industrial Tree Plantation Lease Agreement (ITPLA)",
-    // [FormEnum.FORESTRY_17]: "Table 17. Gratuitous Permit for the Special Uses of Forest Lands (GSUP)",
-    // [FormEnum.FORESTRY_18]: "Table 18. Existing Socialized Industrial Forest Management Agreement (SIFMA)",
+    [FormEnum.FORESTRY_11]: "Table 11. Existing Forest Land Grazing Management Agreement (FLGMA)",
+    [FormEnum.FORESTRY_12]: "Table 12. Existing Forest Land Management Agreement (FLMA)",
+    [FormEnum.FORESTRY_13]: "Table 13. Existing Forest Land Use Agreement (FLAg)",
+    [FormEnum.FORESTRY_14]: "Table 14. Existing Forest Land Use Agreement for Tourism Purposes (FLAgT)",
+    [FormEnum.FORESTRY_15]: "Table 15. Existing Integrated Forest Management Agreement (IFMA)",
+    [FormEnum.FORESTRY_16]: "Table 16. Existing Industrial Tree Plantation Lease Agreement (ITPLA)",
+    [FormEnum.FORESTRY_17]: "Table 17. Gratuitous Permit for the Special Uses of Forest Lands (GSUP)",
+    [FormEnum.FORESTRY_18]: "Table 18. Existing Socialized Industrial Forest Management Agreement (SIFMA)",
     // [FormEnum.FORESTRY_19]: "Table 19. Existing Special Land Use Permit (SLUP)",
     // [FormEnum.FORESTRY_20]: "Table 20. Existing Private Forest Development Agreement",
     // [FormEnum.FORESTRY_21]: "Table 21. Existing Tree Farm Lease Agreement",
     // [FormEnum.FORESTRY_22]: "Table 22. Registered Lumber Dealers",
     // [FormEnum.FORESTRY_23]: "Table 23. Certificate of Registration as Importer/Dealer of Imported Wood Products: (Year)",
-    // [FormEnum.FORESTRY_24]: "Table 24. Issued Chainsaw Registration",
+    [FormEnum.FORESTRY_24]: "Table 24. Issued Chainsaw Registration",
     // [FormEnum.FORESTRY_25]: "Table 25. Registered Wood Processing Plants",
     // [FormEnum.FORESTRY_26]: "Table 26. Forest Land Use Plan (FLUP) of LGUs",
     // [FormEnum.FORESTRY_27]: "Table 27. Summary of DENR NGP Accomplishment",

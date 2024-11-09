@@ -260,6 +260,62 @@ const ReportsSidebar = ({open}) => {
                                 style: menuStyle2,
                                 onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_10}`)
                             },
+                            {
+                                key: FormEnum.FORESTRY_11,
+                                label: "Table 11. Existing Forest Land Grazing Management Agreement (FLGMA)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_11}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_12,
+                                label: "Table 12. Existing Forest Land Management Agreement (FLMA)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_12}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_13,
+                                label: "Table 13. Existing Forest Land Protection Agreement (FLPA)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_13}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_14,
+                                label: "Table 14. Existing Forest Land Use Agreement for Tourism Purposes (FLAgT)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_14}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_15,
+                                label: "Table 15. Existing Integrated Forest Management Agreement (IFMA)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_15}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_16,
+                                label: "Table 16. Industrial Tree Plantation Lease Agreement (ITPLA)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_16}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_17,
+                                label: "Table 17. Gratuitous Permit for the Special Uses of Forest Lands (GSUP)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_17}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_18,
+                                label: "Table 18. Socialized Industrial Forest Management Agreement (SIFMA)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_18}`)
+                            },
+                            {
+                                key: FormEnum.FORESTRY_19,
+                                label: "Table 19. Special Land Use Permit (SLUP)",
+                                style: menuStyle2,
+                                onClick: () => navigate(`/reports/${Sector.FORESTRY}/${FormEnum.FORESTRY_19}`)
+                            }
+                            
+                            
                         ]
                     },
                     

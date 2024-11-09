@@ -57,6 +57,7 @@ const RequestReportForm = ({ formName,  fields, isCustom, title, btnLabel } : Re
             { contextHandler }
             <Button onClick={() => setOpen(true)}>{btnLabel}</Button>
             <CustomReportGenerator 
+            formName={formName}
             title={title}
             visible={open} 
             fields={fields} 

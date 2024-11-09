@@ -1,6 +1,15 @@
-import { Drawer, Form, Button, Divider, Typography, Checkbox, Row, Col, Input } from 'antd';
+import { Drawer, Form, Button, Divider, Typography, Checkbox, Row, Col, Input, Tooltip, Flex, Collapse, Select, Card } from 'antd';
 import { GenericFormFieldV3 } from '../../types/forms/GenericFormTypes';
 import TextArea from 'antd/es/input/TextArea';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import { FormFieldsBySector } from '../../types/forms/formFields';
+import Title from 'antd/es/typography/Title';
+import { FormEnum, reportTitles } from '../../types/forms/formNameEnum';
+import { add, div } from '@tensorflow/tfjs';
+import { useForm } from 'antd/es/form/Form';
+import _ from 'lodash';
 
 /**
  * CustomReportGenerator component.
@@ -20,15 +29,23 @@ const CustomReportGenerator: React.FC<{
   onClose: () => void;
   onSubmit: (reportTitle: string, description : string, filters: Record<string, any>, fieldSelections: { name: string; included: boolean }[]) => Promise<void>;
   isCustom : boolean
-  title : string
-}> = ({ visible, fields, onClose, onSubmit, isCustom, title  }) => {
+  title : string,
+  formName : FormEnum
+}> = ({ visible, fields, onClose, onSubmit, isCustom, title, formName  }) => {
   
   const [form] = Form.useForm();
   const [selectionForm] = Form.useForm();
+  const [additionalFieldForm] = Form.useForm();
+  const [drawer2, setDrawer2] = useState(false);
+  const [selectedTables, setSelectedTables] = useState<any>([]);
 
   // Custom validation function for field selections
-  const validateSelection = (_, value) => {
-    const atLeastOneChecked = Object.values(value).some((checked) => checked);
+  const validateSelection = (_, value, fields) => {
+    const o = selectionForm.getFieldsValue(true, (meta) => {
+      return fields.includes(meta.name[0]);
+    });
+
+    const atLeastOneChecked = Object.values(o).some((val) => !!val);
     if (!atLeastOneChecked) {
       return Promise.reject(new Error('At least one field must be selected.'));
     }
@@ -44,6 +61,15 @@ const CustomReportGenerator: React.FC<{
 
       const filterValues = form.getFieldsValue();
       const selectionValues = selectionForm.getFieldsValue();
+
+      if(isCustom) {  
+        const additionalFields = {};
+        const additionalFieldValue = additionalFieldForm.getFieldsValue();
+        Object.entries(additionalFieldValue).filter(([key, value]) => value !== "on").forEach(([key, value]) => {
+          _.set(additionalFields, key, !!value);
+        });
+        console.log(additionalFields)
+      }
       
       // Extract report title and description separately
       const reportTitle = isCustom && filterValues.reportTitle;
@@ -77,11 +103,111 @@ const CustomReportGenerator: React.FC<{
     }
   };
 
+  const onCloseAdditionalFields = async () => {
+    console.log(additionalFieldForm.getFieldsValue())
+    await additionalFieldForm.validateFields()
+    setDrawer2(false);
+  }
+
+  const renderOtherFields = () => {
+
+    const [selectTableForm] = Form.useForm();
+
+    const handleTableSelection = (values: { table: string }) => {
+      if(selectedTables.includes(values.table)){
+        selectTableForm.resetFields();
+        return
+      } 
+      setSelectedTables([...selectedTables, values.table]);
+      selectTableForm.resetFields();
+    };
+
+    const handleRemoveTable = (table) => {
+      setSelectedTables(selectedTables.filter((t) => t !== table));
+    }
+
+    return (
+      <div>
+        <Card className='mb-4'>
+          <Form form={selectTableForm} onFinish={handleTableSelection}>
+            <Title level={5}>Select Table</Title>
+            <Flex gap={4}>
+              <Form.Item name="table" className='w-full' rules={[{ required: true, message: 'Please select a table' }]}>
+                <Select
+                  showSearch
+                  className='w-full'
+                  optionFilterProp="label"
+                  placeholder="Select a table"
+                  options={
+                  Object.entries(FormFieldsBySector).map(([sectorKey, value]) => {
+                    return {  
+                      label: sectorKey.charAt(0).toUpperCase() + sectorKey.slice(1),
+                      title : sectorKey,
+                      options : Object.entries(value).filter(([formKey, value]) => formKey !== formName).map(([formKey, value]) => {
+                        return {
+                          label : reportTitles[formKey],
+                          value : `${sectorKey}.${formKey}`
+                        }
+                      })
+                    };
+                  })
+                  } />
+              </Form.Item>
+              <Form.Item>
+                <Button htmlType='submit' color='primary' variant='filled'>Add</Button>
+              </Form.Item>
+            </Flex>
+          </Form>
+        </Card>
+        <Form form={additionalFieldForm}>
+          {
+            selectedTables.map((table : any) => {
+              const [sector, form] = table.split('.');
+              return (
+                <div key={table}>
+                  <Title level={5}>
+                    <Button onClick={() => handleRemoveTable(table)} size='small' className='me-3' color='danger' variant='outlined'  >Remove</Button>
+                    {reportTitles[form]}
+                  </Title>
+                  <Form.Item
+                    name={form}
+                    rules={[{ validator: (_, value) => {
+                      console.log(FormFieldsBySector[sector][form].filter(e => e.type != 'title' && e.type != 'divider').map(({ name, label }) => name))
+                      const o = additionalFieldForm.getFieldsValue(true, (meta) => {
+                        return FormFieldsBySector[sector][form].filter(e => e.type != 'title' && e.type != 'divider').map(({ name, label }) => `${form}.${name}`).includes(meta.name[0]);
+                      });
+
+                      const atLeastOneChecked = Object.values(o).some((val) => !!val);
+                      if (!atLeastOneChecked) {
+                        return Promise.reject(new Error('At least one field must be selected.'));
+                      }
+                      return Promise.resolve();
+                    } }]} // Custom validation rule
+                  >
+                    <Row>
+                      {FormFieldsBySector[sector][form].filter(e => e.type != 'title' && e.type != 'divider').map(({ name, label }) => (
+                        <Col span={24} key={name}>
+                          <Form.Item name={`${form}.${name}`} valuePropName="checked" noStyle>
+                            <Checkbox>{label}</Checkbox>
+                          </Form.Item>
+                        </Col>
+                      ))}
+                    </Row>
+                  </Form.Item>
+                </div>
+              );
+            })
+          }
+        </Form>
+      </div>
+    )
+  };
+
 
   return (
     <Drawer
       title={title}
-      width={400}
+      size='large'
       onClose={onClose}
       open={visible}
       footer={
@@ -154,10 +280,16 @@ const CustomReportGenerator: React.FC<{
 
       {isCustom && (
         <Form form={selectionForm} layout="vertical">
-          <Typography.Title level={4}>Select Fields to Display</Typography.Title>
+          <Typography.Title level={4}>
+            Select Fields to Display 
+            {/* <Tooltip title="Add more fields from other tables">
+              <Button className='ms-3' size='small' variant='outlined' color='primary' onClick={() => setDrawer2(true)} icon={<FontAwesomeIcon icon={faPlus} />}></Button>
+            </Tooltip> */}
+          </Typography.Title>
           <Form.Item
             name="selection"
-            rules={[{ validator: validateSelection }]} // Custom validation rule
+            required
+            rules={[{ validator: (_, value) => validateSelection(_, value, fields.filter(e => e.type != 'title' && e.type != 'divider').map(({ name }) => name)) }]} // Custom validation rule
           >
             <Row>
               {fields.filter(e => e.type != 'title' && e.type != 'divider').map(({ name, label }) => (
@@ -171,6 +303,24 @@ const CustomReportGenerator: React.FC<{
           </Form.Item>
         </Form>
       )}
+
+      {/* <Drawer 
+      footer = {
+        <Flex justify='end' gap={4}>
+          <Button color='primary' variant='filled' onClick={() => {
+            setSelectedTables([])
+            additionalFieldForm.resetFields()
+            setDrawer2(false)
+            }}>Cancel</Button>
+          <Button color='primary' variant='solid' onClick={onCloseAdditionalFields}>Done</Button>
+        </Flex>
+      }
+      closable={false}
+      size='large'
+      open={drawer2}
+      title="Add more fields">
+        {renderOtherFields()}
+      </Drawer> */}
     </Drawer>
   );
 };

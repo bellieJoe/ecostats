@@ -15,8 +15,6 @@ const RouteGuard = (props : Props) => {
 
     const [isIdle, setIsIdle] = useState(false);
 
-    const location = useLocation();
-
     useEffect(() => {
         const interval = setInterval(() => {
             if(!isIdle){

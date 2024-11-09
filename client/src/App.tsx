@@ -128,6 +128,24 @@ import Forestry_9 from './pages/Reports/DataEntry/Forestry/Forestry_9'
 import Forestry_9_Dashboard from './pages/Dashboard/Forestry/Forestry_9_dashboard'
 import Forestry_10 from './pages/Reports/DataEntry/Forestry/Forestry_10'
 import Forestry_10_Dashboard from './pages/Dashboard/Forestry/Forestry_10_dashboard'
+import Forestry_11 from './pages/Reports/DataEntry/Forestry/Forestry_11'
+import Forestry_11_Dashboard from './pages/Dashboard/Forestry/Forestry_11_dashboard'
+import Forestry_12 from './pages/Reports/DataEntry/Forestry/Forestry_12'
+import Forestry_12_Dashboard from './pages/Dashboard/Forestry/Forestry_12_dashboard'
+import Forestry_13 from './pages/Reports/DataEntry/Forestry/Forestry_13'
+import Forestry_13_Dashboard from './pages/Dashboard/Forestry/Forestry_13_dashboard'
+import Forestry_15 from './pages/Reports/DataEntry/Forestry/Forestry_15'
+import Forestry_15_Dashboard from './pages/Dashboard/Forestry/Forestry_15_dashboard'
+import Forestry_16 from './pages/Reports/DataEntry/Forestry/Forestry_16'
+import Forestry_16_Dashboard from './pages/Dashboard/Forestry/Forestry_16_dashboard'
+import Forestry_17 from './pages/Reports/DataEntry/Forestry/Forestry_17'
+import Forestry_18 from './pages/Reports/DataEntry/Forestry/Forestry_18'
+import Forestry_17_Dashboard from './pages/Dashboard/Forestry/Forestry_17_dashboard'
+import Forestry_18_Dashboard from './pages/Dashboard/Forestry/Forestry_18_dashboard'
+import Forestry_14 from './pages/Reports/DataEntry/Forestry/Forestry_14'
+import Forestry_14_Dashboard from './pages/Dashboard/Forestry/Forestry_14_dashboard'
+import Forestry_19 from './pages/Reports/DataEntry/Forestry/Forestry_19'
+import Forestry_19_Dashboard from './pages/Dashboard/Forestry/Forestry_19_dashboard'
 
 axios.defaults.withCredentials = true;
 
@@ -217,10 +235,18 @@ function App() {
                   <Route path='forestry_8' element={<Forestry_8_Dashboard />} />
                   <Route path='forestry_9' element={<Forestry_9_Dashboard />} />
                   <Route path='forestry_10' element={<Forestry_10_Dashboard />} />
+                  <Route path='forestry_11' element={<Forestry_11_Dashboard />} />
+                  <Route path='forestry_12' element={<Forestry_12_Dashboard />} />    
+                  <Route path='forestry_13' element={<Forestry_13_Dashboard />} />
+                  <Route path='forestry_14' element={<Forestry_14_Dashboard />} />
+                  <Route path='forestry_15' element={<Forestry_15_Dashboard />} />
+                  <Route path='forestry_16' element={<Forestry_16_Dashboard />} />
+                  <Route path='forestry_17' element={<Forestry_17_Dashboard />} /> 
+                  <Route path='forestry_18' element={<Forestry_18_Dashboard />} />
+                  <Route path='forestry_19' element={<Forestry_19_Dashboard />} />
 
 
                   <Route path='forestry_24' element={<Forestry_24_Dashboard />} />
-
 
                   <Route path='biodiversity_2' element={<Biodiversity_2_Dashboard />} />
                   <Route path='biodiversity_3' element={<Biodiversity_3_Dashboard />} />
@@ -280,6 +306,15 @@ function App() {
                       <Route path={FormEnum.FORESTRY_8} element={<Forestry_8 />} />
                       <Route path={FormEnum.FORESTRY_9} element={<Forestry_9 />} />
                       <Route path={FormEnum.FORESTRY_10} element={<Forestry_10 />} />
+                      <Route path={FormEnum.FORESTRY_11} element={<Forestry_11 />} />
+                      <Route path={FormEnum.FORESTRY_12} element={<Forestry_12 />} />
+                      <Route path={FormEnum.FORESTRY_13} element={<Forestry_13 />} />
+                      <Route path={FormEnum.FORESTRY_14} element={<Forestry_14 />} />
+                      <Route path={FormEnum.FORESTRY_15} element={<Forestry_15 />} />
+                      <Route path={FormEnum.FORESTRY_16} element={<Forestry_16 />} />
+                      <Route path={FormEnum.FORESTRY_17} element={<Forestry_17 />} />
+                      <Route path={FormEnum.FORESTRY_18} element={<Forestry_18 />} />
+                      <Route path={FormEnum.FORESTRY_19} element={<Forestry_19 />} />
 
                       
                       <Route path={FormEnum.FORESTRY_24} element={<Forestry_24 />} />
