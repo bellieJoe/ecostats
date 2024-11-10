@@ -2670,9 +2670,9 @@
 										"$ref": "AAAAAAGTD2mGaYqm2Qg="
 									},
 									"font": "Arial;13;1",
-									"left": 256,
-									"top": 61,
-									"width": 376,
+									"left": 232,
+									"top": 53,
+									"width": 296,
 									"height": 13,
 									"text": "sectors"
 								},
@@ -2696,9 +2696,9 @@
 												"$ref": "AAAAAAGTD2n6JIq0R9A="
 											},
 											"font": "Arial;13;0",
-											"left": 261,
-											"top": 84,
-											"width": 366,
+											"left": 237,
+											"top": 76,
+											"width": 286,
 											"height": 13
 										},
 										{
@@ -2711,9 +2711,9 @@
 												"$ref": "AAAAAAGTD2of24q741Y="
 											},
 											"font": "Arial;13;0",
-											"left": 261,
-											"top": 99,
-											"width": 366,
+											"left": 237,
+											"top": 91,
+											"width": 286,
 											"height": 13
 										},
 										{
@@ -2726,23 +2726,23 @@
 												"$ref": "AAAAAAGTD2oylIrCGgg="
 											},
 											"font": "Arial;13;0",
-											"left": 261,
-											"top": 114,
-											"width": 366,
+											"left": 237,
+											"top": 106,
+											"width": 286,
 											"height": 13
 										}
 									],
 									"font": "Arial;13;0",
-									"left": 256,
-									"top": 79,
-									"width": 376,
+									"left": 232,
+									"top": 71,
+									"width": 296,
 									"height": 53
 								}
 							],
 							"font": "Arial;13;0",
-							"left": 256,
-							"top": 56,
-							"width": 376,
+							"left": 232,
+							"top": 48,
+							"width": 296,
 							"height": 80,
 							"nameLabel": {
 								"$ref": "AAAAAAGTD2mGaYqnMIk="
@@ -2767,7 +2767,7 @@
 							"_parent": {
 								"$ref": "AAAAAAGTDynEeon5PWc="
 							},
-							"name": "calendar_year",
+							"name": "sector",
 							"length": 0
 						},
 						{

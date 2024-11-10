@@ -19,7 +19,7 @@ router.get("/by-query", async (req, res) => {
         const query = JSON.parse(req.query.query);
         const populate = JSON.parse(req.query.populate);
 
-        const m = await SectorModel.find(query).populate(populate)
+        const m = await ReportConfigModel.find(query).populate(populate)
 
         return res.json(m)
 

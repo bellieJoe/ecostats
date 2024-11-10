@@ -7,25 +7,59 @@ const FieldSchema = new mongoose.Schema({
     },
     identifier: {
         type: String,
-        required: true,
-        unique: true
+        required: function() {
+            return !this.is_nested;
+        },
+        validate: {
+            validator: function(value) {
+                // Make sure `identifier` is not null or empty
+                if (this.is_nested === false) {
+                    return value !== null && value.trim() !== '';
+                }
+                return true; // No validation if nested
+            },
+            message: 'Identifier cannot be null or empty if not nested'
+        }
     },
-    inputType: {
+    input_type: {
         type: String,
         enum: ['text', 'number', 'date', 'enum'], 
-        required: true
+        required : function() {
+            return !this.is_nested;
+        },
+    },
+    is_nested : {
+        type : Boolean,
+        default : false,
+        required : true
     },
     values : {
         type : [String],
         required : function() {
-            return this.inputType === 'enum';
+            return this.input_type === 'enum';
         }
+    },
+    editable : {
+        type : Boolean,
+        default : false,
+        required : true
+    },
+    default : {
+        type : String,
+        required : function() {
+            return !this.is_nested && !this.editable;
+        },
     },
     children : {
         type : [this],
+        required : function() {
+            return this.is_nested;
+        },
         default : []
     }
 }, { timestamps: true });
+
+FieldSchema.index({ identifier: 1, is_nested: 1 }, { unique: true, partialFilterExpression: { is_nested: false } });
 
 
 const ReportConfigSchema = new mongoose.Schema({

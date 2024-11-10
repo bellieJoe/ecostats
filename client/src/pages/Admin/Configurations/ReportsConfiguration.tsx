@@ -1,4 +1,4 @@
-import { Button, List, message, Select, Space } from "antd";
+import { Button, Flex, List, message, Select, Space } from "antd";
 import Title from "antd/es/typography/Title";
 import { generateYearOptionsFixed } from "../../../services/helper";
 import { useEffect, useState } from "react";
@@ -7,6 +7,8 @@ import { parseResError } from "../../../services/errorHandler";
 import { AddOutlined } from "@mui/icons-material";
 import AddReportDrawer from "../../../components/Admin/Configurations/AddReportDrawer";
 import { useAddReportConfigStore } from "../../../stores/useReportConfigStore";
+import { report } from "process";
+import { reportConfigGetByQuery } from "../../../services/api/reportConfigApi";
 
 
 
@@ -38,6 +40,43 @@ const ReportConfiguration =  () =>  {
         AddReportConfigStore.setSector(sector); 
     }
 
+    const RenderConfigs = ({sectorId} : {sectorId : string}) => {
+        const [configs, setConfigs] = useState<any[]>([]);
+
+        const fetchConfigs = async () => {
+            try {
+                const _configs = (await reportConfigGetByQuery({sector : sectorId}, [])).data;
+                setConfigs(_configs);
+            } catch (error) {
+                message.error(parseResError(error).msg);
+            }
+        }
+        useEffect(() => {
+            fetchConfigs();
+        }, [sectorId]);
+
+        return (
+            <List dataSource={configs} 
+            className="mt-4"
+            bordered
+            renderItem={(config) => (
+                <List.Item>
+                    <Flex className="w-full" justify="space-between">
+                        <Flex vertical>
+                            <p><span className="font-semibold">Name :</span> {config.name}</p>
+                            <p><span className="font-semibold">Identifier :</span> {config.identifier}</p>
+                        </Flex>
+                        <Flex gap={4}>
+                            <Button size="small" variant="solid" color="danger">Delete</Button>
+                            <Button size="small" >Update</Button>
+                            <Button size="small" >Fields</Button>
+                        </Flex>
+                    </Flex>
+                </List.Item>
+            )} />
+        )
+    }
+
     useEffect(() => {
         init();
     }, [refresh, year]);
@@ -50,9 +89,8 @@ const ReportConfiguration =  () =>  {
                     <Space>
                         <Button type="primary" icon={<AddOutlined />} onClick={() => openAddForm(sector)}>Add Report</Button>
                     </Space>
-                    <List>
 
-                    </List>
+                    <RenderConfigs sectorId={sector._id} />
                 </div>
             )
         });
