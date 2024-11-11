@@ -13,12 +13,22 @@ const SectorSchema = new mongoose.Schema({
         type : String,
         required : true
     },
-}, { timestamps: true });
+}, { 
+    timestamps: true,
+    virtuals : true,
+    toJSON : { virtuals : true }
+});
 
 SectorSchema.index(
     { calendar_year: 1, identifier : 1 },   
     { unique: true }
 );
+
+SectorSchema.virtual("configs", {
+    ref : "report_configs",
+    localField : "_id",
+    foreignField : "sector"
+})
 
 const SectorModel = mongoose.model('sectors', SectorSchema);
 

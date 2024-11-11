@@ -148,6 +148,7 @@ import Forestry_19 from './pages/Reports/DataEntry/Forestry/Forestry_19'
 import Forestry_19_Dashboard from './pages/Dashboard/Forestry/Forestry_19_dashboard'
 import Sectors from './pages/Admin/Configurations/Sector'
 import ReportsConfiguration from './pages/Admin/Configurations/ReportsConfiguration'
+import Report from './pages/Reports/DataEntry/Report'
 
 axios.defaults.withCredentials = true;
 
@@ -289,6 +290,9 @@ function App() {
                 <Route path='reports' element={<Reports />}>
                     <Route path='to-approve' element={<ToApprove />} />
                     <Route path='to-review' element={<ToReview />} />
+
+                    <Route path='report/:_id' element={<Report />} />
+
                     <Route path={Sector.LAND} >
                       <Route path='toc' element={<LandTOC />} />
                       <Route path='land_1' element={<Land_1 />} />

@@ -7,19 +7,8 @@ const FieldSchema = new mongoose.Schema({
     },
     identifier: {
         type: String,
-        required: function() {
-            return !this.is_nested;
-        },
-        validate: {
-            validator: function(value) {
-                // Make sure `identifier` is not null or empty
-                if (this.is_nested === false) {
-                    return value !== null && value.trim() !== '';
-                }
-                return true; // No validation if nested
-            },
-            message: 'Identifier cannot be null or empty if not nested'
-        }
+        required: true,
+        unique: true
     },
     input_type: {
         type: String,
@@ -59,8 +48,6 @@ const FieldSchema = new mongoose.Schema({
     }
 }, { timestamps: true });
 
-FieldSchema.index({ identifier: 1, is_nested: 1 }, { unique: true, partialFilterExpression: { is_nested: false } });
-
 
 const ReportConfigSchema = new mongoose.Schema({
     identifier: {
@@ -80,12 +67,17 @@ const ReportConfigSchema = new mongoose.Schema({
         type: [FieldSchema], 
         required: true
     }
-}, { timestamps: true });
+}, { 
+    timestamps: true,
+    virtuals : true,
+    toJSON : { virtuals : true }
+});
 
 ReportConfigSchema.index(
     { identifier : 1, sector : 1 },   
     { unique: true }
 );
+
 
 const ReportConfigModel = mongoose.model('report_configs', ReportConfigSchema);
 

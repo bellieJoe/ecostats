@@ -4,13 +4,51 @@ import { generateYearOptionsFixed } from "../../../services/helper";
 import { useEffect, useState } from "react";
 import { sectorGetByQuery } from "../../../services/api/sectorApi";
 import { parseResError } from "../../../services/errorHandler";
-import { AddOutlined } from "@mui/icons-material";
+import { AddOutlined, Update } from "@mui/icons-material";
 import AddReportDrawer from "../../../components/Admin/Configurations/AddReportDrawer";
-import { useAddReportConfigStore } from "../../../stores/useReportConfigStore";
+import { useAddReportConfigStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore";
 import { report } from "process";
 import { reportConfigGetByQuery } from "../../../services/api/reportConfigApi";
+import UpdateReportDrawer from "../../../components/Admin/Configurations/UpdateReportDrawer";
 
+const RenderConfigs = ({sectorId} : {sectorId : string}) => {
+    const [configs, setConfigs] = useState<any[]>([]);
+    const { setReportData } = useUpdateReportConfigStore();
 
+    const fetchConfigs = async () => {
+        try {
+            const _configs = (await reportConfigGetByQuery({sector : sectorId}, ["sector"])).data;
+            setConfigs(_configs);
+            console.log(_configs)
+        } catch (error) {
+            message.error(parseResError(error).msg);
+        }
+    }
+    useEffect(() => {
+        fetchConfigs();
+    }, [sectorId]);
+
+    return (
+        <List dataSource={configs} 
+        className="mt-4"
+        bordered
+        renderItem={(config) => (
+            <List.Item>
+                <Flex className="w-full" justify="space-between">
+                    <Flex vertical>
+                        <p><span className="font-semibold">Name :</span> {config.name}</p>
+                        <p><span className="font-semibold">Identifier :</span> {config.identifier}</p>
+                    </Flex>
+                    <Flex gap={4}>
+                        <Button size="small" variant="solid" color="danger">Delete</Button>
+                        <Button size="small" >Update</Button>
+                        <Button size="small" >Fields</Button>
+                    </Flex>
+                </Flex>
+            </List.Item>
+        )} />
+    )
+}
 
 
 const ReportConfiguration =  () =>  {
@@ -40,43 +78,7 @@ const ReportConfiguration =  () =>  {
         AddReportConfigStore.setSector(sector); 
     }
 
-    const RenderConfigs = ({sectorId} : {sectorId : string}) => {
-        const [configs, setConfigs] = useState<any[]>([]);
-
-        const fetchConfigs = async () => {
-            try {
-                const _configs = (await reportConfigGetByQuery({sector : sectorId}, [])).data;
-                setConfigs(_configs);
-            } catch (error) {
-                message.error(parseResError(error).msg);
-            }
-        }
-        useEffect(() => {
-            fetchConfigs();
-        }, [sectorId]);
-
-        return (
-            <List dataSource={configs} 
-            className="mt-4"
-            bordered
-            renderItem={(config) => (
-                <List.Item>
-                    <Flex className="w-full" justify="space-between">
-                        <Flex vertical>
-                            <p><span className="font-semibold">Name :</span> {config.name}</p>
-                            <p><span className="font-semibold">Identifier :</span> {config.identifier}</p>
-                        </Flex>
-                        <Flex gap={4}>
-                            <Button size="small" variant="solid" color="danger">Delete</Button>
-                            <Button size="small" >Update</Button>
-                            <Button size="small" >Fields</Button>
-                        </Flex>
-                    </Flex>
-                </List.Item>
-            )} />
-        )
-    }
-
+    
     useEffect(() => {
         init();
     }, [refresh, year]);
@@ -110,7 +112,7 @@ const ReportConfiguration =  () =>  {
             { renderSectors() }
 
             <AddReportDrawer   />
-
+            {/* <UpdateReportDrawer onClose={() => setRefresh(!refresh)} /> */}
         </div>
     );
 }

@@ -39,6 +39,7 @@ export const sectorGet = async ( limit : number, page : number) : Promise<any> =
 }
 
 export const sectorGetByQuery = async ( query : any, populate : any) : Promise<any> => {
+    console.log(JSON.stringify(populate))
     const res = await axios.get(`${apiUrl}/sectors/by-query`, {
         params : {
             query : JSON.stringify(query), 

@@ -1,10 +1,43 @@
-
 import { Button, Checkbox, Collapse, Drawer, Flex, Form, FormInstance, Input, message, Select, Space, Typography } from "antd";
-import { useAddReportConfigStore } from "../../../stores/useReportConfigStore";
-import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
-import { reportConfigCreate } from "../../../services/api/reportConfigApi";
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { useAddReportConfigStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore";
+import { reportConfigUpdate } from "../../../services/api/reportConfigApi"; // Assume you have an update API endpoint
 import { parseResError } from "../../../services/errorHandler";
+
+
+const cleanFormValues = (formValues) => {
+    const cleanedFields = formValues.fields.map((field) => {
+        const cleanedField = { ...field };
+    
+        // Ensure that input_type is required only when not nested
+        if (cleanedField.is_nested === false && !cleanedField.input_type) {
+            delete cleanedField.input_type;
+        }
+    
+        // Ensure that values is only set for 'enum' input_type
+        if (cleanedField.input_type !== 'enum') {
+            delete cleanedField.values;
+        }
+    
+        // Default should be required only when input_type is not 'enum' and it's not editable
+        if (cleanedField.input_type !== 'enum' && !cleanedField.editable && !cleanedField.default) {
+            delete cleanedField.default;
+        }
+    
+        // Clean children for nested fields
+        if (cleanedField.is_nested) {
+            // Recursively clean children if the field is nested
+            cleanedField.children = cleanedField.children?.map(child => cleanFormValues({ fields: [child] }).fields[0]);
+        } else {
+            delete cleanedField.children;
+        }
+    
+        return cleanedField;
+    });
+  
+    return { ...formValues, fields: cleanedFields };
+  };
 
 const IsNestedComponent = ({fieldName, form}) => {
     const [isNested, setIsNested] = useState(false);
@@ -29,7 +62,7 @@ const IsNestedComponent = ({fieldName, form}) => {
     return (
         <>
             <Form.Item
-                preserve={false}
+                // preserve={false}
                 label="Identifier"
                 name={[fieldName, 'identifier']}
                 rules={[{ required: true, message: 'Please enter an identifier' }]}
@@ -38,7 +71,7 @@ const IsNestedComponent = ({fieldName, form}) => {
             </Form.Item>
 
             <Form.Item
-                preserve={false}
+                // preserve={false}
                 name={[fieldName, 'is_nested']}
                 valuePropName="checked"
                 initialValue={false}
@@ -51,7 +84,7 @@ const IsNestedComponent = ({fieldName, form}) => {
                     <>
 
                         <Form.Item
-                        preserve={false}
+                        // preserve={false}
                         label="Input Type"
                         name={[fieldName, 'input_type']}
                         rules={[{ required: true, message: 'Please select an input type' }]}
@@ -65,7 +98,7 @@ const IsNestedComponent = ({fieldName, form}) => {
                         </Form.Item>
 
                         <Form.Item
-                            preserve={false}
+                            // preserve={false}
                             name={[fieldName, 'editable']}
                             valuePropName="checked"
                             initialValue={false}
@@ -77,7 +110,7 @@ const IsNestedComponent = ({fieldName, form}) => {
                             !editable && (
                                 <Form.Item
                                     label="Default"
-                                    preserve={false}
+                                    // preserve={false}
                                     name={[fieldName, 'default']}
                                     rules={[{ required: true, message: 'Please enter the default value' }]}
                                 >
@@ -89,7 +122,9 @@ const IsNestedComponent = ({fieldName, form}) => {
                         {
                             inputType === "enum" 
                             && (
-                            <Form.Item preserve={false} name={[fieldName, "values"]} label="Values" rules={[{ required: true, message: 'Please add at least one value for the enum.' }]}>
+                            <Form.Item 
+                            // preserve={false} 
+                            name={[fieldName, "values"]} label="Values" rules={[{ required: true, message: 'Please add at least one value for the enum.' }]}>
                                 <Form.List  name={[fieldName, "values"]} >
                                     {(fields, { add: addValue, remove: removeValue }) => (
                                     <Flex gap={10}>
@@ -97,7 +132,7 @@ const IsNestedComponent = ({fieldName, form}) => {
                                         <Flex gap={5} key={field.key} align="baseline">
                                             <Form.Item
                                                 {...field}
-                                                preserve={false}
+                                                // preserve={false}
                                                 name={field.name}
                                                 rules={[{ required: true, message: 'Missing value' }]}
                                                 >
@@ -128,141 +163,121 @@ const IsNestedComponent = ({fieldName, form}) => {
     )
 }
 
-const RecursiveField = ({ fieldPath, form } : { fieldPath: any, form: FormInstance }) => {
-    
+
+const RecursiveField = ({ fieldPath, form }: { fieldPath: any; form: FormInstance }) => {
     return (
         <Form.Item
-            preserve={false}
+            // preserve={false}
             label="Fields"
             name={fieldPath}
             rules={[{ required: true, message: 'Please add at least one field.' }]}
         >
-            <Form.List name={fieldPath} initialValue={[]} >
-                {(fields, { add, remove }) => {
-                    return (
+            <Form.List name={fieldPath} initialValue={[]}>
+                {(fields, { add, remove }) => (
                     <div>
-                        {fields.map((field, index) => {
-                            return (
-                            <Collapse key={field.key} className="mb-2 hover:bg-slate-100 hover:border-slate-300" >
-                                <Collapse.Panel header={`Field ${index + 1}`} key={field.key} extra={(
+                        {fields.map((field, index) => (
+                            <Collapse key={field.key} className="mb-2 hover:bg-slate-100 hover:border-slate-300">
+                                <Collapse.Panel
+                                    header={`Field ${index + 1}`}
+                                    key={field.key}
+                                    extra={
                                         <Button
-                                            variant="dashed"
-                                            color="danger"
+                                            type="dashed"
+                                            danger
                                             onClick={() => remove(field.name)}
                                             icon={<MinusCircleOutlined />}
                                         >
                                             Remove Field
                                         </Button>
-                                    )}>
-                                <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-                                    <Form.Item
-                                        preserve={false}
-                                        label="Field Name"
-                                        name={[field.name, 'name']}
-                                        rules={[{ required: true, message: 'Please enter a field name' }]}
-                                    >
-                                    <Input placeholder="Field name" />
-                                    </Form.Item>
-
-                                    <IsNestedComponent fieldName={field.name} form={form} />
-
-                                </Space>
+                                    }
+                                >
+                                    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
+                                        <Form.Item
+                                            // preserve={false}
+                                            label="Field Name"
+                                            name={[field.name, 'name']}
+                                            rules={[{ required: true, message: 'Please enter a field name' }]}
+                                        >
+                                            <Input placeholder="Field name" />
+                                        </Form.Item>
+                                        <IsNestedComponent fieldName={field.name} form={form} />
+                                    </Space>
                                 </Collapse.Panel>
                             </Collapse>
-                            )
-                        })
-                        }
-            
-                        {/* Add Field Button */}
-                        <Form.Item preserve={false}>
-                        <Button
-                            type="dashed"
-                            onClick={() => add()}
-                            icon={<PlusOutlined />}
+                        ))}
+                        <Form.Item 
+                        // preserve={false}
                         >
-                            Add Field
-                        </Button>
+                            <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
+                                Add Field
+                            </Button>
                         </Form.Item>
                     </div>
-                    )}
-                }
+                )}
             </Form.List>
         </Form.Item>
     );
-            
-  };
+};
 
-
-const AddReportDrawer = () => {
-    const AddReportConfigStore = useAddReportConfigStore();
+const UpdateReportDrawer = ({  onClose }: {  onClose: () => void }) => {
+    const {reportData, setReportData} = useUpdateReportConfigStore();
     const [form] = Form.useForm();
 
-    const handleFinish = async () => {
-        console.log(form.getFieldsValue());
-        try {
-            await reportConfigCreate(form.getFieldsValue());
-            message.success("Report Config created successfully.");
-            AddReportConfigStore.setSector(null);
-            form.resetFields();
-        } catch (error) {
-            message.error(parseResError(error).msg);
-        }
-        
-    }
+    const handleFinish = async (e) => {
+        console.log(cleanFormValues(e))
+        // try {
+        //     await reportConfigUpdate(reportData._id, form.getFieldsValue());
+        //     message.success("Report Config updated successfully.");
+        //     onClose();
+        //     form.resetFields();
+        // } catch (error) {
+        //     message.error(parseResError(error).msg);
+        // }
+    };
 
     useEffect(() => {
-        if (AddReportConfigStore.sector) {
-            form.setFieldsValue({ sectorName: AddReportConfigStore.sector.name, sector: AddReportConfigStore.sector._id });
+        if (Object.entries(reportData).length > 0) {
+            form.resetFields();
+            form.setFieldsValue(reportData);
+            console.log(form.getFieldsValue());
         }
-    }, [AddReportConfigStore.sector]);
-    
+    }, [reportData]);
+
     return (
-        <Drawer 
+        <Drawer
             width="100%"
-            open={!!AddReportConfigStore.sector}
+            open={Object.entries(reportData).length > 0}
             onClose={() => {
-                    form.resetFields();
-                    AddReportConfigStore.setSector(null)
-                }
-            }>
-            <Form 
-            onValuesChange={(values) => {
-                // console.log(values)
+                form.resetFields();
+                setReportData({});
+                onClose();
             }}
-                form={form}
-                onFinish={handleFinish}
-                onFieldsChange={() => {
-                    const updatedValues = form.getFieldsValue();
-                    // Apply similar cleanup logic as in Solution 2, if needed
-                    form.setFieldsValue(updatedValues);
-                }}>
-                <Flex gap={10} justify="">
+        >
+            <Form form={form} onFinish={handleFinish}>
+                <Flex gap={10}>
                     <Form.Item
                         label="Sector"
                         name="sector"
                         hidden
-                        initialValue={AddReportConfigStore.sector?._id!}
-                        rules={[{ required: true, message: 'Please enter a report identifier' }]}
+                        initialValue={reportData.sector?._id}
                     >
-                        <Input hidden  />
+                        <Input hidden />
                     </Form.Item>
                     <Form.Item
                         label="Sector"
                         name="sectorName"
-                        initialValue={AddReportConfigStore.sector?.name!}
+                        initialValue={reportData.sector?.name}
                         rules={[{ required: true, message: 'Please enter a report identifier' }]}
                     >
-                        <Input readOnly  />
+                        <Input readOnly />
                     </Form.Item>
                     <Form.Item
                         label="Identifier"
                         name="identifier"
                         rules={[{ required: true, message: 'Please enter a report identifier' }]}
-                        
                     >
-                        <Input placeholder="Unique report identifier" />
+                        <Input readOnly placeholder="Unique report identifier" />
                     </Form.Item>
-
                     <Form.Item
                         label="Name"
                         name="name"
@@ -273,20 +288,16 @@ const AddReportDrawer = () => {
                 </Flex>
 
                 {/* Recursive Fields */}
-                {/* <Form.Item
-                label="Fields"
-                name="fields"
-                rules={[{ required: true, message: 'Please add at least one field.' }]}
-                > */}
-                    <RecursiveField fieldPath="fields" form={form} />
-                {/* </Form.Item> */}
+                <RecursiveField fieldPath="fields" form={form} />
 
                 <Form.Item>
-                    <Button  className="block me-0 ms-auto" type="primary" htmlType="submit">Save</Button>
+                    <Button className="block me-0 ms-auto" type="primary" htmlType="submit">
+                        Save
+                    </Button>
                 </Form.Item>
             </Form>
         </Drawer>
-    )   
-}
+    );
+};
 
-export default AddReportDrawer;
+export default UpdateReportDrawer;

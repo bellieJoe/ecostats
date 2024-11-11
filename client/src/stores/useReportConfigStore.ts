@@ -10,3 +10,13 @@ export const useAddReportConfigStore = create<{
        set({sector : sector})
    }
 }));
+
+export const useUpdateReportConfigStore = create<{
+    reportData : any
+    setReportData : (reportData : any|null) => void
+}>((set) => ({
+    reportData: {},
+   setReportData : (reportData : any|null) => {
+       set({reportData : reportData})
+   }
+}));
