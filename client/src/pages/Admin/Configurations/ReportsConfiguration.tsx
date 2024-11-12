@@ -1,4 +1,4 @@
-import { Button, Flex, List, message, Select, Space } from "antd";
+import { Button, Flex, List, message, Popconfirm, Select, Space } from "antd";
 import Title from "antd/es/typography/Title";
 import { generateYearOptionsFixed } from "../../../services/helper";
 import { useEffect, useState } from "react";
@@ -8,12 +8,13 @@ import { AddOutlined, Update } from "@mui/icons-material";
 import AddReportDrawer from "../../../components/Admin/Configurations/AddReportDrawer";
 import { useAddReportConfigStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore";
 import { report } from "process";
-import { reportConfigGetByQuery } from "../../../services/api/reportConfigApi";
+import { reportConfigDelete, reportConfigGetByQuery } from "../../../services/api/reportConfigApi";
 import UpdateReportDrawer from "../../../components/Admin/Configurations/UpdateReportDrawer";
 
 const RenderConfigs = ({sectorId} : {sectorId : string}) => {
     const [configs, setConfigs] = useState<any[]>([]);
     const { setReportData } = useUpdateReportConfigStore();
+    const [refresh, setRefresh] = useState<boolean>(false);
 
     const fetchConfigs = async () => {
         try {
@@ -24,9 +25,21 @@ const RenderConfigs = ({sectorId} : {sectorId : string}) => {
             message.error(parseResError(error).msg);
         }
     }
+    
+    const handleDelete = async (id) => {
+        try {
+            await reportConfigDelete(id);
+            message.success("Report Config deleted successfully.");
+            setRefresh(!refresh);
+        } catch (error) {
+            message.error(parseResError(error).msg, 10);
+        }
+    }
+
+
     useEffect(() => {
         fetchConfigs();
-    }, [sectorId]);
+    }, [sectorId, refresh]);
 
     return (
         <List dataSource={configs} 
@@ -40,7 +53,9 @@ const RenderConfigs = ({sectorId} : {sectorId : string}) => {
                         <p><span className="font-semibold">Identifier :</span> {config.identifier}</p>
                     </Flex>
                     <Flex gap={4}>
-                        <Button size="small" variant="solid" color="danger">Delete</Button>
+                        <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this Report Configuration?" onConfirm={() => handleDelete(config._id)}>
+                            <Button size="small" variant="solid" color="danger">Delete</Button>
+                        </Popconfirm>
                         <Button size="small" >Update</Button>
                         <Button size="small" >Fields</Button>
                     </Flex>

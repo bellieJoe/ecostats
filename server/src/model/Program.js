@@ -16,15 +16,25 @@ const ProgramSchema = new Schema({
         ref : "users",
         required : true
     },
-    management : {
-        type : String,
-        enum : ["land", "biodiversity", "forestry"],
-        required : true
+    sector_id : {
+        type : Schema.Types.ObjectId,
+        required : true,
+        ref : "sectors"
     }
 },
 {
-    timestamps  : true
+    timestamps  : true,
+    toJSON : {
+        virtuals : true
+    }
 });
+
+ProgramSchema.virtual("sector", {
+    ref : "sectors",
+    localField : "sector_id",
+    foreignField : "_id",
+    justOne : true
+})
 
 // Create a compound index to enforce unique name where deletedAt is null
 ProgramSchema.index({ name: 1, deletedAt: 1 }, { unique: true, partialFilterExpression: { deletedAt: null } });

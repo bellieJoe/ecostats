@@ -11,7 +11,7 @@ export const create = async (req, res) => {
     session.startTransaction()
     try {
 
-        const { title, description, filters, fields, requested_by, form_name, isCustom } = req.body;
+        const { title, description, filters, fields, requested_by, isCustom, report_config_id } = req.body;
 
         const focal = await FocalPerson.findOne({
             userId :requested_by,
@@ -31,9 +31,9 @@ export const create = async (req, res) => {
             filters,
             fields,
             requested_by,
-            form_name,
             isCustom,
-            unit_id : focal.unitId
+            unit_id : focal.unitId,
+            report_config_id : report_config_id
         });
         await requestedReport.save({session});
         console.log(requestedReport._id)

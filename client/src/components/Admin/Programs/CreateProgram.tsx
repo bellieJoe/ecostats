@@ -6,19 +6,18 @@ import debounce from 'lodash.debounce';
 import { createProgram } from "../../../services/api/programApi";
 import { ValidationError } from "../../../types/ApiValidationError";
 import FieldError from "../../FieldError";
-import { Sector } from "../../../types/forms/formNameEnum";
 
 
 
-const CreateProgram = () => {
+const CreateProgram = ({ sectors } : {sectors : any[]}) => {
     const [userOptions, setUserOptions] = useState([]);
     const [selectUserloading, setSelectUserloading] = useState(false);
     const [isSaving, setIsSaving] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
-    const [formData, setFormData] = useState<{name:string, userId:string|null, management : string}>({
+    const [formData, setFormData] = useState<{name:string, userId:string|null, sector_id : string}>({
         userId: null,
         name : "",
-        management : ""
+        sector_id : ""
     });
     const [validationErrors , setValidationErrors] = useState<ValidationError[]>([]);
     
@@ -56,25 +55,25 @@ const CreateProgram = () => {
         debouncedSearch(e)
     }
 
-    const onSave = () => {
+    const onSave = async () => {
         setIsSaving(true)
-        setValidationErrors([])
-        console.log({...formData})
-        createProgram(formData.userId!, formData.name, formData.management)
-        .then(res => {
-            setFormData({userId: null, name : "", management : ""})
+        setValidationErrors([]);
+        console.log(formData)
+        try {
+            await createProgram(formData.userId!, formData.name, formData.sector_id)
+            setFormData({userId: null, name : "", sector_id : ""})
             messageApi.success("Program successfully created.")
-        })
-        .catch(err => {
-            console.log(err)
+        } catch (err : any) {
             if(err.response.status == 422){
                 setValidationErrors(err.response.data.errors)
             }
             else{
                 messageApi.error(err.response.data.msg)
             }
-        })
-        .finally(() => setIsSaving(false))
+        } finally {
+            setIsSaving(false)
+        }
+
     }
 
 
@@ -104,14 +103,10 @@ const CreateProgram = () => {
                     <Select 
                         className="w-full" 
                         placeholder="Assign Management"
-                        value={formData.management}
-                        onChange={(e)=>setFormData({...formData, management: e})}
-                        options={[
-                            { value: Sector.LAND, label: "Land" },
-                            { value: Sector.FORESTRY, label: "Forestry" },
-                            { value: Sector.BIODIVERSITY, label: "Biodiversity" },
-                        ]} />
-                    <FieldError errors={validationErrors} name={"management"} />
+                        value={formData.sector_id}
+                        onChange={(e)=>setFormData({...formData, sector_id: e})}
+                        options={sectors.map(sector => {return {label : sector.name, value : sector._id}})} />
+                    <FieldError errors={validationErrors} name={"sector_id"} />
                 </div>
 
                 <div className="mb-2">

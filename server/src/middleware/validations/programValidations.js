@@ -18,10 +18,6 @@ export const createProgramValidation = [
         }
     }),
 
-    body("management")
-    .exists().withMessage("Management Id is required.")
-    .notEmpty().withMessage("Management should not be empty"),
-
     body("name")
     .exists().withMessage("Name is required.")
     .notEmpty().withMessage("Name should not be empty")

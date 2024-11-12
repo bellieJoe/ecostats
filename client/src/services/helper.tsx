@@ -120,3 +120,12 @@ export const flattenFields = (fields) => {
   });
 };
 
+export const convertReportFilters = (filters : any) => {
+  const _filters: Record<string, any> = {}; 
+  for (const key in filters) {
+    _filters[`data.${key}`] = filters[key]; 
+  }
+  return _filters; 
+}
+
+  

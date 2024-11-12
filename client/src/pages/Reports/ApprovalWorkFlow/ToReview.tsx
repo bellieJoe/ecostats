@@ -10,9 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faEye, faFilePen, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { AddComment, ViewLogs } from "../../../components/Reports/ApprovalWorkflow/ApprovalComponents";
 import { useAddCommentStore, usePreviewReportStore, useViewLogsStore } from "../../../stores/useReportStore";
-import { PreviewPrint } from "../../../components/CustomReport/CustomReport";
-import { ColDefsMap, FormNameMap } from "../../../types/forms/formNameEnum";
-import { reject } from "lodash";
+import { PreviewPrint } from "../../../components/Reports/CustomReportV2";
 
 
 const ToReview = () => {
@@ -58,7 +56,6 @@ const ToReview = () => {
         {
             headerName : "Actions",
             cellRenderer : (params) => {
-                console.log(params)
                 return (
                     <Space className="w-full"> 
                         <Tooltip title="Approve"  >
@@ -75,7 +72,7 @@ const ToReview = () => {
                             <Button onClick={() => addCommentStore.setReportId(params.data._id)} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faComment} />}></Button>
                         </Tooltip>
                         <Tooltip title="Preview" >
-                            <Button onClick={() => previewReportStore.setStore(ColDefsMap[params.data.form_name], params.data.form_name, FormNameMap[params.data.form_name], params.data)} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faEye} />}></Button>
+                            <Button onClick={() => previewReportStore.setStore(params.data)} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faEye} />}></Button>
                         </Tooltip>
                         <Tooltip title="Logs" >
                             <Button onClick={() => viewLogsStore.setReportId(params.data._id)} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faFilePen} />}></Button>
@@ -108,7 +105,6 @@ const ToReview = () => {
                     { path : "requested_by"},
                 ]
             )).data;
-            console.log(q)
             setReports(_reports);
             setRowData(_reports)
         } catch (error) {
@@ -137,7 +133,6 @@ const ToReview = () => {
     useEffect(() => {
         if(authStore.user){
             getReports()
-            console.log(ColDefsMap)
         }
     }, [authStore.user, refresh]);
 

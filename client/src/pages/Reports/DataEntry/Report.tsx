@@ -6,6 +6,7 @@ import { parseResError } from "../../../services/errorHandler";
 import { reportConfigGetByQuery } from "../../../services/api/reportConfigApi";
 import DataEntry from "../../../components/Reports/DataEntry";
 import DataMigratorV2 from "../../../components/Reports/DataMigratorV2";
+import CustomReportV2 from "../../../components/Reports/CustomReportV2";
 
 
 const Report = () => {
@@ -26,11 +27,7 @@ const Report = () => {
         {
             key: '3',
             label: 'Reports',
-            // children: <CustomReport 
-            //             formName={FormEnum.LAND_1} 
-            //             sector={Sector.LAND} 
-            //             fields={land_1_gen_form_fields}
-            //             colDefs={land_1_col_defs} />
+            children: <CustomReportV2 config={reportConfig} />
         }
     ];
 

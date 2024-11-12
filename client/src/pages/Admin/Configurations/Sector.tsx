@@ -226,7 +226,7 @@ const Sectors = () => {
             message.success("Sector deleted");
             setRefresh(!refresh);
         } catch (error) {
-            message.error(parseResError(error).msg);
+            message.error(parseResError(error).msg, 10);
         } finally {
             setLoading(false);
         }
