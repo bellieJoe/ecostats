@@ -78,6 +78,12 @@ ReportConfigSchema.index(
     { unique: true }
 );
 
+ReportConfigSchema.virtual("charts", {
+    ref: "chart_configs",
+    localField: "_id",
+    foreignField: "report_config_id"
+})
+
 
 const ReportConfigModel = mongoose.model('report_configs', ReportConfigSchema);
 

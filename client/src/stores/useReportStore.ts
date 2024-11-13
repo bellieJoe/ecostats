@@ -56,3 +56,27 @@ export const useViewLogsStore = create<{
         })
     }
 }));
+
+export const useAddChartStore = create<{
+    config : any
+    setConfig : (config : any) => void
+}>((set) => ({
+    config : {},
+    setConfig : (config) => {
+        set({
+            config : config
+        })
+    }
+}));
+
+export const useViewChartStore = create<{
+    charts : any[]
+    setCharts : (charts : any[]) => void
+}>((set) => ({
+    charts : [],
+    setCharts : (charts) => {
+        set({
+            charts : charts
+        })
+    }
+}));

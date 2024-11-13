@@ -1,24 +1,28 @@
-import { Button, Flex, List, message, Popconfirm, Select, Space } from "antd";
+import { Badge, Button, Card, Dropdown, Flex, List, message, Popconfirm, Select, Space, Typography } from "antd";
 import Title from "antd/es/typography/Title";
 import { generateYearOptionsFixed } from "../../../services/helper";
 import { useEffect, useState } from "react";
 import { sectorGetByQuery } from "../../../services/api/sectorApi";
 import { parseResError } from "../../../services/errorHandler";
-import { AddOutlined, Update } from "@mui/icons-material";
+import { AddchartOutlined, AddOutlined, MoreHoriz, Update } from "@mui/icons-material";
 import AddReportDrawer from "../../../components/Admin/Configurations/AddReportDrawer";
 import { useAddReportConfigStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore";
-import { report } from "process";
 import { reportConfigDelete, reportConfigGetByQuery } from "../../../services/api/reportConfigApi";
-import UpdateReportDrawer from "../../../components/Admin/Configurations/UpdateReportDrawer";
+import { BarChartOutlined, PlusOutlined } from "@ant-design/icons";
+import AddChart from "../../../components/Reports/AddChart";
+import { useAddChartStore, useViewChartStore } from "../../../stores/useReportStore";
+import ViewCharts from "../../../components/Reports/ViewCharts";
 
-const RenderConfigs = ({sectorId} : {sectorId : string}) => {
+const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, refresh:boolean, setRefresh : () => void}) => {
     const [configs, setConfigs] = useState<any[]>([]);
     const { setReportData } = useUpdateReportConfigStore();
-    const [refresh, setRefresh] = useState<boolean>(false);
+
+    const viewChartStore = useViewChartStore();
+    const addChartStore = useAddChartStore();
 
     const fetchConfigs = async () => {
         try {
-            const _configs = (await reportConfigGetByQuery({sector : sectorId}, ["sector"])).data;
+            const _configs = (await reportConfigGetByQuery({sector : sectorId}, ["sector", "charts"])).data;
             setConfigs(_configs);
             console.log(_configs)
         } catch (error) {
@@ -30,7 +34,7 @@ const RenderConfigs = ({sectorId} : {sectorId : string}) => {
         try {
             await reportConfigDelete(id);
             message.success("Report Config deleted successfully.");
-            setRefresh(!refresh);
+            setRefresh();
         } catch (error) {
             message.error(parseResError(error).msg, 10);
         }
@@ -47,16 +51,42 @@ const RenderConfigs = ({sectorId} : {sectorId : string}) => {
         bordered
         renderItem={(config) => (
             <List.Item>
-                <Flex className="w-full" justify="space-between">
+                <Flex className="w-full" justify="space-between" align="top">
                     <Flex vertical>
                         <p><span className="font-semibold">Name :</span> {config.name}</p>
-                        <p><span className="font-semibold">Identifier :</span> {config.identifier}</p>
+                        <p><span className="font-semibold">Identifier :</span> <Typography.Text code>{config.identifier}</Typography.Text> </p> 
                     </Flex>
-                    <Flex gap={4}>
+                    <Flex gap={4} className="h-fit">
                         <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this Report Configuration?" onConfirm={() => handleDelete(config._id)}>
                             <Button size="small" variant="solid" color="danger">Delete</Button>
                         </Popconfirm>
                         <Button size="small" >Update</Button>
+                        <Dropdown
+                            menu={{
+                                items: [
+                                    {
+                                        key: '1',
+                                        label: (
+                                            <>Add Chart</>
+                                        ),
+                                        icon : <PlusOutlined />,
+                                        onClick : () => addChartStore.setConfig(config)
+                                    },
+                                    {
+                                        key: '2',
+                                        label: (
+                                            <>View Charts <Badge className="ms-2" size="small" count={config.charts.length} color="primary" /></>
+                                        ),
+                                        icon : <BarChartOutlined />,
+                                        onClick : () => viewChartStore.setCharts(config.charts)
+                                    },
+                                ],
+                            }}
+                        >
+                            <Button size="small" icon={<BarChartOutlined />} >
+                                Charts
+                            </Button>
+                        </Dropdown>
                         <Button size="small" >Fields</Button>
                     </Flex>
                 </Flex>
@@ -73,6 +103,7 @@ const ReportConfiguration =  () =>  {
     const [loading, setLoading] = useState<boolean>(false);
 
     const AddReportConfigStore = useAddReportConfigStore();
+    
 
     const getSectors = async () => {
         try {
@@ -107,7 +138,7 @@ const ReportConfiguration =  () =>  {
                         <Button type="primary" icon={<AddOutlined />} onClick={() => openAddForm(sector)}>Add Report</Button>
                     </Space>
 
-                    <RenderConfigs sectorId={sector._id} />
+                    <RenderConfigs setRefresh={() => setRefresh(!refresh)} refresh={refresh} sectorId={sector._id} />
                 </div>
             )
         });
@@ -127,6 +158,11 @@ const ReportConfiguration =  () =>  {
             { renderSectors() }
 
             <AddReportDrawer   />
+            <AddChart onSave={() => setRefresh(!refresh)} />
+            <ViewCharts onClose={() =>{ 
+                setRefresh(!refresh)
+                console.log("refresh")
+                }}  />
             {/* <UpdateReportDrawer onClose={() => setRefresh(!refresh)} /> */}
         </div>
     );

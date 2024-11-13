@@ -18,6 +18,7 @@ import focalPersonRoutes from "./routes/focalPersonRoutes.js"
 import sectorRoutes from "./routes/sectorRoutes.js"
 import reportConfigRoutes from "./routes/reportConfigRoutes.js"
 import reportDataRoutes from "./routes/reportDataRoutes.js"
+import chartConfigRoutes from "./routes/chartConfigRoutes.js"
 
 
 dotenv.config(); // Load environment variables from .env file
@@ -74,4 +75,5 @@ app.use("/focal-persons", focalPersonRoutes);
 app.use("/sectors", sectorRoutes);
 app.use("/report-configs", reportConfigRoutes);
 app.use("/report-data", reportDataRoutes);
+app.use("/chart-config", chartConfigRoutes);
 
