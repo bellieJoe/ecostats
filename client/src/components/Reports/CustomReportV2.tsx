@@ -89,8 +89,8 @@ export const PreviewPrint = () => {
 
     const getSignatories = async () => {
         try {
-            const requestedBy = (await getUserById(previewReportStore.report.requested_by)).data;
-            
+            const requestedBy = (await getUserById(previewReportStore.report.requested_by._id || previewReportStore.report.requested_by)).data;
+            console.log(requestedBy)
             const unit = (await getUnitsByQuery({
                 _id : previewReportStore.report.unit_id
             }, [
@@ -104,6 +104,7 @@ export const PreviewPrint = () => {
                     path : "programId.programHead",
                 }
             ])).data[0];
+            console.log(unit)
             const approvedBy = (await getUserById(unit.programId.programHead)).data;
             setSignatories({
                 requestedBy: requestedBy.name,

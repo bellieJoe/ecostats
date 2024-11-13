@@ -12,7 +12,7 @@ import { AddComment, ViewLogs } from "../../../components/Reports/ApprovalWorkfl
 import { useAddCommentStore, usePreviewReportStore, useViewLogsStore } from "../../../stores/useReportStore";
 import { ColDefsMap, FormNameMap } from "../../../types/forms/formNameEnum";
 import { getProgramByQuery } from "../../../services/api/programApi";
-import { PreviewPrint } from "../../../components/CustomReport/CustomReport";
+import { PreviewPrint } from "../../../components/Reports/CustomReportV2";
 
 
 
