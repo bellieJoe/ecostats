@@ -16,7 +16,7 @@ export default async function SeedUsers(){
     // setup admin
     const admin = new UserModel({
         name: "Admin User",
-        email: "admin@gmail.com",
+        email: "admin_ecostats@gudri.com",
         passwordHash: await bcrypt.hash("password", 10),
         verifiedAt: new Date(),
         isActive: true,

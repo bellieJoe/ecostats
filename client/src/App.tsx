@@ -10,7 +10,7 @@ import { getUserById, isAuthenticated } from './services/api/userApi'
 import { useAuthStore } from './stores/useAuthStore'
 import { jwtDecode } from 'jwt-decode'
 import Cookies from "js-cookie"
-import { ConfigProvider, Layout } from 'antd'
+import { ConfigProvider, Layout, message } from 'antd'
 import axios from 'axios'
 import Programs from './pages/Admin/Programs/Programs'
 import LandTOC from './pages/Reports/DataEntry/Land/LandTOC'
@@ -146,12 +146,16 @@ import Forestry_14 from './pages/Reports/DataEntry/Forestry/Forestry_14'
 import Forestry_14_Dashboard from './pages/Dashboard/Forestry/Forestry_14_dashboard'
 import Forestry_19 from './pages/Reports/DataEntry/Forestry/Forestry_19'
 import Forestry_19_Dashboard from './pages/Dashboard/Forestry/Forestry_19_dashboard'
+import Sectors from './pages/Admin/Configurations/Sector'
+import ReportsConfiguration from './pages/Admin/Configurations/ReportsConfiguration'
+import Report from './pages/Reports/DataEntry/Report'
 
 axios.defaults.withCredentials = true;
 
 function App() {
   const {setUser, accessToken} = useAuthStore();
   const errorStore = useErrorLogStore();
+  const [contextHandler] = message.useMessage();
 
 
   const configTheme = {
@@ -208,6 +212,8 @@ function App() {
                   {/* <Route path='' element={<Users />} /> */}
                   <Route path='users' element={<Users />} />
                   <Route path='programs' element={<Programs />} />
+                  <Route path="configurations/sectors" element={<Sectors />} />
+                  <Route path="configurations/reports" element={<ReportsConfiguration />} />
                   <Route path='budgets'  > 
                     <Route path='data' element={<Data />} />
                     <Route path='' element={<BudgetAnalytics />} />
@@ -284,6 +290,9 @@ function App() {
                 <Route path='reports' element={<Reports />}>
                     <Route path='to-approve' element={<ToApprove />} />
                     <Route path='to-review' element={<ToReview />} />
+
+                    <Route path='report/:_id' element={<Report />} />
+
                     <Route path={Sector.LAND} >
                       <Route path='toc' element={<LandTOC />} />
                       <Route path='land_1' element={<Land_1 />} />

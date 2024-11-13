@@ -9,17 +9,17 @@ import { parseResError } from "../../../services/errorHandler";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowsRotate, faPlus } from '@fortawesome/free-solid-svg-icons';
 import UpdateProgram from "./UpdateProgram";
-import { Sector } from "../../../types/forms/formNameEnum";
 import { User } from "../../../types/User";
 
 interface DataSource {
     key: string
     name: string
     management : string
+    sector : any
     programHead : User
 }
 
-const ProgramLists = () => {
+const ProgramLists = ({year} : { year : number }) => {
     const [ page, setPage ] = useState(1);
     const [ limit ] = useState(10);
     const [ total, setTotal ] = useState(0);
@@ -54,12 +54,7 @@ const ProgramLists = () => {
             title: 'Access Management',
             key: 'management',
             render : (record : DataSource) => {
-                if(record.management == Sector.LAND)
-                    return "Land";
-                if(record.management == Sector.BIODIVERSITY)
-                    return "Biodiversity";
-                if(record.management == Sector.FORESTRY)
-                    return "Forestry";
+                return record.sector.name
             }
         },
         {
@@ -87,11 +82,7 @@ const ProgramLists = () => {
                         title="Delete Program" 
                         onConfirm={() => handleDeleteProgram(record.key)}
                         placement="right" 
-                        description={
-                            <>
-                                Are you sure you want to delete this division?<br /> <br />
-                                <Alert type="warning" description="Note that this will also delete all associated units and program heads.." />
-                            </>}>
+                        description={"Are you sure you want to delete this division?"}>
                             <Button size="small" variant="text" color="danger">Delete</Button>
                         </Popconfirm>
                     </Space>
@@ -103,8 +94,7 @@ const ProgramLists = () => {
     const [refresh, setRefresh] = useState(false)
 
     const handleDeleteProgram = (id : string) => {
-        deleteProgram(id)
-        .then(() => {
+        deleteProgram(id).then(() => {
             programStore.setPrograms(programStore.programs.filter(p => p._id != id))
             messageApi.success("Program successfully deleted.")
         })
@@ -116,7 +106,7 @@ const ProgramLists = () => {
 
     useEffect(() => {
         setIsProgramsLoading(true)
-        getAllPrograms(page, limit)
+        getAllPrograms(page, limit, year)
         .then(res => {
             programStore.setPrograms(res.data.programs)
             setTotal(res.data.total)
@@ -126,14 +116,14 @@ const ProgramLists = () => {
             setIsProgramsLoading(false)
         });
         
-    }, [page, refresh]);
+    }, [page, refresh, year]);
 
     useEffect(() => {
         const d : any[]  = programStore.programs.map((val, i) => {
             return  {
                 key: val._id,
                 name: val.name,
-                management : val.management,
+                sector : val.sector,
                 programHead : val.programHead
             }
         })

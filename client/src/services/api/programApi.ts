@@ -2,8 +2,8 @@ import axios from "axios";
 
 const apiUrl : string = import.meta.env.VITE_API_URL;
 
-export const createProgram = async (userId : string, name : string, management : string) : Promise<any> => {
-    const res = await axios.post(`${apiUrl}/programs/create`, {userId, name, management});
+export const createProgram = async (userId : string, name : string, sector_id : string) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/programs/create`, {userId, name, sector_id});
     return res;
 }
 
@@ -12,13 +12,13 @@ export const searchProgramByName = async (name : string) : Promise<any> => {
     return res;
 }
 
-export const countPrograms = async () : Promise<any> => {
-    const res = await axios.get(`${apiUrl}/programs/count`);
+export const countPrograms = async (year : number) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/programs/count?year=${year}`);
     return res;
 }
 
-export const getAllPrograms = async (page:number, limit:number, name?:string|null) : Promise<any> => {
-    let query = `page=${page}&limit=${limit}`;
+export const getAllPrograms = async (page:number, limit:number,year : number, name?:string|null) : Promise<any> => {
+    let query = `page=${page}&limit=${limit}&year=${year}`;
     if(name){
         query += `&name=${name}`;
     }

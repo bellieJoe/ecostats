@@ -4,6 +4,7 @@ import ProgramModel from "../model/Program.js";
 // import ProgramHeadModel from "../model/ProgramHead.js";
 import mongoose from "mongoose";
 import UnitModel from "../model/Unit.js";
+import SectorModel from "../model/Sector.js";
 // import UnitHeadModel from "../model/UnitHead.js";
 
 export const create = async (req, res) => {
@@ -16,12 +17,12 @@ export const create = async (req, res) => {
 
         const userId = req.body.userId;
         const name = req.body.name;
-        const management = req.body.management;
+        const sector_id = req.body.sector_id;
 
         const user = await UserModel.findById(userId);
         const program = new ProgramModel({
             name: name,
-            management : management,
+            sector_id : sector_id,
             programHead : user
         });
         await program.save({session});
@@ -64,10 +65,14 @@ export const searchProgramByName = async (req, res) => {
 
 export const countPrograms = async (req, res) => {
     try {
-
+        const {year} = req.query;
+        const sectors = await SectorModel.find({calendar_year : year});
         const programs = await ProgramModel.countDocuments({
-            deletedAt: null
-        })
+            deletedAt: null,
+            sector_id : {
+                $in : sectors.map(s => s._id)
+            }
+        });
         return res.json(programs)
     } catch (error) {
         console.log(error)
@@ -85,18 +90,35 @@ export const all = async (req, res) => {
         const page = parseInt(req.query.page) || 1; 
         const limit = parseInt(req.query.limit) || 10; 
         const name = req.query.name; 
+        const year = req.query.year;
 
         const skip = (page - 1) * limit;
 
         const total = await ProgramModel.countDocuments();
+        
+        const sectors = await SectorModel.find({calendar_year : year});
+        const q = name ? { 
+            name : { 
+                $regex : name, 
+                $options: "i" 
+            }, 
+            deletedAt : null,
+            sector_id : {
+                $in : sectors.map(s => s._id)
+            }
+        } : {
+            deletedAt  : null,
+            sector_id : {
+                $in : sectors.map(s => s._id)
+            }
+        };
 
-        const q = name ? { name : { $regex : name, $options: "i" }, deletedAt : null } : {deletedAt  : null}
 
         const programs = await ProgramModel.find(q)
-                            .skip(skip)
-                            .limit(limit)
-                            .select("_id name management createdAt ")
-                            .populate("programHead");
+            .skip(skip)
+            .limit(limit)
+            .select("_id name sector_id createdAt ")
+            .populate(["programHead", "sector"]);
 
         return res.json({
             total,
@@ -169,7 +191,7 @@ export const deleteProgram = async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
     try {
-      const programId = req.params.programId
+      const programId = req.params.programId;
        
       // delete programs
       await ProgramModel.findOneAndUpdate({

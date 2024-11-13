@@ -10,9 +10,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faEye, faFilePen, faThumbsDown, faThumbsUp } from "@fortawesome/free-solid-svg-icons";
 import { AddComment, ViewLogs } from "../../../components/Reports/ApprovalWorkflow/ApprovalComponents";
 import { useAddCommentStore, usePreviewReportStore, useViewLogsStore } from "../../../stores/useReportStore";
-import { PreviewPrint } from "../../../components/CustomReport/CustomReport";
 import { ColDefsMap, FormNameMap } from "../../../types/forms/formNameEnum";
 import { getProgramByQuery } from "../../../services/api/programApi";
+import { PreviewPrint } from "../../../components/CustomReport/CustomReport";
 
 
 
@@ -59,7 +59,6 @@ const ToApprove = () => {
         {
             headerName : "Actions",
             cellRenderer : (params) => {
-                console.log(params)
                 return (
                     <Space className="w-full"> 
                         <Tooltip title="Approve"  >
@@ -76,7 +75,10 @@ const ToApprove = () => {
                             <Button onClick={() => addCommentStore.setReportId(params.data._id)} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faComment} />}></Button>
                         </Tooltip>
                         <Tooltip title="Preview" >
-                            <Button onClick={() => previewReportStore.setStore(ColDefsMap[params.data.form_name], params.data.form_name, FormNameMap[params.data.form_name], params.data)} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faEye} />}></Button>
+                            <Button onClick={() => {
+                                console.log(params.data)
+                                previewReportStore.setStore(params.data)
+                            }} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faEye} />}></Button>
                         </Tooltip>
                         <Tooltip title="Logs" >
                             <Button onClick={() => viewLogsStore.setReportId(params.data._id)} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faFilePen} />}></Button>

@@ -7,6 +7,7 @@ import SidebarUser from "../SidebarUser";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCoins } from "@fortawesome/free-solid-svg-icons";
+import { chipClasses } from "@mui/material";
 
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -71,6 +72,27 @@ const AdminSidebar = ({open}) => {
                 style: menuStyle1,
                 onClick: () => navigate("programs"),
                 role : ["admin", "planning officer"]
+            },
+            {
+                key: "configurations",
+                label: "Configurations",
+                icon: <FolderOutlined />,
+                style: menuStyle1,
+                role : ["admin", "planning officer"],
+                children : [
+                    {
+                        key : "Sectors",
+                        label : "Sectors",
+                        style: menuStyle2,
+                        onClick: () => navigate("configurations/sectors"),
+                    },
+                    {
+                        key : "Reports",
+                        label : "Reports",
+                        style: menuStyle2,
+                        onClick: () => navigate("configurations/reports"),
+                    },
+                ]
             },
             {
                 key: "budget",

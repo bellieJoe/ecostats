@@ -4,6 +4,7 @@ import ProgramModel from "../model/Program.js";
 import UnitModel from "../model/Unit.js";
 import mongoose, { mongo } from "mongoose";
 import FocalPersonModel from "../model/FocalPerson.js";
+import SectorModel from "../model/Sector.js";
 
 
 export const create = async (req, res) => {
@@ -63,7 +64,20 @@ export const searchUnitByName = async (req, res) => {
 export const countUnits = async (req, res) => {
     try {
 
-        const units = await UnitModel.countDocuments({deletedAt:null})
+        const {year} = req.query;
+        const sectors = await SectorModel.find({calendar_year : year});
+        const programs = await ProgramModel.find({
+            deletedAt: null,
+            sector_id : {
+                $in : sectors.map(s => s._id)
+            }
+        }); 
+        const units = await UnitModel.countDocuments({
+            deletedAt:null,
+            programId : {
+                $in : programs.map(p => p._id)
+            }
+        });
 
         return res.json(units)
     } catch (error) {
@@ -127,7 +141,6 @@ export const getByProgram = async (req, res) => {
     }
 }
 
-
 export const deleteUnit = async (req, res) => {
     const session = await mongoose.startSession();
     session.startTransaction();
@@ -136,6 +149,13 @@ export const deleteUnit = async (req, res) => {
       
       await UnitModel.findOneAndUpdate({
         _id : unitId
+      }, {
+        deletedAt : Date.now()
+      })
+      .session(session);
+
+      await FocalPersonModel.updateMany({
+        unitId : unitId
       }, {
         deletedAt : Date.now()
       })

@@ -9,9 +9,15 @@ import { countPrograms } from "../../../services/api/programApi";
 import { countUnits } from "../../../services/api/unitApi";
 import UnitsList from "../../../components/Admin/Programs/UnitsList";
 import RoleGuard from "../../../components/Guards/RoleGuard";
+import { generateYearOptionsFixed } from "../../../services/helper";
+import { parseResError } from "../../../services/errorHandler";
+import { sectorGetByQuery } from "../../../services/api/sectorApi";
 
 
 const Programs = () => {
+
+    const [year, setYear] = useState<number>(new Date().getFullYear());
+    const [sectors, setSectors] = useState<any[]>([]);    
 
     const [drawerStates, setDraweStates] = useState({
         newProgram : false,
@@ -31,22 +37,39 @@ const Programs = () => {
         (async () => {
 
             try {
-                const program = (await countPrograms()).data
-                const unit = (await countUnits()).data
+                const program = (await countPrograms(year)).data
+                const unit = (await countUnits(year)).data
                 setCount({
                         programs : program,
                         units : unit
                 })
             } catch (err) {
+                console.log(err)
                 messageApi.error("Unexpected Error Occured")
             } 
 
         })()
-    }, [])
+    }, [year])
+
+    const fetchSectors = async () => {
+        try {
+            const _sectors = (await sectorGetByQuery({ calendar_year : year}, [])).data;
+            setSectors(_sectors);
+        } catch (error) {
+            message.error(parseResError(error).msg);
+        }
+    }
+
+    useEffect(() => {
+        fetchSectors();
+    }, [year]);
 
     return (
         <RoleGuard role={["admin", "planning officer"]}>
             { contextHolder }
+            <Flex className="w-full" justify="end">
+                <Select  value={year} onChange={(e) => setYear(e)} options={generateYearOptionsFixed} />
+            </Flex>
             <Title level={3} >Division</Title>
             <div className="">
                 <Layout>
@@ -75,7 +98,7 @@ const Programs = () => {
                             <Button type="primary" className="w-fit" onClick={() => setDraweStates({...drawerStates, newUnit:true})}>Create Unit</Button>
                             <Button className="w-fit" onClick={() => setDraweStates({...drawerStates, assignHead:true})}>Assign Head</Button>
                         </Space>
-                        <ProgramLists  />
+                        <ProgramLists year={year}  />
                         <div id="units">
                             <UnitsList />
                         </div>
@@ -84,7 +107,7 @@ const Programs = () => {
             </div>
 
             <Drawer open={drawerStates.newProgram} onClose={() => setDraweStates({...drawerStates, newProgram:false})} >
-                <CreateProgram />
+                <CreateProgram sectors={sectors} />
             </Drawer>
             <Drawer open={drawerStates.newUnit} onClose={() => setDraweStates({...drawerStates, newUnit:false})} >
                 <CreateUnit />

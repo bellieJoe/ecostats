@@ -18,8 +18,12 @@ const RequestedReportSchema = new mongoose.Schema({
     required : true
   },
   form_name : {
-    type : String,
-    required : true
+    type : String
+  },
+  report_config_id : {
+    type : Schema.Types.ObjectId,
+    required : true,
+    ref : "report_configs"
   },
   unit_id : {
     type : Schema.Types.ObjectId,

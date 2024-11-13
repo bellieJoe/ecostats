@@ -49,12 +49,12 @@ const NavbarMenus = () => {
                 onClick: () => navigate("/reports"),
                 role : ["admin", "planning officer", "chief", "focal"]
             },
-            {
-                key : "4",
-                label : "Dashboard",
-                onClick: () => navigate("/dashboard"),
-                role : ["admin", "planning officer", "chief", "focal"]
-            },
+            // {
+            //     key : "4",
+            //     label : "Dashboard",
+            //     onClick: () => navigate("/dashboard"),
+            //     role : ["admin", "planning officer", "chief", "focal"]
+            // },
         ];
         setItems(i.filter(i => {
             return i.role?.includes(authStore.user?.role!)
