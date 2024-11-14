@@ -1,14 +1,32 @@
-import { Button, Collapse, Drawer, Flex, Form, Space, Typography } from "antd"
-import { useReportFieldsStore, useUpdateFieldsStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore"
+import { Button, Collapse, Drawer, Flex, Form, message, Popconfirm, Space, Typography } from "antd"
+import { useInsertFieldStore, useReportFieldsStore, useUpdateFieldsStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore"
 import UpdateField from "./UpdateField";
 import { useEffect, useState } from "react";
+import { parseResError } from "../../../services/errorHandler";
+import { reportConfigDeleteField } from "../../../services/api/reportConfigApi";
+import InsertField from "./InsertField";
 
 const Text = Typography.Text;
 
 const RecursiveFields = ({ fields } : { fields : any[] }) => {
 
+    const [isDeleting, setIsDeleting] = useState(false);
     const { setStore, field } = useUpdateFieldsStore();
-    const { reportData } = useReportFieldsStore();
+    
+    const { reportData, setReportData } = useReportFieldsStore();
+
+    const handleDelete = async (identifier) => {
+        setIsDeleting(true);
+        try {
+            const d = (await reportConfigDeleteField(reportData._id, identifier)).data;
+            setReportData(d);
+            message.success("Field successfully deleted.");
+        } catch (error) {
+            message.error(parseResError(error).msg)
+        } finally {
+            setIsDeleting(false);
+        }
+    }
     
 
     return (
@@ -26,7 +44,9 @@ const RecursiveFields = ({ fields } : { fields : any[] }) => {
                         >
                             <div key={index}>
                                 <Flex justify="end" gap={4}>
-                                    <Button size="small" color="danger" variant="outlined">Delete</Button>
+                                    <Popconfirm title="Delete Field" description="Are you sure you want to delete this field?" onConfirm={() => handleDelete(field.identifier)}>
+                                        <Button size="small" color="danger" variant="outlined" loading={isDeleting}>Delete</Button>
+                                    </Popconfirm>
                                     <Button size="small" onClick={() => {
                                         setStore(reportData._id, field);
                                     }}>Edit</Button>
@@ -53,6 +73,7 @@ const RecursiveFields = ({ fields } : { fields : any[] }) => {
                     </Collapse>
                 ))
             }
+            
         </>
     )
 }
@@ -60,7 +81,7 @@ const RecursiveFields = ({ fields } : { fields : any[] }) => {
 const FieldsDrawer = ({onClose}) => {
 
     const store = useReportFieldsStore();
-
+    const insertFieldStore = useInsertFieldStore();
     const [form] = Form.useForm();
 
     return (
@@ -74,7 +95,8 @@ const FieldsDrawer = ({onClose}) => {
             open={Object.keys(store.reportData).length > 0}
         >
             <RecursiveFields fields={store.reportData.fields} />
-
+            <Button onClick={() => insertFieldStore.setReportData(store.reportData)}>Add Field</Button>
+            <InsertField />
             <UpdateField />
         </Drawer>
     )

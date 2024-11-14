@@ -2,7 +2,6 @@ import { Alert, Button, Checkbox, Drawer, Flex, Form, Input, message, Select } f
 import { useReportFieldsStore, useUpdateFieldsStore } from "../../../stores/useReportConfigStore";
 import { useEffect, useState } from "react";
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-import { forEach } from "lodash";
 import { parseResError } from "../../../services/errorHandler";
 import { reportDataGetByQuery } from "../../../services/api/reportDataApi";
 import { reportConfigUpdateField } from "../../../services/api/reportConfigApi";
@@ -31,7 +30,7 @@ const UpdateField = () => {
         const data = form.getFieldsValue();
         try {
             const d = (await reportConfigUpdateField(report_config_id, data, field.identifier)).data;
-            reportFieldStore.reportData = d;
+            reportFieldStore.setReportData(d);
             message.success("Field successfully updated.");
             form.resetFields();
             clear();

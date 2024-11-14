@@ -31,6 +31,16 @@ export const useReportFieldsStore = create<{
    }
 }));
 
+export const useInsertFieldStore = create<{
+    reportData : any
+    setReportData : (reportData : any|null) => void
+}>((set) => ({
+    reportData: {},
+   setReportData : (reportData : any|null) => {
+       set({reportData : reportData})
+   }
+}));
+
 export const useUpdateFieldsStore = create<{
     report_config_id : string
     field : any,

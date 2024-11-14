@@ -24,6 +24,17 @@ export const reportConfigDelete = async (id : any) : Promise<any> => {
     return res;
 }
 
+export const reportConfigDeleteField = async (report_config_id, identifier) : Promise<any> => {
+    const res = await axios.delete(`${apiUrl}/report-configs/fields/delete`, {
+        params : {
+            
+            report_config_id : report_config_id, 
+            identifier: identifier
+        }
+    });
+    return res;
+}
+
 export const reportConfigCreate = async (model : any) : Promise<any> => {
     const res = await axios.post(`${apiUrl}/report-configs`, {
         model : model
@@ -34,6 +45,13 @@ export const reportConfigCreate = async (model : any) : Promise<any> => {
 export const reportConfigSaveMany = async (models : any) : Promise<any> => {
     const res = await axios.post(`${apiUrl}/report-configs/save-many`, {
         models : models
+    });
+    return res;
+}
+
+export const reportConfigInsertField = async (report_config_id : string, newField : any, position_identifier  : string, position : string) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/report-configs/fields/insert`, {
+        report_config_id, newField, position_identifier, position
     });
     return res;
 }
