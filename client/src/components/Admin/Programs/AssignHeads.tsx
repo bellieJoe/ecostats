@@ -6,7 +6,7 @@ import debounce from 'lodash.debounce';
 import { searchProgramByName } from "../../../services/api/programApi";
 import { ValidationError } from "../../../types/ApiValidationError";
 import FieldError from "../../FieldError";
-import {  searchUnitByName } from "../../../services/api/unitApi";
+import {  getUnitsByQuery, searchUnitByName } from "../../../services/api/unitApi";
 import { parseResError } from "../../../services/errorHandler";
 
 const AssignHeads = () => {
@@ -74,23 +74,22 @@ const AssignHeads = () => {
     const debouncedUnitSearch = useCallback(
         debounce((value) => {
             setSelectUnitloading(true)
-            getByQuery({
+            getUnitsByQuery({
                 name : {
                     $regex : value,
                     $options : "i"
                 },
-                role : "chief"
-            })
+                deletedAt : null
+            }, [])
             .then(res => {
                 console.log(res.data)
                 const options = res.data.map(val => {
                     return {
                         value : val._id,
                         label : val.name,
-                        email : val.email
                     }
                 });
-                setUserOptions(options)
+                setUnitOptions(options)
             })
             .catch(err => {
                 messageApi.error("Unexpected Error occured")

@@ -1,19 +1,25 @@
-import { ConfigProvider, Menu, ThemeConfig } from "antd";
+import { ConfigProvider, Menu, message, Select, ThemeConfig } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SidebarUser from "../SidebarUser";
-import { FormEnum, Sector } from "../../types/forms/formNameEnum";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFile, faList } from "@fortawesome/free-solid-svg-icons";
+import { faChartBar, faChartLine, faChartSimple, faFile } from "@fortawesome/free-solid-svg-icons";
 import { useAuthStore } from "../../stores/useAuthStore";
 import _ from "lodash"
 import Title from "antd/es/typography/Title";
-import { land_1_col_defs } from "../Reports/Forms/Land/Land_Table_1";
+import { parseResError } from "../../services/errorHandler";
+import { getProgramByQuery } from "../../services/api/programApi";
+import { getUnitsByQuery } from "../../services/api/unitApi";
+import { focalPersonGetByQuery } from "../../services/api/focalPersonApi";
+import { sectorGetByQuery } from "../../services/api/sectorApi";
+import { generateYearOptionsFixed } from "../../services/helper";
 
 const DashboardSidebar = ({open}) => {
     const navigate = useNavigate();
     const authStore = useAuthStore();
+
+    const [year, setYear] = useState<number>(new Date().getFullYear());
 
     const [collapsed, setCollapsed] = useState(true);
 
@@ -55,469 +61,57 @@ const DashboardSidebar = ({open}) => {
 
     useEffect(() => setCollapsed(open), [open]);
 
-    useEffect(()=>{
-        const i = [
-            {
-                key: "overview",
-                label : "Overview",
-                icon : <FontAwesomeIcon icon={faFile} />,
-                style: menuStyle1,
-                role : ["admin", "planning officer", "chief"],
-                onClick : () => navigate(`/dashboard`)
-            },
-            {
-                key: Sector.LAND,
-                label: "Land Sector",
-                icon: <FontAwesomeIcon icon={faList} />,
-                style: menuStyle1,
-                role : ["admin", "planning officer", "chief", "focal"],
-                children : [
+    const initSidebar = async () => {
+        try {
+            const it : any[] = [];
+    
+            const programs : any[] = (await getProgramByQuery({programHead : authStore.user?._id!, deletedAt : null}, [])).data;
+            const units : any[] = (await getUnitsByQuery({unitHead : authStore.user?._id!, deletedAt : null}, ["programId"])).data;
+            const fp : any[] = (await focalPersonGetByQuery(
+                {
+                    userId : authStore.user?._id,
+                    deletedAt : null
+                }, 
+                [
                     {
-                        key: "Land Management",
-                        label: "A. Land Management",
-                        style: menuStyle1,
-                        children : [
-                            {
-                                key : FormEnum.LAND_1,
-                                label : "Land Area",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.LAND_1}`)
-                            },
-                            {
-                                key : FormEnum.LAND_2,
-                                label : "Patrimonial Properties",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.LAND_2}`)
-                            },
-                        ]
-                    },
-                    {
-                        key : "Land Management Disposition",
-                        label : "B.	Land Management Disposition",
-                        style: menuStyle1,
-                        children : [
-                            {
-                                key : "Patentable Public Land Application",
-                                label : "a. Patentable Public Land Application",
-                                children : [
-                                    {
-                                        key : FormEnum.LAND_3,
-                                        label : "Residential Free Patent Issued",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.LAND_3}`)
-                                    },
-                                    {
-                                        key : FormEnum.LAND_4,
-                                        label : "Agricultural Free Patent Issued",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.LAND_4}`)
-                                    },
-                                    {
-                                        key : FormEnum.LAND_5,
-                                        label : "Homestead",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.LAND_5}`)
-                                    },
-                                    {
-                                        key : FormEnum.LAND_6,
-                                        label : "List of Special Patent of LGUs and NGAs",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.LAND_6}`)
-                                    },
-                                ]
-                            },
-                            {
-                                key : "Non-Patentable Public Land Application",
-                                label : "b.	Non-Patentable Public Land Application",
-                                children : [
-                                    {
-                                        key : FormEnum.LAND_7,
-                                        label : "Management of Foreshore Areas",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.LAND_7}`)
-                                    },
-                                ]
-                            },
-                        ]
+                        path: "unitId",
+                        populate : {
+                            path: "programId"
+                        }
                     }
                 ]
-            },
-            {
-                key: Sector.FORESTRY,
-                label: "Forestry Sector",
-                icon: <FontAwesomeIcon icon={faList} />,
-                style: menuStyle1,
-                role : ["admin", "planning officer", "chief", "focal"],
-                children: [
-                    {
-                        key: "Forest Resources",
-                        label : "A.	Forest Resources",
-                        children : [
-                            {
-                                key : FormEnum.FORESTRY_1,
-                                label : "Land Classification",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_1}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_2,
-                                label : "Land Cover",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_2}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_3,
-                                label : "Production and Protection Forest (Hectares)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_3}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_4,
-                                label : "Proclaimed Watershed Forest Reserve",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_4}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_5,
-                                label : "Priority Critical Watershed Supporting National Irrigation System",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_5}`)
-                            },
-                        ]
-                    },
-                    {
-                        key : "Tenurial Instrument",
-                        label : "B.	Tenurial Instrument",
-                        children : [
-                            {
-                                key : FormEnum.FORESTRY_6,
-                                label : "Existing Community-Based Forest Management Agreement",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_6}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_7,
-                                label : "Community Forest Stewardship Agreement",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_7}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_8,
-                                label : "Existing Agroforestry Land Management Agreement",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_8}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_9,
-                                label : "Integrated Social Forestry (ISF)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_9}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_10,
-                                label : "Forest land Grazing Lease Agreement (FLGLA)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_10}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_11,
-                                label : "Forest Land Grazing Management Agreement (FLGMA)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_11}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_12,
-                                label : "Existing Forest Land Management Agreement (FLMA)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_12}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_13,
-                                label : "Forest Land Use Agreement (FLAg)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_13}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_14,
-                                label : "Existing Forest Land Use Agreement for Tourism Purposes (FLAgT)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_14}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_15,
-                                label : "Existing Integrated Forest Management Agreement (IFMA)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_15}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_16,
-                                label : "Industrial Tree Plantation Lease Agreement (ITPLA)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_16}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_17,
-                                label : "Gratuitous Permit for the Special Uses of Forest Lands (GSUP)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_17}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_18,
-                                label : "Existing Socialized Industrial Forest Management Agreement (SIFMA)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_18}`)
-                            },
-                            {
-                                key : FormEnum.FORESTRY_19,
-                                label : "Existing Special Land Use Permit (SLUP)",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_19}`)
-                            },
-                        ]
-                    },
-                    {
-                        key : FormEnum.FORESTRY_24,
-                        label : "Issued Chainsaw Registration",
-                        style  : menuStyle2,
-                        onClick : () => navigate(`/dashboard/${FormEnum.FORESTRY_24}`)
-                    },
-                ]
-            },
-            {
-                key: Sector.BIODIVERSITY,
-                label: "Biodiversity Sector",
-                icon: <FontAwesomeIcon icon={faList} />,
-                style: menuStyle1,
-                role : ["admin", "planning officer", "chief", "focal"],
-                children: [
-                    {
-                        key : "Protected Area",
-                        label :"A. Protected Area",
-                        children : []
-                    },
-                    {
-                        key : "Coastal Resource Management",
-                        label :"B. Coastal Resource Management",
-                        children : [
-                            {
-                                key : FormEnum.BIODIVERSITY_2,
-                                label : "Area Distribution of Coastal Resources",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_2}`)
-                            },
-                            {
-                                key : FormEnum.BIODIVERSITY_3,
-                                label : "Inventory of Coral Reef",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_3}`)
-                            },
-                            {
-                                key : FormEnum.BIODIVERSITY_4,
-                                label : "Inventory of Seagrass",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_4}`)
-                            },
-                            {
-                                key : FormEnum.BIODIVERSITY_5,
-                                label : "Mangrove Assessment",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_5}`)
-                            },
-                            {
-                                key : FormEnum.BIODIVERSITY_6,
-                                label : "Mangrove Area Rehabilitated",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_6}`)
-                            },
-                            {
-                                key : FormEnum.BIODIVERSITY_7,
-                                label : "Livelihood Projects Implemented in Coastal Areas",
-                                style  : menuStyle2,
-                                onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_7}`)
-                            },
-                        ]
-                    },
-                    {
-                        key : "Biodiversity Conservation and Wildlife Management",
-                        label :"C. Biodiversity Conservation and Wildlife Management",
-                        children : [
-                            {
-                                key : "a. Caves and inland Wetland",
-                                label :"a. Caves and inland Wetland",
-                                children : [
-                                    {
-                                        key : FormEnum.BIODIVERSITY_8,
-                                        label : "Inland Wetland in the Region",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_8}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_9,
-                                        label : "Classified Caves",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_9}`)
-                                    },
-                                ]
-                            },
-                            {
-                                key : "b. Critical Habitats",
-                                label :"b. Critical Habitats",
-                                children : [
-                                    {
-                                        key : FormEnum.BIODIVERSITY_10,
-                                        label : "Identified/Assessed Critical Habitats",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_10}`)
-                                    },
-                                ]
-                            },
-                            {
-                                key : "c. Wildlife Registration and Permits",
-                                label :"c. Wildlife Registration and Permits",
-                                children : [
-                                    {
-                                        key : FormEnum.BIODIVERSITY_11,
-                                        label : "Certificate of Wildlife Registration",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_11}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_12,
-                                        label : "Wildlife Import/Export/Re-Export Permit",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_12}`)
-                                    },
-                
-                                    {
-                                        key : FormEnum.BIODIVERSITY_15,
-                                        label : "Wildlife Collector's Permit (WCP)",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_15}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_16,
-                                        label : "Gratuitous Permit (GP)",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_16}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_17,
-                                        label : "Wildlife Special Use Permit",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_17}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_19,
-                                        label : "Wildlife Farm Permit",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_19}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_20,
-                                        label : "Wildlife Culture Permit",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_20}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_21,
-                                        label : "Clearance to Operate (for Zoological Parks and Botanical Gardens)",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_21}`)
-                                    },
-                                ]
-                            },
-                            {
-                                key : "d. Flora and Fauna",
-                                label :"d. Flora and Fauna",
-                                children : [
-                                    {
-                                        key : FormEnum.BIODIVERSITY_22,
-                                        label : "Known Fauna Species by Taxonomic Group",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_22}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_23,
-                                        label : "Known Flora Species by Taxonomic Group",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_23}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_24,
-                                        label : "Endemic Fauna Species by Taxonomic Group",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_24}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_25,
-                                        label : "Endemic Flora Species by Taxonomic Group",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_25}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_26,
-                                        label : "Wild Flora Confiscation",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_26}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_27,
-                                        label : "Wild Fauna Confiscation",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_27}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_28,
-                                        label : "Wild Fauna Retrieval and Donation",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_28}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_29,
-                                        label : "Wild Flora Retrieval and Donation",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_29}`)
-                                    },
-                                ]
-                            },
-                            {
-                                key : "e. Wildlife Rescue and Retrieval",
-                                label :"e. Wildlife Rescue and Retrieval",
-                                children : [
-                                    {
-                                        key : FormEnum.BIODIVERSITY_30,
-                                        label : "Inventory of Wildlife at DENR Established Wildlife Rescue Centers",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_30}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_31,
-                                        label : "Population of Threatened Species",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_31}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_32,
-                                        label : "Marine Turtles Tagged and Released",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_32}`)
-                                    },
-                                    {
-                                        key : FormEnum.BIODIVERSITY_33,
-                                        label : "Stranded Marine Turtle",
-                                        style  : menuStyle2,
-                                        onClick : () => navigate(`/dashboard/${FormEnum.BIODIVERSITY_33}`)
-                                    },
-                                ]
-                            },
-                        ]
-                    }, 
-                ]
-            },
-        ];
-        setItems([...i.filter(i => i.role.includes(authStore.user?.role!))])
+            )).data;
+            const sectors = (await sectorGetByQuery({calendar_year : year}, ["configs"])).data;
+            
+            sectors.forEach( (sector) => {
+                if(["planning officer", "admin"].includes(authStore.user?.role!) || [...programs.map(a => a.sector_id), ...units.map(a => a.programId.sector_id), ...fp.map(a => a.unitId.programId.sector_id)].includes(sector._id)){
+                    it.push({
+                        key: sector._id,
+                        label : sector.name,
+                        icon : <FontAwesomeIcon icon={faChartSimple} />,
+                        style: menuStyle1,
+                        children : sector.configs?.map((config : any) => {
+                            return {
+                                key : config._id,
+                                label : config.name,
+                                style : menuStyle2,
+                                onClick : () => navigate(`/dashboard/report/${config._id}`)
+                            }
+                        })
+                    });
+                }
+            })
+    
+            setItems(it);
+        } catch (error) {
+            message.error(parseResError(error).msg)
+        }
+    }
+
+    useEffect(()=>{
         
-    }, [authStore.user]);
+        initSidebar();
+    }, [authStore.user, year]);
 
     return (
         <>
@@ -534,7 +128,10 @@ const DashboardSidebar = ({open}) => {
             trigger={null}>
                 <div style={{padding: "0.5rem"}} >
                     <SidebarUser />
-                    <Title className="my-4" level={5} style={{color: "white"}}>Dashboard</Title>
+                    {/* <Title className="my-4" level={5} style={{color: "white"}}>Dashboard</Title> */}
+                    <div className="w-full " >
+                        <Select   value={year} className="block ms-auto me-0 w-fit"    options={generateYearOptionsFixed} onChange={e => setYear(e)} />
+                    </div>
                     <Menu
                         mode="inline"
                         defaultSelectedKeys={['1']}

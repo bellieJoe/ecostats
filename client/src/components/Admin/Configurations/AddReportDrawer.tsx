@@ -161,7 +161,7 @@ const RecursiveField = ({ fieldPath, form } : { fieldPath: any, form: FormInstan
                                         name={[field.name, 'name']}
                                         rules={[{ required: true, message: 'Please enter a field name' }]}
                                     >
-                                    <Input placeholder="Field name" />
+                                        <Input placeholder="Field name" />
                                     </Form.Item>
 
                                     <IsNestedComponent fieldName={field.name} form={form} />

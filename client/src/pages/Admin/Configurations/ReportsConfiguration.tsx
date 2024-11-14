@@ -6,12 +6,14 @@ import { sectorGetByQuery } from "../../../services/api/sectorApi";
 import { parseResError } from "../../../services/errorHandler";
 import { AddchartOutlined, AddOutlined, MoreHoriz, Update } from "@mui/icons-material";
 import AddReportDrawer from "../../../components/Admin/Configurations/AddReportDrawer";
-import { useAddReportConfigStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore";
+import { useAddReportConfigStore, useReportFieldsStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore";
 import { reportConfigDelete, reportConfigGetByQuery } from "../../../services/api/reportConfigApi";
 import { BarChartOutlined, PlusOutlined } from "@ant-design/icons";
 import AddChart from "../../../components/Reports/AddChart";
 import { useAddChartStore, useViewChartStore } from "../../../stores/useReportStore";
 import ViewCharts from "../../../components/Reports/ViewCharts";
+import UpdateReportDrawer from "../../../components/Admin/Configurations/UpdateReportDrawer";
+import FieldsDrawer from "../../../components/Admin/Configurations/Fields";
 
 const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, refresh:boolean, setRefresh : () => void}) => {
     const [configs, setConfigs] = useState<any[]>([]);
@@ -19,6 +21,7 @@ const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, ref
 
     const viewChartStore = useViewChartStore();
     const addChartStore = useAddChartStore();
+    const reportFieldsStore = useReportFieldsStore();
 
     const fetchConfigs = async () => {
         try {
@@ -60,7 +63,8 @@ const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, ref
                         <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this Report Configuration?" onConfirm={() => handleDelete(config._id)}>
                             <Button size="small" variant="solid" color="danger">Delete</Button>
                         </Popconfirm>
-                        <Button size="small" >Update</Button>
+                        <Button size="small" onClick={() => setReportData(config)} >Update</Button>
+                        <Button size="small" onClick={() => reportFieldsStore.setReportData(config)} >Fields</Button>
                         <Dropdown
                             menu={{
                                 items: [
@@ -87,7 +91,6 @@ const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, ref
                                 Charts
                             </Button>
                         </Dropdown>
-                        <Button size="small" >Fields</Button>
                     </Flex>
                 </Flex>
             </List.Item>
@@ -163,7 +166,8 @@ const ReportConfiguration =  () =>  {
                 setRefresh(!refresh)
                 console.log("refresh")
                 }}  />
-            {/* <UpdateReportDrawer onClose={() => setRefresh(!refresh)} /> */}
+            <UpdateReportDrawer onClose={() => setRefresh(!refresh)} />
+            <FieldsDrawer onClose={() => setRefresh(!refresh)} />
         </div>
     );
 }

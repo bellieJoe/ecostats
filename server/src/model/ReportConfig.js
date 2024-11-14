@@ -84,6 +84,12 @@ ReportConfigSchema.virtual("charts", {
     foreignField: "report_config_id"
 })
 
+ReportConfigSchema.virtual("data", {
+    ref: "report_data",
+    localField: "_id",
+    foreignField: "report_config_id"
+})
+
 
 const ReportConfigModel = mongoose.model('report_configs', ReportConfigSchema);
 

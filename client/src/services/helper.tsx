@@ -128,4 +128,19 @@ export const convertReportFilters = (filters : any) => {
   return _filters; 
 }
 
+export function getRandomColor(index : number) {
+  const colors = [
+    "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#33FFF6", "#FFD733", "#D733FF", "#FF8C33", "#8CFF33", "#338CFF",
+    "#FF3368", "#33FF94", "#9433FF", "#33FFA8", "#FF8C33", "#A8FF33", "#FF338C", "#338CFF", "#D733FF", "#FF8C33",
+    "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#33FFF6", "#FFD733", "#FF33D7", "#D7FF33", "#33FFD7", "#57FF33",
+    "#FF3357", "#33D7FF", "#FF57A1", "#A1FF33", "#33FF8C", "#8C33FF", "#FFD733", "#57FF33", "#FF338C", "#A8FF33",
+    "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#33FFF6", "#FFD733", "#D733FF", "#FF8C33", "#8CFF33", "#338CFF",
+    "#FF3368", "#33FF94", "#9433FF", "#33FFA8", "#FF8C33", "#A8FF33", "#FF338C", "#338CFF", "#D733FF", "#FF8C33",
+    "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#33FFF6", "#FFD733", "#FF33D7", "#D7FF33", "#33FFD7", "#57FF33",
+    "#FF3357", "#33D7FF", "#FF57A1", "#A1FF33", "#33FF8C", "#8C33FF", "#FFD733", "#57FF33", "#FF338C", "#A8FF33",
+    "#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#33FFF6", "#FFD733", "#D733FF", "#FF8C33", "#8CFF33", "#338CFF",
+    "#FF3368", "#33FF94", "#9433FF", "#33FFA8", "#FF8C33", "#A8FF33", "#FF338C", "#338CFF", "#D733FF", "#FF8C33"
+  ];
   
+  return colors[index];
+}
