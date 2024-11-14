@@ -9,9 +9,6 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js"
 import programRoutes from "./routes/programRoutes.js"
 import unitRoutes from "./routes/unitRoutes.js"
-import landRoutes from "./routes/landRoutes.js"
-import forestryRoutes from "./routes/forestryRoutes.js"
-import biodiversityRoutes from "./routes/biodiversityRoutes.js"
 import requestedReportRoutes from "./routes/requestedReportRoutes.js"
 import budgetRoutes from "./routes/budgetRoutes.js"
 import focalPersonRoutes from "./routes/focalPersonRoutes.js"
@@ -67,9 +64,6 @@ app.use("/users", userRoutes);
 app.use("/programs", programRoutes);
 app.use("/units", unitRoutes);
 app.use("/requested-reports", requestedReportRoutes);
-app.use("/land", landRoutes);
-app.use("/forestry", forestryRoutes);
-app.use("/biodiversity", biodiversityRoutes);
 app.use("/budgets", budgetRoutes);
 app.use("/focal-persons", focalPersonRoutes);
 app.use("/sectors", sectorRoutes);

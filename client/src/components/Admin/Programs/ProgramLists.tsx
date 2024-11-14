@@ -45,7 +45,7 @@ const ProgramLists = ({year} : { year : number }) => {
             render : (record : DataSource) => {
                 return (
                     <>
-                        { record.programHead.name }
+                        { record.programHead?.name }
                     </>
                 );
             }

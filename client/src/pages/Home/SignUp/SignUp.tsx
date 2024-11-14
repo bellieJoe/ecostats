@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import 'boxicons/css/boxicons.min.css';
-import { Link, Button, Paper, TextField, Typography, MenuItem, Select, FormControl, InputLabel, Alert } from "@mui/material";
+import { Link, Button, Paper, TextField, Typography, MenuItem, Select, FormControl, InputLabel, Alert, LinearProgress, CircularProgress } from "@mui/material";
 import { useRoleStore } from "../../../stores/useRoleStore";
 import { signup } from "../../../services/api/userApi";
 import { AxiosResponse } from "axios";
@@ -97,6 +97,8 @@ function SignUp() {
         },
     ];
 
+    const [isSaving, setIsSaving] = useState<boolean>(false);
+
     const [ errors , setErrors ] = useState<ValidationError[]>([])
 
     const [ signupFormData, setSignupFormData ] = useState({
@@ -114,6 +116,7 @@ function SignUp() {
 
     const handleSignupSubmit = async (e) => {
         e.preventDefault();
+        setIsSaving(true)
         setErrors([])
         try {
             const { email, password, name, role } = signupFormData;
@@ -128,6 +131,8 @@ function SignUp() {
             if(error.response.status = 422){
                 setErrors([...error.response.data.errors])
             }
+        } finally {
+            setIsSaving(false)
         }
     }
 
@@ -216,7 +221,10 @@ function SignUp() {
                             </FormControl>
                             <FieldError errors={errors} name="userRole" />
                         </div>
-                        <Button style={btnStyle} variant="contained" type="submit">Register</Button>
+                        <Button disabled={isSaving} style={btnStyle} variant="contained" type="submit" > 
+                            { isSaving && <CircularProgress className="me-2" size={20} /> }
+                            Register
+                        </Button>
                     </form>
                     <Typography style={linkStyle}>
                         Already have an account? <Link href="/login" style={{ color: "#fff", textDecoration: "underline" }}>Login</Link>

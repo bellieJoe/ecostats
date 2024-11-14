@@ -213,7 +213,7 @@ const UnitsList = () => {
             render : (record : DataSource) => {
                 return (
                     <>
-                        { record.unitHead.name }
+                        { record.unitHead?.name }
                     </>
                 );
             }
