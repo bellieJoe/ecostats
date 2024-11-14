@@ -149,6 +149,7 @@ import Forestry_19_Dashboard from './pages/Dashboard/Forestry/Forestry_19_dashbo
 import Sectors from './pages/Admin/Configurations/Sector'
 import ReportsConfiguration from './pages/Admin/Configurations/ReportsConfiguration'
 import Report from './pages/Reports/DataEntry/Report'
+import ReportDashboard from './pages/Dashboard/ReportDashboard'
 
 axios.defaults.withCredentials = true;
 
@@ -221,9 +222,12 @@ function App() {
                 </Route>
 
                 <Route path='dashboard' element={<Dashboard />}>
-                  <Route path='' element={<Overview />} />
 
-                  <Route path='land_1' element={<Land_1_Dashboard />} />
+                  <Route path='report/:_id' element={<ReportDashboard />} />
+                  
+                  {/* <Route path='' element={<Overview />} /> */}
+
+                  {/* <Route path='land_1' element={<Land_1_Dashboard />} />
                   <Route path='land_2' element={<Land_2_Dashboard />} />
                   <Route path='land_3' element={<Land_3_Dashboard />} />
                   <Route path='land_4' element={<Land_4_Dashboard />} />
@@ -284,7 +288,7 @@ function App() {
                   <Route path='biodiversity_30' element={<Biodiversity_30_Dashboard />} />
                   <Route path='biodiversity_31' element={<Biodiversity_31_Dashboard />} />
                   <Route path='biodiversity_32' element={<Biodiversity_32_Dashboard />} />
-                  <Route path='biodiversity_33' element={<Biodiversity_33_Dashboard />} />
+                  <Route path='biodiversity_33' element={<Biodiversity_33_Dashboard />} /> */}
                 </Route>
 
                 <Route path='reports' element={<Reports />}>
@@ -293,7 +297,7 @@ function App() {
 
                     <Route path='report/:_id' element={<Report />} />
 
-                    <Route path={Sector.LAND} >
+                    {/* <Route path={Sector.LAND} >
                       <Route path='toc' element={<LandTOC />} />
                       <Route path='land_1' element={<Land_1 />} />
                       <Route path='land_2' element={<Land_2 />} />
@@ -362,7 +366,7 @@ function App() {
                       <Route path={FormEnum.BIODIVERSITY_31} element={<Biodiversity_31 />} />
                       <Route path={FormEnum.BIODIVERSITY_32} element={<Biodiversity_32 />} />
                       <Route path={FormEnum.BIODIVERSITY_33} element={<Biodiversity_33 />} />
-                    </Route>
+                    </Route> */}
                 </Route>
 
                 {/* Error Pages */}
