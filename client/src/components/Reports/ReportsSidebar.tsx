@@ -97,9 +97,9 @@ const ReportsSidebar = ({open}) => {
     
             
             const programs : any[] = (await getProgramByQuery({programHead : authStore.user?._id!, deletedAt : null}, [])).data;
-            console.log("programs", programs)
+
             const units : any[] = (await getUnitsByQuery({unitHead : authStore.user?._id!, deletedAt : null}, ["programId"])).data;
-            console.log("units", units)
+
             const fp : any[] = (await focalPersonGetByQuery(
                 {
                     userId : authStore.user?._id,
@@ -114,10 +114,8 @@ const ReportsSidebar = ({open}) => {
                     }
                 ]
             )).data;
-            console.log("fp", fp)
+
             const sectors = (await sectorGetByQuery({calendar_year : year}, ["configs"])).data;
-            
-            console.log(sectors)
             
             sectors.forEach( (sector) => {
                 if(["planning officer", "admin"].includes(authStore.user?.role!) || [...programs.map(a => a.sector_id), ...units.map(a => a.programId.sector_id), ...fp.map(a => a.unitId.programId.sector_id)].includes(sector._id)){

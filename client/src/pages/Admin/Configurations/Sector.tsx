@@ -5,6 +5,8 @@ import { useEffect, useState } from "react";
 import { sectorCreate, sectorDelete, sectorGet, sectorGetByQuery, sectorUpdate } from "../../../services/api/sectorApi";
 import { parseResError } from "../../../services/errorHandler";
 import { set } from "lodash";
+import Generate from "../../../components/Admin/Configurations/Generate";
+import { useGenerateStore } from "../../../stores/useReportStore";
 
 const AddSectorDrawer = ({
     visible,
@@ -17,8 +19,6 @@ const AddSectorDrawer = ({
 }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState<boolean>(false);
-
-    
 
     const onFinish = async (values: any) => {
         const fields = form.getFieldsValue();
@@ -193,6 +193,8 @@ const Sectors = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [refresh, setRefresh] = useState<boolean>(false);
 
+    const generateStore = useGenerateStore();
+
     const getSectors = async () => {
         setLoading(true);
         try {
@@ -243,6 +245,9 @@ const Sectors = () => {
                 <Button type="primary" onClick={showDrawer}>
                     Add Sector
                 </Button>
+                {
+                    sectors.length <= 0 && <Button variant="solid" color="primary" onClick={() => generateStore.setYear(year)}>Copy Configuration</Button>
+                }
             </Space>
             <br/>
             <List
@@ -269,6 +274,7 @@ const Sectors = () => {
                     </List.Item>
                 )}
             />
+            <Generate onClose={() => {setRefresh(!refresh)}} />
             <AddSectorDrawer visible={addFormVisible} onClose={() => {onClose()}} year={year}/>
             <EditSectorDrawer visible={addFormVisible} onClose={() => {
                 SetToEdit(null)

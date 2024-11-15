@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
-import { Button, Card, Col, Flex, message, Row, Typography } from "antd";
+import { Button, Card, Col, Flex, message, Result, Row, Typography } from "antd";
 import { parseResError } from "../../services/errorHandler";
 import Title from "antd/es/typography/Title";
 import _ from "lodash"
@@ -14,7 +14,6 @@ const HorizontalBarChart = ({config, chart, data} : {config : any, chart : any, 
 
     const [chartData, setChartData] = useState<any[]>([]);
     const [fields, setFields] = useState<any[]>([]);
-    const stackId = 1;
 
     useEffect(() => {
         if(data.length > 0 && fields.length > 0){
@@ -28,7 +27,7 @@ const HorizontalBarChart = ({config, chart, data} : {config : any, chart : any, 
                         [fields.filter(f => f.identifier == chart.chart_config.y_axis)[0].name] : d[chart.chart_config.y_axis],
                      }
                      chart.chart_config.x_axis.forEach((item : any) => {
-                         _data[fields.filter(f => f.identifier == item)[0].name] = _.sum(data.map(d => parseInt(d[item])));
+                         _data[fields.filter(f => f.identifier == item)[0].name] = _.sum(data.filter(a => d[chart.chart_config.y_axis] == a[chart.chart_config.y_axis]).map(d => parseInt(d[item])));
                      });
                      return _data;
                  })
@@ -49,30 +48,35 @@ const HorizontalBarChart = ({config, chart, data} : {config : any, chart : any, 
         <Card className="w-full">
             <Typography.Paragraph className="text-center">{chart.title}</Typography.Paragraph>
             {
+                chartData.length <= 0 && (
+                    <Result status="error" title="No data available" />
+                )
+            }
+            {
                 (fields.length > 0 && data.length > 0) && (
-                        <ResponsiveContainer width="100%" height={300}>
-                            <BarChart
-                                data={chartData}
-                                layout="vertical"
-                            >
-                                <YAxis type="category" dataKey={fields.filter(f => f.identifier == chart.chart_config.y_axis)[0].name} />
-                                <XAxis type="number"  />
-                                <Tooltip />
-                                {
-                                    chart.chart_config.x_axis.map((item : any, index : number) => {
-                                        if(chart.chart_config.stacked)
-                                            return (
-                                                <Bar fill={getRandomColor(index)} stackId="a"  key={item} dataKey={fields.filter(f => f.identifier == item)[0].name}  />
-                                            )
-                                        else 
-                                            return (
-                                                <Bar fill={getRandomColor(index)}  key={item} dataKey={fields.filter(f => f.identifier == item)[0].name}  />
-                                            )
-                                    })
-                                }
-                                <Legend />
-                            </BarChart>
-                        </ResponsiveContainer>
+                    <ResponsiveContainer width="100%" height={300}>
+                        <BarChart
+                            data={chartData}
+                            layout="vertical"
+                        >
+                            <YAxis type="category" dataKey={fields.filter(f => f.identifier == chart.chart_config.y_axis)[0]?.name} />
+                            <XAxis type="number"  />
+                            <Tooltip />
+                            {
+                                chart.chart_config.x_axis.map((item : any, index : number) => {
+                                    if(chart.chart_config.stacked)
+                                        return (
+                                            <Bar fill={getRandomColor(index)} stackId="a"  key={item} dataKey={fields.filter(f => f.identifier == item)[0].name}  />
+                                        )
+                                    else 
+                                        return (
+                                            <Bar fill={getRandomColor(index)}  key={item} dataKey={fields.filter(f => f.identifier == item)[0]?.name}  />
+                                        )
+                                })
+                            }
+                            <Legend />
+                        </BarChart>
+                    </ResponsiveContainer>
                 )
             }
         </Card>
@@ -90,10 +94,10 @@ const VerticalBarChart = ({config, chart, data} : {config : any, chart : any, da
                  _.uniqBy(data, chart.chart_config.x_axis)
                  .map((d:any) => {
                      const _data =  {
-                        [fields.filter(f => f.identifier == chart.chart_config.x_axis)[0].name] : d[chart.chart_config.x_axis],
+                        [fields.filter(f => f.identifier == chart.chart_config.x_axis)[0]?.name] : d[chart.chart_config.x_axis],
                      }
                      chart.chart_config.y_axis.forEach((item : any) => {
-                         _data[fields.filter(f => f.identifier == item)[0].name] = _.sum(data.map(d => parseInt(d[item])));
+                         _data[fields.filter(f => f.identifier == item)[0]?.name] = _.sum(data.map(d => parseInt(d[item])));
                      });
                      return _data;
                  })
@@ -113,6 +117,11 @@ const VerticalBarChart = ({config, chart, data} : {config : any, chart : any, da
     return (
         <Card className="w-full">
             <Typography.Paragraph className="text-center">{chart.title}</Typography.Paragraph>
+            {
+                chartData.length <= 0 && (
+                    <Result status="error" title="No data available" />
+                )
+            }
             {
                 (fields.length > 0 && data.length > 0) && (
                     <ResponsiveContainer width="100%" height={300}>
@@ -177,6 +186,11 @@ const C_PieChart = ({config, chart, data} : {config : any, chart : any, data : a
         <Card className="w-full">
             <Typography.Paragraph className="text-center">{chart.title}</Typography.Paragraph>
             {
+                chartData.length <= 0 && (
+                    <Result status="error" title="No data available" />
+                )
+            }
+            {
                 (fields.length > 0 && data.length > 0) && (
                     <ResponsiveContainer width="100%" height={300}>
                         <PieChart
@@ -237,6 +251,11 @@ const C_LineChart = ({config, chart, data} : {config : any, chart : any, data : 
         <Card className="w-full">
             <Typography.Paragraph className="text-center">{chart.title}</Typography.Paragraph>
             {
+                chartData.length <= 0 && (
+                    <Result status="error" title="No data available" />
+                )
+            }
+            {
                 (fields.length > 0 && data.length > 0) && (
                     <ResponsiveContainer width="100%" height={300}>
                         <LineChart
@@ -278,6 +297,11 @@ const TabularPresentation = ({config, chart, data} : {config : any, chart : any,
     return (
         <Card className="w-full">
             <Typography.Paragraph className="text-center">{chart.title}</Typography.Paragraph>
+            {
+                chartData.length <= 0 && (
+                    <Result status="error" title="No data available" />
+                )
+            }
             {
                 (fields.length > 0 && data.length > 0) && (
                     <div className={`${data.length == 0 && "hidden"} mx-auto`}>
@@ -339,16 +363,24 @@ const ReportDashboard = () => {
     return (
         <div>
             <Title level={4}>{config.name}</Title>
-            <Button onClick={() => setRefresh(!refresh)} icon={<ReloadOutlined />}>Reload</Button>
-            <Row >
-                {charts.map((chart, index) => {
-                    return (
-                        <Col className="p-3" key={index} span={setSpans(chart)}>
-                            <RenderChart  chart={chart} data={data} config={config} />
-                        </Col>
-                    )
-                })}
-            </Row>
+            {
+                charts.length > 0 ? (
+                    <>
+                        <Button onClick={() => setRefresh(!refresh)} icon={<ReloadOutlined />}>Reload</Button>
+                        <Row >
+                            {charts.map((chart, index) => {
+                                return (
+                                    <Col className="p-3" key={index} span={setSpans(chart)}>
+                                        <RenderChart  chart={chart} data={data} config={config} />
+                                    </Col>
+                                )
+                            })}
+                        </Row>
+                    </>
+                ) : (
+                    (<Result status="404" title="No charts found"  />)
+                )
+            }
         </div>
     );
 }

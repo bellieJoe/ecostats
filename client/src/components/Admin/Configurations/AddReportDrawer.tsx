@@ -5,6 +5,15 @@ import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { useEffect, useState } from "react";
 import { reportConfigCreate } from "../../../services/api/reportConfigApi";
 import { parseResError } from "../../../services/errorHandler";
+import { flattenFields } from "../../../services/helper";
+
+const uniqueValuesValidator = async (_, values) => {
+    const uniqueValues = new Set(values);
+    if (uniqueValues.size !== values.length) {
+        return Promise.reject(new Error('Values must be unique.'));
+    }
+    return Promise.resolve();
+}
 
 const IsNestedComponent = ({fieldName, form}) => {
     const [isNested, setIsNested] = useState(false);
@@ -32,7 +41,20 @@ const IsNestedComponent = ({fieldName, form}) => {
                 preserve={false}
                 label="Identifier"
                 name={[fieldName, 'identifier']}
-                rules={[{ required: true, message: 'Please enter an identifier' }]}
+                rules={[
+                    { required: true, message: 'Please enter an identifier' },
+                    {
+                        pattern: /^[A-Za-z\s_]+$/,
+                        message: 'Identifier can only contain letters, spaces, and underscores',
+                    },
+                    {
+                        validator : async (_, value) => {
+                            const _values = [...flattenFields((await form.getFieldValue("fields")))];
+                            const values=[ ..._values.map(field => field.identifier)];
+                            return uniqueValuesValidator(_, values);
+                        }
+                    }
+                ]}
             >
                 <Input placeholder="Unique field identifier" />
             </Form.Item>
@@ -242,7 +264,9 @@ const AddReportDrawer = () => {
                         name="sector"
                         hidden
                         initialValue={AddReportConfigStore.sector?._id!}
-                        rules={[{ required: true, message: 'Please enter a report identifier' }]}
+                        rules={[
+                            { required: true, message: 'Please enter a report identifier' },
+                        ]}
                     >
                         <Input hidden  />
                     </Form.Item>
@@ -250,14 +274,27 @@ const AddReportDrawer = () => {
                         label="Sector"
                         name="sectorName"
                         initialValue={AddReportConfigStore.sector?.name!}
-                        rules={[{ required: true, message: 'Please enter a report identifier' }]}
+                        rules={[{ required: true, message: 'Please enter a report sector name' }]}
                     >
                         <Input readOnly  />
                     </Form.Item>
                     <Form.Item
                         label="Identifier"
                         name="identifier"
-                        rules={[{ required: true, message: 'Please enter a report identifier' }]}
+                        rules={[
+                            { required: true, message: 'Please enter a report identifier' },
+                            {
+                                pattern: /^[A-Za-z\s_]+$/,
+                                message: 'Identifier can only contain letters, spaces, and underscores',
+                            },
+                            {
+                                validator : async (_, value) => {
+                                    const _values = [...flattenFields((await form.getFieldValue("fields")))];
+                                    const values=[ ..._values.map(field => field.identifier)];
+                                    return uniqueValuesValidator(_, values);
+                                }
+                            }
+                        ]}
                         
                     >
                         <Input placeholder="Unique report identifier" />
@@ -266,7 +303,9 @@ const AddReportDrawer = () => {
                     <Form.Item
                         label="Name"
                         name="name"
-                        rules={[{ required: true, message: 'Please enter a report name' }]}
+                        rules={[
+                            { required: true, message: 'Please enter a report name' },
+                        ]}
                     >
                         <Input placeholder="Report name" />
                     </Form.Item>

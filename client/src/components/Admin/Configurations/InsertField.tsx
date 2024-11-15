@@ -44,6 +44,10 @@ const IsNestedComponent = ({fieldName, form}) => {
                 rules={[
                     { required: true, message: 'Please enter an identifier' },
                     {
+                        pattern: /^[A-Za-z\s_]+$/,
+                        message: 'Identifier can only contain letters, spaces, and underscores',
+                    },
+                    {
                         validator : async (_, value) => {
                             const _values = [...flattenFields((await form.getFieldValue("children"))), ...flattenFields(reportData?.fields)];
                             const values=[ ..._values.map(field => field.identifier), form.getFieldValue("identifier")];
@@ -324,6 +328,10 @@ const InsertField = () => {
                     name={'identifier'}
                     rules={[
                         { required: true, message: 'Please enter an identifier' },
+                        {
+                            pattern: /^[A-Za-z\s_]+$/,
+                            message: 'Identifier can only contain letters, spaces, and underscores',
+                        },
                         {
                             validator : async (_, value) => {
                                 const _values = [...flattenFields((await form.getFieldValue("children"))), ...flattenFields(reportData?.fields)];

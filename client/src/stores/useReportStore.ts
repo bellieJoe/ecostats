@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { FormEnum, Sector } from "../types/forms/formNameEnum";
+import { NumberFilterModel } from "ag-grid-community";
 
 interface PreviewReportState {
     report : any
@@ -77,6 +78,18 @@ export const useViewChartStore = create<{
     setCharts : (charts) => {
         set({
             charts : charts
+        })
+    }
+}));
+
+export const useGenerateStore = create<{
+    year : number|null
+    setYear : (year : number|null) => void
+}>((set) => ({
+    year : null,
+    setYear : (year) => {
+        set({
+            year : year
         })
     }
 }));

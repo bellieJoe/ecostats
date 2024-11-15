@@ -57,12 +57,13 @@ export const generateColDefs = (fields : any[]) => {
       f.editable = field.editable;
       f.field = field.identifier;
       if(["number", "text"].includes(field.input_type)){
-        f.type = getColDefType(field.input_type);
+        f.cellDataType = getColDefType(field.input_type);
       }
       if(field.input_type === "number"){
-        f.valueFormatter = (params) => {
-          return parseInt(params.value);
-        }
+        // f.valueFormatter = (params) => {
+        //   console.log("paramvalue" , params)
+        //   return parseInt(params.value);
+        // }
       }
       if(field.input_type === "enum"){
         f.cellEditor = "agSelectCellEditor";
@@ -89,10 +90,10 @@ export const generateColDefs = (fields : any[]) => {
 
 const getColDefType = (type : string) => {
   if(type == "text"){
-    return "textColumn";
+    return "text";
   }
   if(type == "number"){
-    return "numberColumn"
+    return "text"
   }
 }
 
