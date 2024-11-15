@@ -11,6 +11,7 @@ import CustomReportV2 from "../../../components/Reports/CustomReportV2";
 
 const Report = () => {
     const {_id} = useParams();
+
     const [reportConfig, setReportConfig] = useState<any>({});
 
     const items : TabsProps['items'] = [
@@ -40,9 +41,13 @@ const Report = () => {
             message.error(parseResError(error).msg);
         }
     }
+
     useEffect(() => {
-        setReportConfig({});
+        console.log("confog", reportConfig)
         fetchReportConfig();
+        return () => {
+            setReportConfig({})
+        }
     }, [_id]);
 
     
@@ -50,7 +55,7 @@ const Report = () => {
 
     return (
         <div>
-            <Title level={4}>{reportConfig.name}</Title>
+            <Title level={4}>{reportConfig?.name}</Title>
             <Tabs items={items} defaultActiveKey="1" />
         </div>
     )   

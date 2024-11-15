@@ -25,9 +25,21 @@ export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] =>
   
       if(!field.is_nested && !field.editable){
         _field.initialValue = field.default;
+        if(field.input_type === "enum"){
+            _field.input = (<Select disabled options={field.values.map((v : any) => ({label : v, value : v}))} />)
+          }
+          if(field.input_type === "text"){
+            _field.input = (<Input readOnly type="text" />)
+          }
+          if(field.input_type === "number"){
+            _field.input = (<Input readOnly type="number" min={0} />)
+          }
+          if(field.input_type === "date"){
+            _field.input = (<DatePicker readOnly  />)
+          }
       }
   
-      if(!field.is_nested){
+      if(!field.is_nested && field.editable){
         if(field.input_type === "enum"){
           _field.input = (<Select options={field.values.map((v : any) => ({label : v, value : v}))} />)
         }
@@ -45,96 +57,18 @@ export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] =>
     })
 }
 
-export const land_1_gen_form_fields : GenericFormFieldV3[] = [
-    {
-        name : "calendar_year",
-        label : "Calendar Year", 
-        input : <Input type="Number" />,
-        type : "input",
-        notDefault : true
-    },
-    {
-        name : "province",
-        label : "Province", 
-        input : (
-            <Input type="text" readOnly  />
-        ),
-        type : "input",
-        initialValue : "Marinduque"
-    },
-    {
-        name : "municipality",
-        label : "Municipality", 
-        input : (
-            <Select showSearch virtual options={municipalityOptions} />
-        ),
-        type : "input",
-        notDefault : true
-    },
-    {
-        name : "contested_area",
-        label : "Contested Area (ha)",
-        input : <Input type="number" />,
-        type : "input"
-
-    },
-    {
-        name : "uncontested_area",
-        label : "Uncontested Area (ha)",
-        input : <Input type="number" />,
-        type : "input"
-    },
-];
-
-// Column Definitions: Defines the columns to be displayed.
-// export const land_1_col_defs : any[] = [
-//     { 
-//         headerName: "Calendar year", 
-//         headerClass: "justify-center", 
-//         field: "calendar_year", 
-//         editable : true, 
-//         type: "numberColumn",
-//     },
-//     { 
-//         headerName: "Province", 
-//         headerClass: "justify-center", 
-//         field: "province",  
-//         editable : true, 
-//         type: "textColumn",
-//     },
-//     { 
-//         headerName: "Municipality", 
-//         headerClass: "justify-center", 
-//         field: "municipality",  
-//         editable : true, 
-//         type: "textColumn",
-//     },
-//     { 
-//         headerName: "Contested Area (ha)", 
-//         field: "uncontested_area", 
-//         editable : true, 
-//         type: "numberColumn" 
-
-//     },
-//     { 
-//         headerName: " Uncontested Area (ha)", 
-//         field: "contested_area", 
-//         editable : true, 
-//         type: "numberColumn" 
-
-//     }
-// ];
+const cleanData = (data, fields) => {
+    const flatFields = flattenFields(fields);
+    // return data.map(d)
+}
 
 const DataEntry  = ({config} : {config:any}) => {
-    const [page, setPage] = useState(1);
     const [addRecord, setAddRecord] = useState(false);
-    const [limit, setLimit] = useState(10);
-    const [total, setTotal] = useState(0);
     const [loading, setLoading] = useState(false);
     const [refresh, setRefresh] = useState(false);
     const [messageApi, contextHolder] = message.useMessage();
+    const [gridKey, setGridKey] = useState<string>(`grid-key-${Math.random()}`);
 
-    // Row Data: The data to be displayed.
     const [rowData, setRowData] = useState([]);
     
     
@@ -168,7 +102,7 @@ const DataEntry  = ({config} : {config:any}) => {
     // };
 
     const handleSubmit = async (d) => {
-        console.log(d)
+        // console.log(d)
         try {
             const data = {
                 report_config_id : config._id,
@@ -190,18 +124,26 @@ const DataEntry  = ({config} : {config:any}) => {
         setLoading(true);
         try {
             const data = (await reportDataGetByQuery({report_config_id : config._id}, [])).data;
+            setGridKey(`grid-key-${Math.random()}`);
+            console.log("real data:" ,data.map(d => {
+                return {
+                    ...d.data,
+                    _id : d._id
+                }
+            }));
+            console.log("col defs", colDefs)
             setRowData(data.map(d => {
                 return {
                     ...d.data,
                     _id : d._id
                 }
-            }))
-            console.log("rowData", rowData)
+            }));
         } catch (error) {
             message.error(parseResError(error).msg);    
         }
         setLoading(false);
     }
+
     useEffect(() => {
         fetchData()
         return () => {
@@ -211,7 +153,7 @@ const DataEntry  = ({config} : {config:any}) => {
 
     useEffect(() => {
         
-        if(config.fields && config.fields.length > 0){
+        if(Object.keys(config).length > 0 && config.fields && config.fields.length > 0){
             setGenericFields(generateGenericFields(config.fields));
             setColDefs([
                 ...generateColDefs(config.fields),
@@ -226,10 +168,27 @@ const DataEntry  = ({config} : {config:any}) => {
                         )
                     }
                 }
-            ])
+            ]);
+            fetchData();
+            setGridKey(`grid-key-${Math.random()}`);
+            // setRefresh(!refresh)
+            console.log("dadd", rowData)
         } 
-        setRefresh(!refresh)
-    }, [config._id]);
+
+
+        return () => {
+            setRowData([]);
+        }
+    }, [config]);
+
+    useEffect(() => {
+        // console.log("colDefs", colDefs)
+    }, [colDefs]);
+
+    useEffect(() => {
+        // console.log("dadd", rowData)
+    }, [rowData]);
+
 
     return (
         <>
@@ -243,6 +202,7 @@ const DataEntry  = ({config} : {config:any}) => {
                     <Button onClick={() => setRefresh(!refresh)} variant="text" color="primary"><FontAwesomeIcon icon={faArrowsRotate} /></Button>
                 </Flex>
                 <AgGridReact
+                    key={gridKey}
                     pagination
                     loading={loading}
                     editType={'fullRow'}

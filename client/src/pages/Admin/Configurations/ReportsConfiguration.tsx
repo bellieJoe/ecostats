@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Dropdown, Flex, List, message, Popconfirm, Select, Space, Typography } from "antd";
+import { Badge, Button, Card, Dropdown, Flex, List, message, Popconfirm, Result, Select, Space, Typography } from "antd";
 import Title from "antd/es/typography/Title";
 import { generateYearOptionsFixed } from "../../../services/helper";
 import { useEffect, useState } from "react";
@@ -63,7 +63,6 @@ const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, ref
                         <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this Report Configuration?" onConfirm={() => handleDelete(config._id)}>
                             <Button size="small" variant="solid" color="danger">Delete</Button>
                         </Popconfirm>
-                        <Button size="small" onClick={() => setReportData(config)} >Update</Button>
                         <Button size="small" onClick={() => reportFieldsStore.setReportData(config)} >Fields</Button>
                         <Dropdown
                             menu={{
@@ -157,6 +156,10 @@ const ReportConfiguration =  () =>  {
                     Add Sector
                 </Button> */}
             </Space>
+
+            {
+                sectors.length === 0 && <Result status="404" title="No Configurations found" />
+            }
 
             { renderSectors() }
 

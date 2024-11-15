@@ -29,6 +29,14 @@ export const sectorSaveMany = async (models : any) : Promise<any> => {
     return res;
 }
 
+export const sectorCopy = async (base_on : number, for_year : number) : Promise<any> => {
+    const res = await axios.post(`${apiUrl}/sectors/copy-all-sector-configs`, {
+        base_on : base_on,
+        for_year : for_year
+    });
+    return res;
+}
+
 export const sectorGet = async ( limit : number, page : number) : Promise<any> => {
     const res = await axios.get(`${apiUrl}/sectors`, {
         params : {
