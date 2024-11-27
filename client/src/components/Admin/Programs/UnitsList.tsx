@@ -31,6 +31,7 @@ const ViewFocals = () => {
             const res2 = await getFocalPersons(viewFocalsStore.unitId!);
             setFocals(res2.data)
         } catch (error) {
+            message.error("Unexpected Error occured");
             messageApi.error(parseResError(error).msg);
         }
         finally {

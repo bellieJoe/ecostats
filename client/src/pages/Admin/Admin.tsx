@@ -26,7 +26,7 @@ const Admin = () => {
     }, [screens])
     
     return (
-        <RouteGuard redirectTo="/error/401">
+        <RouteGuard>
             <Layout className="h-full">
                 <AdminSidebar open={collapsed} />
                 <Layout>

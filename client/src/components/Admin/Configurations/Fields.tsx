@@ -98,7 +98,7 @@ const FieldsDrawer = ({onClose}) => {
             <Button onClick={() => insertFieldStore.setReportData(store.reportData)}>Add Field</Button>
             <InsertField />
             <UpdateField />
-        </Drawer>
+        </Drawer>   
     )
 }
 
