@@ -135,6 +135,7 @@ export const all = async (req, res) => {
         const q = name ? { name : { $regex : name, $options: "i" }} : {}
 
         const users = await UserModel.find(q)
+                            .sort({ createdAt: -1 })
                             .skip(skip)
                             .limit(limit);
 

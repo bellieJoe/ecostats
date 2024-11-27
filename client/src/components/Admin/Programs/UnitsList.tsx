@@ -11,6 +11,8 @@ import { User } from "../../../types/User";
 import { Unit } from "../../../types/Unit";
 import { debounce } from "lodash";
 import { getByQuery, searchUserByName } from "../../../services/api/userApi";
+import { Program } from "../../../types/Program";
+import { getProgramById } from "../../../services/api/programApi";
 
 const ViewFocals = () => {
     const viewFocalsStore = useViewFocalsStore();
@@ -18,6 +20,7 @@ const ViewFocals = () => {
     const [ open, setOpen ] = useState(false);
     const [ focals, setFocals ] = useState<any>([]);
     const [ unit, setUnit ] = useState<Unit|null>(null);
+    const [ program, setProgram ] = useState<Program|null>(null);
     const [loading, setLoading] = useState(false);
     const [userOptions, setUserOptions] = useState([]);
     const [addFocalForm] = Form.useForm();
@@ -29,7 +32,10 @@ const ViewFocals = () => {
             const res1 = await getUnitById(viewFocalsStore.unitId!);
             setUnit(res1.data);
             const res2 = await getFocalPersons(viewFocalsStore.unitId!);
-            setFocals(res2.data)
+            setFocals(res2.data);
+            const res3 = await getProgramById(res1.data.programId);
+            setProgram(res3.data);
+            console.log(res3.data);
         } catch (error) {
             message.error("Unexpected Error occured");
             messageApi.error(parseResError(error).msg);
@@ -47,11 +53,16 @@ const ViewFocals = () => {
         debounce((value) => {
             setSelectUserloading(true)
             getByQuery({
+                _id : {
+                    $nin : [unit?.unitHead, ...focals.map(val => val.focalPerson?._id), program?.programHead]
+                },
                 name : {
                     $regex : value,
                     $options : "i"
                 },
-                role : "focal"
+                role : {
+                    $in : ["chief", "focal"]
+                }
             })
             .then(res => {
                 console.log(res.data)

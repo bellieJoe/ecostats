@@ -225,7 +225,7 @@ export const addFocalPerson = async (req, res) => {
         
         const { unitId , userId, position } = req.body;
 
-        const exists = await FocalPersonModel.exists({ userId : userId, deletedAt : null });
+        const exists = await FocalPersonModel.exists({ userId : userId, deletedAt : null, unitId : unitId });
         if(exists) {
             return res.status(500).json({
                 error: "Duplicate",

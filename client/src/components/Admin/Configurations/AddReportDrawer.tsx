@@ -44,8 +44,8 @@ const IsNestedComponent = ({fieldName, form}) => {
                 rules={[
                     { required: true, message: 'Please enter an identifier' },
                     {
-                        pattern: /^[A-Za-z\s_]+$/,
-                        message: 'Identifier can only contain letters, spaces, and underscores',
+                        pattern: /^[^$.]+$/,
+                        message: 'The identifier should not contain $ or .',
                     },
                     {
                         validator : async (_, value) => {
@@ -284,8 +284,8 @@ const AddReportDrawer = () => {
                         rules={[
                             { required: true, message: 'Please enter a report identifier' },
                             {
-                                pattern: /^[A-Za-z\s_]+$/,
-                                message: 'Identifier can only contain letters, spaces, and underscores',
+                                pattern: /^[^$.]+$/,
+                                message: 'The identifier should not contain $ or .',
                             },
                             {
                                 validator : async (_, value) => {

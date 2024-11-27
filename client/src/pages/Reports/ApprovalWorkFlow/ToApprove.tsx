@@ -96,13 +96,14 @@ const ToApprove = () => {
                 programHead : authStore.user!._id,
                 deletedAt : null,
             }, [])).data;
-            
+            console.log("programs : ",programs)
             const units = (await getUnitsByQuery({
                 programId : {
                     $in : programs.map(p => p._id)
                 },
                 deletedAt : null
             }, [])).data;
+            console.log("units : ",units)
             setUnits(units);
             const _reports = (await getRequestReportByQuery(
                 {
@@ -120,8 +121,10 @@ const ToApprove = () => {
                     { path : "requested_by"},
                 ]
             )).data;
+            console.log("reports : ",_reports);
             setReports(_reports);
-            setRowData(_reports)
+            setRowData(_reports);
+            console.log("reports : ",_reports)
         } catch (error) {
             messageApi.error(parseResError(error).msg);
         }
