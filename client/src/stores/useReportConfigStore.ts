@@ -56,3 +56,13 @@ export const useUpdateFieldsStore = create<{
         set({report_config_id : "", field : {}})
     }
 }));
+
+export const useUpdateReportNameStore = create<{
+    reportData : any
+    setReportData : (reportData : any) => void
+}>((set) => ({
+    reportData: {},
+   setReportData : (reportData : any) => {
+       set({reportData : reportData})
+   }    
+}));
