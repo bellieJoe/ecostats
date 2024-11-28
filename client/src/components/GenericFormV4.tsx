@@ -19,14 +19,23 @@ const GenericFormDrawer: React.FC<{
   fields: GenericFormFieldV3[];
   onClose: () => void;
   onSubmit: (values: Record<string, any>) => void;
-}> = ({ visible, fields, onClose, onSubmit }) => {
+  config: any
+}> = ({ visible, fields, onClose, onSubmit, config }) => {
   const [form] = Form.useForm();
 
   // Handle form submission
-  const handleFinish = (values: Record<string, any>) => {
+  const handleFinish = async (values: Record<string, any>) => {
     const data = form.getFieldsValue();
-    
-    onSubmit(data);
+    // console.log(config)
+    const flatFields = flattenFields(config.fields);
+    flatFields.filter(field => !field.editable && field.computed_value).forEach(field => {
+      console.log(field.identifier)
+      if(field.computed_value_type === "sum"){
+        data[field.identifier] = _.sum(field.computed_values.map((v : any) => parseInt(data[v])));
+      }
+    });
+    // console.log(data)
+    await onSubmit(data);
     form.resetFields();
   };
 

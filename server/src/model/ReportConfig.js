@@ -33,10 +33,31 @@ const FieldSchema = new mongoose.Schema({
         default : false,
         required : true
     },
+    computed_value : {
+        type : Boolean,
+        default : false,
+        required : function() {
+            return this.editable;
+        },
+    },
+    computed_values : {
+        type : [String],
+        required : function() {
+            return this.computed_value;
+        }
+    },
+    computed_value_type : {
+        type : String,
+        enum : ['sum'],
+        default : 'sum',
+        required : function() {
+            return this.computed_value;
+        }
+    },
     default : {
         type : String,
         required : function() {
-            return !this.is_nested && !this.editable;
+            return !this.is_nested && !this.editable && !this.computed_value;
         },
     },
     children : {

@@ -19,10 +19,17 @@ const IsNestedComponent = ({fieldName, form}) => {
     const [isNested, setIsNested] = useState(false);
     const [editable, setEditable] = useState(false);
     const [inputType, setInputType] = useState("");
+    const [isComputed, setIsComputed] = useState(false);
+    const [fieldIdentifier, setFieldIdentifier] = useState("");
     
     const handleIsNestedOnChange = (e) => {
         console.log(e.target.checked);
         setIsNested(e.target.checked);
+    }
+
+    const handleisComputedOnChange = (e) => {
+        console.log(e.target.checked);
+        setIsComputed(e.target.checked);
     }
 
     const handleIsEditableOnChange = (e) => {
@@ -44,8 +51,8 @@ const IsNestedComponent = ({fieldName, form}) => {
                 rules={[
                     { required: true, message: 'Please enter an identifier' },
                     {
-                        pattern: /^[A-Za-z\s_]+$/,
-                        message: 'Identifier can only contain letters, spaces, and underscores',
+                        pattern: /^[^$.]+$/,
+                        message: 'The identifier should not contain $ or .',
                     },
                     {
                         validator : async (_, value) => {
@@ -56,7 +63,7 @@ const IsNestedComponent = ({fieldName, form}) => {
                     }
                 ]}
             >
-                <Input placeholder="Unique field identifier" />
+                <Input onChange={(e) => setFieldIdentifier(e.target.value)} placeholder="Unique field identifier" />
             </Form.Item>
 
             <Form.Item
@@ -97,14 +104,45 @@ const IsNestedComponent = ({fieldName, form}) => {
 
                         {
                             !editable && (
-                                <Form.Item
-                                    label="Default"
-                                    preserve={false}
-                                    name={[fieldName, 'default']}
-                                    rules={[{ required: true, message: 'Please enter the default value' }]}
-                                >
-                                    <Input placeholder="Default Value" />
-                                </Form.Item>
+                                <>
+                                    <Form.Item
+                                        preserve={false}
+                                        name={[fieldName, 'computed_value']}
+                                        valuePropName="checked"
+                                        initialValue={false}
+                                    >
+                                        <Checkbox value={isComputed} onChange={handleisComputedOnChange}>Is Computed Value</Checkbox>
+                                    </Form.Item>
+                                    {
+                                        isComputed && (
+                                            <Form.Item
+                                                label="Computed Value"
+                                                preserve={false}
+                                                name={[fieldName, 'computed_values']}
+                                                rules={[{ required: true, message: 'Please select other fields' }]}
+                                            >
+                                                <Select mode="multiple" options={
+                                                    flattenFields((form.getFieldValue("fields")))
+                                                    .filter(field => field.identifier && (field.identifier !== fieldIdentifier) && !field.is_nested && field.computed_value != true && field.type == "number")
+                                                    .map(field => ({label: field.identifier, value: field.identifier}))
+                                                } />
+                                            </Form.Item>
+                                        )
+                                    }
+                                    {
+                                        !isComputed && (
+                                            <Form.Item
+                                                label="Default"
+                                                preserve={false}
+                                                name={[fieldName, 'default']}
+                                                rules={[{ required: true, message: 'Please enter the default value' }]}
+                                            >
+                                                <Input placeholder="Default Value" />
+                                            </Form.Item>
+                                        )
+                                    }
+                                    
+                                </>
                             )
                         }
 
@@ -151,7 +189,6 @@ const IsNestedComponent = ({fieldName, form}) => {
 }
 
 const RecursiveField = ({ fieldPath, form } : { fieldPath: any, form: FormInstance }) => {
-    
     return (
         <Form.Item
             preserve={false}
@@ -183,7 +220,7 @@ const RecursiveField = ({ fieldPath, form } : { fieldPath: any, form: FormInstan
                                         name={[field.name, 'name']}
                                         rules={[{ required: true, message: 'Please enter a field name' }]}
                                     >
-                                        <Input placeholder="Field name" />
+                                        <Input  placeholder="Field name" />
                                     </Form.Item>
 
                                     <IsNestedComponent fieldName={field.name} form={form} />
@@ -220,7 +257,7 @@ const AddReportDrawer = () => {
     const [form] = Form.useForm();
 
     const handleFinish = async () => {
-        console.log(form.getFieldsValue());
+        console.log(flattenFields(form.getFieldValue("fields")));
         try {
             await reportConfigCreate(form.getFieldsValue());
             message.success("Report Config created successfully.");
@@ -284,12 +321,12 @@ const AddReportDrawer = () => {
                         rules={[
                             { required: true, message: 'Please enter a report identifier' },
                             {
-                                pattern: /^[A-Za-z\s_]+$/,
-                                message: 'Identifier can only contain letters, spaces, and underscores',
+                                pattern: /^[^$.]+$/,
+                                message: 'The identifier should not contain $ or .',
                             },
                             {
                                 validator : async (_, value) => {
-                                    const _values = [...flattenFields((await form.getFieldValue("fields")))];
+                                    const _values = [...flattenFields((await form.getFieldValue("fields")).filter(field => field.identifier))];
                                     const values=[ ..._values.map(field => field.identifier)];
                                     return uniqueValuesValidator(_, values);
                                 }

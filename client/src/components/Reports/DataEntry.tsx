@@ -6,11 +6,11 @@ import { Button, Checkbox, DatePicker, Flex, Input, message, Pagination, Popconf
 import { AgGridReact } from "ag-grid-react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowsRotate } from "@fortawesome/free-solid-svg-icons";
-import GenericFormDrawerV3 from "../GenericFormV3";
 import { GenericFormFieldV3 } from "../../types/forms/GenericFormTypes";
 import { flattenFields, generateColDefs, municipalityOptions } from "../../services/helper";
-import { set } from "lodash";
 import { reportDataCreate, reportDataDelete, reportDataGetByQuery, reportDataUpdate } from "../../services/api/reportDataApi";
+import GenericFormDrawer from "../GenericFormV4";
+import _ from "lodash";
 
 
 export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] => {
@@ -23,20 +23,24 @@ export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] =>
         type : field.is_nested ? "title" : "input",
       }
   
-      if(!field.is_nested && !field.editable){
+      if(!field.is_nested && !field.editable && !field.computed_value){
         _field.initialValue = field.default;
         if(field.input_type === "enum"){
             _field.input = (<Select disabled options={field.values.map((v : any) => ({label : v, value : v}))} />)
-          }
-          if(field.input_type === "text"){
-            _field.input = (<Input readOnly type="text" />)
-          }
-          if(field.input_type === "number"){
-            _field.input = (<Input readOnly type="number" min={0} />)
-          }
-          if(field.input_type === "date"){
-            _field.input = (<DatePicker readOnly  />)
-          }
+        }
+        if(field.input_type === "text"){
+        _field.input = (<Input readOnly type="text" />)
+        }
+        if(field.input_type === "number"){
+        _field.input = (<Input readOnly type="number" min={0} />)
+        }
+        if(field.input_type === "date"){
+        _field.input = (<DatePicker readOnly  />)
+        }
+      }
+
+      if(!field.is_nested && !field.editable && field.computed_value){
+        return null;
       }
   
       if(!field.is_nested && field.editable){
@@ -75,10 +79,19 @@ const DataEntry  = ({config} : {config:any}) => {
 
     const handleOnRowValueChanged = async (d, _id) => {
         try {
-            await reportDataUpdate(d.data, _id);
+            const data = d.data;
+            const flatFields = flattenFields(config.fields);
+            flatFields.filter(field => !field.editable && field.computed_value).forEach(field => {
+                if(field.computed_value_type === "sum"){
+                    data[field.identifier] = _.sum(field.computed_values.map((v : any) => parseInt(data[v])));
+                }
+            });
+            await reportDataUpdate(data, _id);
             messageApi.success("Data successfully updated.");
         } catch (error) {
             messageApi.error(parseResError(error).msg)
+        } finally {
+            setRefresh(!refresh);
         }
     }
 
@@ -212,7 +225,8 @@ const DataEntry  = ({config} : {config:any}) => {
                 />
             </div>
 
-            <GenericFormDrawerV3
+            <GenericFormDrawer
+            config={config}
             visible={addRecord} 
             fields={genericFields} 
             onClose={() => setAddRecord(false)} 

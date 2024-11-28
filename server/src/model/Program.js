@@ -36,6 +36,13 @@ ProgramSchema.virtual("sector", {
     justOne : true
 })
 
+ProgramSchema.virtual("units", {
+    ref : "units",
+    localField : "_id",
+    foreignField : "programId",
+    justOne : false
+})
+
 // Create a compound index to enforce unique name where deletedAt is null
 ProgramSchema.index({ name: 1, deletedAt: 1 }, { unique: true, partialFilterExpression: { deletedAt: null } });
 

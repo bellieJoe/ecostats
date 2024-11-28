@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 const SectorSchema = new mongoose.Schema({
     calendar_year : {
@@ -28,7 +28,14 @@ SectorSchema.virtual("configs", {
     ref : "report_configs",
     localField : "_id",
     foreignField : "sector"
-})
+});
+
+SectorSchema.virtual("programs", {
+    ref : "programs",
+    localField : "_id",
+    foreignField : "sector_id",
+    justOne : false
+});
 
 const SectorModel = mongoose.model('sectors', SectorSchema);
 

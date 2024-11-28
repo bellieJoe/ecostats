@@ -298,7 +298,7 @@ const TabularPresentation = ({config, chart, data} : {config : any, chart : any,
         <Card className="w-full">
             <Typography.Paragraph className="text-center">{chart.title}</Typography.Paragraph>
             {
-                chartData.length <= 0 && (
+                data.length <= 0 && (
                     <Result status="error" title="No data available" />
                 )
             }

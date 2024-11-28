@@ -150,6 +150,9 @@ import Sectors from './pages/Admin/Configurations/Sector'
 import ReportsConfiguration from './pages/Admin/Configurations/ReportsConfiguration'
 import Report from './pages/Reports/DataEntry/Report'
 import ReportDashboard from './pages/Dashboard/ReportDashboard'
+import Index from './pages/Admin/Index'
+import ReportsIndex from './pages/Reports/ReportsIndex'
+import DashboardIndex from './pages/Dashboard/Index'
 
 axios.defaults.withCredentials = true;
 
@@ -210,7 +213,7 @@ function App() {
                 </Route>
 
                 <Route path='admin' element={<Admin />}>
-                  {/* <Route path='' element={<Users />} /> */}
+                  <Route path='' element={<Index />} />
                   <Route path='users' element={<Users />} />
                   <Route path='programs' element={<Programs />} />
                   <Route path="configurations/sectors" element={<Sectors />} />
@@ -222,6 +225,7 @@ function App() {
                 </Route>
 
                 <Route path='dashboard' element={<Dashboard />}>
+                  <Route path='' element={<DashboardIndex />} />
 
                   <Route path='report/:_id' element={<ReportDashboard />} />
                   
@@ -292,6 +296,7 @@ function App() {
                 </Route>
 
                 <Route path='reports' element={<Reports />}>
+                    <Route path='' element={<ReportsIndex />} />
                     <Route path='to-approve' element={<ToApprove />} />
                     <Route path='to-review' element={<ToReview />} />
 

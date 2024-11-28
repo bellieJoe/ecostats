@@ -60,7 +60,13 @@ const AddSectorDrawer = ({
                 <Form.Item
                     label="Identifier"
                     name="identifier"
-                    rules={[{ required: true }]}
+                    rules={[
+                        { required: true },
+                        {
+                            pattern: /^[^$.]+$/,
+                            message: 'The identifier should not contain $ or .',
+                        },
+                    ]}
                 >
                     <Input />
                 </Form.Item>

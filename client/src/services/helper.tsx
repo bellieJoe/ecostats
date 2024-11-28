@@ -99,22 +99,39 @@ const getColDefType = (type : string) => {
 
 
 export const flattenFields = (fields) => {
-   return _.flatMapDeep(fields, field => {
-      // Flatten the current field without `children`, so we only have primitive data in the output
-      const flatField = {
-          name: field.name,
-          identifier: field.identifier,
-          input_type: field.input_type || null,
-          editable: field.editable,
-          is_nested: field.is_nested,
-          values: field.values,
-          default: field.default || null,
-      };
 
-      // If the field has children, recursively flatten them with the updated identifier path
-      if (Array.isArray(field.children) && field.children.length > 0) {
-          // Pass unique identifier path to each child for correct flattening
-          return [flatField, ...flattenFields(field.children)];
+   return _.flatMapDeep(fields, field => {
+    // console.log("field", field);
+      // Flatten the current field without `children`, so we only have primitive data in the output
+      const flatField: any = {
+        name: null,
+        identifier: null,
+        input_type: null,
+        editable: false,
+        is_nested: false,
+        values: null,
+        default: null,
+        computed_value: false,
+        computed_values: null,
+        computed_value_type: "sum"
+      };
+      
+      if (field) {
+        flatField.name = field.name || null;
+        flatField.identifier = field.identifier ?? null;
+        flatField.input_type = field.input_type || null;
+        flatField.editable = field.editable || false;
+        flatField.is_nested = field.is_nested || false;
+        flatField.values = field.values;
+        flatField.default = field.default || null;
+        flatField.computed_value = field.computed_value ?? false;
+        flatField.computed_values = field.computed_values ?? null;
+
+        // If the field has children, recursively flatten them with the updated identifier path
+        if (Array.isArray(field.children) && field.children.length > 0) {
+            // Pass unique identifier path to each child for correct flattening
+            return [flatField, ...flattenFields(field.children)];
+        }
       }
 
       return flatField;
