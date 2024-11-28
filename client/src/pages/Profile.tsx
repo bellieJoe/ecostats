@@ -1,6 +1,6 @@
 import Title from "antd/es/typography/Title";
 import RouteGuard from "../components/Guards/RouteGuard"
-import { Avatar, Card, Flex } from "antd";
+import { Avatar, Card, Flex, List, Select } from "antd";
 import { useAuthStore } from "../stores/useAuthStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
@@ -11,6 +11,9 @@ import { parseResError } from "../services/errorHandler";
 import { getByProgram, getFocalPersons, getUnitsByQuery } from "../services/api/unitApi";
 import { getProgramByQuery } from "../services/api/programApi";
 import { focalPersonGetByQuery } from "../services/api/focalPersonApi";
+import { generateYearOptionsFixed } from "../services/helper";
+import { sectorGetByQuery } from "../services/api/sectorApi";
+import _ from "lodash";
 
 const Profile = () => {
 
@@ -18,70 +21,62 @@ const Profile = () => {
     const [membership, setMembership] = useState<string[]>([]);
     const arrayToString = (arr) => arr.length > 0 ? arr.join(', ') : 'No assigned Division and Unit';
 
+    const [year, setYear] = useState<number>(new Date().getFullYear());
+    const [units, setUnits] = useState<any>([]);
+    const [programs, setPrograms] = useState<any>([]);
+    const [focals, setFocals] = useState<any>([]);
+
     const initUserMembership = async () => {
         try {
             setMembership([]);
-            if(authStore.user?.role == "chief") {
-                let m : any = [];
-                const unit = await getUnitsByQuery({unitHead: authStore.user?._id, deletedAt: null}, ["programId"]);
-                m = [...unit.data.map(a => `Head of Unit ${a.name}`)];
-                const program = await getProgramByQuery({programHead: authStore.user?._id, deletedAt: null}, []);
-                m = [...program.data.map(a => `Head of Division ${a.name}`)];
-                console.log(m)
-                setMembership(m);
-                return;
-            }
-            if(authStore.user?.role == "focal") {
-                const res  = await focalPersonGetByQuery(
-                    {
-                        userId : authStore.user._id, 
-                        deletedAt: null
-                    }, 
-                    [
-                        {
-                            path : "unitId",
-                            populate : {
-                                path : "programId"
-                            }
-                        }
-                    ]);
-                setMembership([
-                    ...res.data.map(a => `${a.position} of Unit: ${a.unitId.name} under Division: ${a.unitId.programId.name}`)
-                ])
-                return;
-            }
+
+            const _sectors = await sectorGetByQuery({calendar_year : year}, [{
+                path : "programs",
+                populate : {
+                    path : "units"
+                }
+            }]);
+            const programIds = _.flatMap(_sectors.data, "programs").map(a => a._id);
+            const unitIds = _.flatMap(_sectors.data, "programs").flatMap(a => a.units).map(a => a._id);
+
+            const _units = await getUnitsByQuery(
+                {
+                    unitHead: authStore.user?._id, 
+                    deletedAt: null,
+                    _id : {
+                        $in : unitIds
+                    }
+                }, []);
+            const _programs = await getProgramByQuery(
+                {
+                    programHead: authStore.user?._id, 
+                    deletedAt: null,
+                    _id : {
+                        $in : programIds
+                    }
+                }, []);
+            const _focals = await focalPersonGetByQuery({
+                userId : authStore.user?._id, 
+                deletedAt: null,
+                unitId : {
+                    $in : unitIds
+                }
+            }, ["unitId"]);
+
+            setUnits(_units.data);
+            setPrograms(_programs.data);
+            setFocals(_focals.data);
         } catch (error) {
             console.log(error)
         }
     }
 
-    const renderChiefMembership = () => {
-        if(authStore.user?.role != "chief") {
-            return <></>
-        }
-        return (
-            <Card className="mb-4">
-                <Title level={5}>Designation/s</Title>
-                <p className="text-gray-500">  { arrayToString(membership)} </p>
-            </Card>
-        )
-    }
-
-    const renderFocalMembership = () => {
-        if(authStore.user?.role != "focal") {
-            return <></>
-        }
-        return (
-            <Card className="mb-4">
-                <Title level={5}>Designation/s</Title>
-                <p className="text-gray-500">  { arrayToString(membership)} </p>
-            </Card>
-        )
-    }
-
     useEffect(() => {
+        setFocals([]);
+        setUnits([]);
+        setPrograms([]);
         initUserMembership();
-    }, [authStore.user]);
+    }, [year]);
     
     return (
         <RouteGuard>
@@ -100,8 +95,78 @@ const Profile = () => {
                         </Flex>
                     </Card>
 
-                    {renderChiefMembership()}
-                    {renderFocalMembership()}
+                    <Card className="mb-4">
+                        <div className="float-right">
+                            <Select
+                                style={{ width: 100 }}
+                                value={year}
+                                onChange={(value) => setYear(value)}
+                                options={[...generateYearOptionsFixed]}
+                                placeholder="Select Year"
+                            />
+                        </div>
+                        <Title level={5} >Designation/s</Title>
+                        <br />
+                        {
+                            units.length > 0 &&
+                            (
+                                <div className="mb-3">
+                                    <List
+                                        header={<b>Handled Units</b>}
+                                        bordered
+                                        itemLayout="horizontal"
+                                        dataSource={units}
+                                        renderItem={(item : any) => (
+                                            <List.Item>
+                                                { item.name }
+                                            </List.Item>
+                                        )}
+                                    />
+                                </div>
+                            )
+                        }
+                        {
+                            programs.length > 0 &&
+                            (
+                                <div className="mb-3">
+                                    <List
+                                        header={<b>{"Handled Programs"}</b>}
+                                        bordered
+                                        itemLayout="horizontal"
+                                        dataSource={programs}
+                                        renderItem={(item:any) => (
+                                            <List.Item>
+                                                {item.name}
+                                            </List.Item>
+                                        )}
+                                    />
+                                </div>
+                            )
+                        }
+                        {
+                            focals.length > 0 &&
+                            (
+                                <div className="mb-3">
+                                    <List
+                                        bordered
+                                        header={<b>{"Units Assigned"}</b>}
+                                        itemLayout="horizontal"
+                                        dataSource={focals}
+                                        renderItem={(item:any) => (
+                                            <List.Item>
+                                                {item.unitId.name}
+                                            </List.Item>
+                                        )}
+                                    />
+                                </div>
+                            )
+                        }
+                    </Card>
+
+                    
+
+                    {/* {renderChiefMembership()}
+                    {renderFocalMembership()} */}
                 </div>
             </div>  
         </RouteGuard>
