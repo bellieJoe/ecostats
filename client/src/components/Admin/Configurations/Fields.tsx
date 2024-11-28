@@ -63,7 +63,20 @@ const RecursiveFields = ({ fields } : { fields : any[] }) => {
                                             <div><Text strong>Input Type : </Text><Text code>{field.input_type}</Text></div>
                                             <div><Text strong>Editable : </Text><Text code>{field.editable ? "True" : "False"}</Text></div>
                                             {
-                                                !field.editable && (<div><Text strong>Default : </Text><Text>{field.default}</Text></div>)
+                                                (!field.editable && !field.computed_value) && (<div><Text strong>Default : </Text><Text>{field.default}</Text></div>)
+                                            }
+                                            {
+                                                (!field.editable && field.computed_value) && (
+                                                    <div>
+                                                        <Text strong>Is Computed Value : </Text><Text code>{field.computed_value ? "True" : "False"}</Text><br />
+                                                        <Text strong>Computed Values : </Text>
+                                                        {
+                                                            field.computed_values.map((value, index) => (
+                                                                <Text code key={index}>{value}</Text>
+
+                                                        ))}
+                                                    </div>
+                                                )
                                             }
                                         </div>
                                     )
