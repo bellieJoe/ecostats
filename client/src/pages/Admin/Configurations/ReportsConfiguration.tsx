@@ -6,7 +6,7 @@ import { sectorGetByQuery } from "../../../services/api/sectorApi";
 import { parseResError } from "../../../services/errorHandler";
 import { AddchartOutlined, AddOutlined, MoreHoriz, Update } from "@mui/icons-material";
 import AddReportDrawer from "../../../components/Admin/Configurations/AddReportDrawer";
-import { useAddReportConfigStore, useReportFieldsStore, useUpdateReportConfigStore } from "../../../stores/useReportConfigStore";
+import { useAddReportConfigStore, useReportFieldsStore, useUpdateReportConfigStore, useUpdateReportNameStore } from "../../../stores/useReportConfigStore";
 import { reportConfigDelete, reportConfigGetByQuery } from "../../../services/api/reportConfigApi";
 import { BarChartOutlined, PlusOutlined } from "@ant-design/icons";
 import AddChart from "../../../components/Reports/AddChart";
@@ -14,6 +14,9 @@ import { useAddChartStore, useViewChartStore } from "../../../stores/useReportSt
 import ViewCharts from "../../../components/Reports/ViewCharts";
 import UpdateReportDrawer from "../../../components/Admin/Configurations/UpdateReportDrawer";
 import FieldsDrawer from "../../../components/Admin/Configurations/Fields";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEdit } from "@fortawesome/free-solid-svg-icons";
+import UpdateReportNameDrawer from "../../../components/Admin/Configurations/UpdateReportNameDrawer";
 
 const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, refresh:boolean, setRefresh : () => void}) => {
     const [configs, setConfigs] = useState<any[]>([]);
@@ -22,6 +25,7 @@ const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, ref
     const viewChartStore = useViewChartStore();
     const addChartStore = useAddChartStore();
     const reportFieldsStore = useReportFieldsStore();
+    const updateReportNameStore = useUpdateReportNameStore();
 
     const fetchConfigs = async () => {
         try {
@@ -56,7 +60,10 @@ const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, ref
             <List.Item>
                 <Flex className="w-full" justify="space-between" align="top">
                     <Flex vertical>
-                        <p><span className="font-semibold">Name :</span> {config.name}</p>
+                        <p>
+                            <span className="font-semibold">Name :</span> {config.name} 
+                            <Button onClick={() => updateReportNameStore.setReportData(config)} size="small" type="link"><FontAwesomeIcon className="text-gray-500" icon={faEdit} /></Button>
+                        </p>
                         <p><span className="font-semibold">Identifier :</span> <Typography.Text code>{config.identifier}</Typography.Text> </p> 
                     </Flex>
                     <Flex gap={4} className="h-fit">
@@ -171,6 +178,7 @@ const ReportConfiguration =  () =>  {
                 }}  />
             <UpdateReportDrawer onClose={() => setRefresh(!refresh)} />
             <FieldsDrawer onClose={() => setRefresh(!refresh)} />
+            <UpdateReportNameDrawer />
         </div>
     );
 }
