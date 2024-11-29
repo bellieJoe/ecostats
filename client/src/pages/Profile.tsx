@@ -1,14 +1,12 @@
 import Title from "antd/es/typography/Title";
 import RouteGuard from "../components/Guards/RouteGuard"
-import { Avatar, Card, Flex, List, Select } from "antd";
+import { Avatar, Card, Flex, List, Result, Select } from "antd";
 import { useAuthStore } from "../stores/useAuthStore";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faUser } from "@fortawesome/free-solid-svg-icons";
 import Case from "case";
 import { useEffect, useState } from "react";
-import { parse } from "path";
-import { parseResError } from "../services/errorHandler";
-import { getByProgram, getFocalPersons, getUnitsByQuery } from "../services/api/unitApi";
+import { getUnitsByQuery } from "../services/api/unitApi";
 import { getProgramByQuery } from "../services/api/programApi";
 import { focalPersonGetByQuery } from "../services/api/focalPersonApi";
 import { generateYearOptionsFixed } from "../services/helper";
@@ -18,8 +16,6 @@ import _ from "lodash";
 const Profile = () => {
 
     const authStore = useAuthStore();
-    const [membership, setMembership] = useState<string[]>([]);
-    const arrayToString = (arr) => arr.length > 0 ? arr.join(', ') : 'No assigned Division and Unit';
 
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [units, setUnits] = useState<any>([]);
@@ -28,8 +24,6 @@ const Profile = () => {
 
     const initUserMembership = async () => {
         try {
-            setMembership([]);
-
             const _sectors = await sectorGetByQuery({calendar_year : year}, [{
                 path : "programs",
                 populate : {
@@ -161,12 +155,13 @@ const Profile = () => {
                                 </div>
                             )
                         }
+
+                        { 
+                            (units.length == 0 && programs.length == 0 && focals.length == 0) && (<Result extra="No Designations Found"  />)
+                        }
                     </Card>
 
                     
-
-                    {/* {renderChiefMembership()}
-                    {renderFocalMembership()} */}
                 </div>
             </div>  
         </RouteGuard>

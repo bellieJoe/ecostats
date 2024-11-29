@@ -349,13 +349,7 @@ const AddReportDrawer = () => {
                 </Flex>
 
                 {/* Recursive Fields */}
-                {/* <Form.Item
-                label="Fields"
-                name="fields"
-                rules={[{ required: true, message: 'Please add at least one field.' }]}
-                > */}
-                    <RecursiveField fieldPath="fields" form={form} />
-                {/* </Form.Item> */}
+                <RecursiveField fieldPath="fields" form={form} />
 
                 <Form.Item>
                     <Button  className="block me-0 ms-auto" type="primary" htmlType="submit">Save</Button>
