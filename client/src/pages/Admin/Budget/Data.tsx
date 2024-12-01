@@ -11,6 +11,7 @@ import _ from "lodash";
 import { budgetCreate, budgetDelete, budgetGet, budgetUpdate } from "../../../services/api/budgetApi";
 import { parseResError } from "../../../services/errorHandler";
 import numeral from "numeral"
+import { header } from "case";
 
 export const budget_gen_form_fields : GenericFormFieldV3[] = [
     {
@@ -33,8 +34,8 @@ export const budget_gen_form_fields : GenericFormFieldV3[] = [
         type : "input"
     },
     {
-        name : "forestry",
-        label : "Forestry Sector", 
+        name : "land_manpower",
+        label : "Land Sector Manpower", 
         input : (
             <Input type="number" min={0}/>
         ),
@@ -48,8 +49,30 @@ export const budget_gen_form_fields : GenericFormFieldV3[] = [
         ),
         type : "input"
     },
-
-    
+    {
+        name : "biodiversity_manpower",
+        label : "Biodiversity Sector Manpower", 
+        input : (
+            <Input type="number" min={0}/>
+        ),
+        type : "input"
+    },
+    {
+        name : "forestry",
+        label : "Forestry Sector", 
+        input : (
+            <Input type="number" min={0}/>
+        ),
+        type : "input"
+    },
+    {
+        name : "forestry_manpower",
+        label : "Forestry Sector Manpower", 
+        input : (
+            <Input type="number" min={0}/>
+        ),
+        type : "input"
+    }
 ];
 
 export const budget_col_defs = [
@@ -59,32 +82,74 @@ export const budget_col_defs = [
         editable : true, 
         type: "numberColumn",
     },
-    { 
-        headerName: "Land Sector", 
-        field: "land", 
-        editable : true, 
-        type: "numberColumn",
-        valueFormatter : (data) => {
-            return numeral(data.value).format("0,0.00")
-        }
+    {
+        headerName: "Land Sector",
+        children : [
+            { 
+                headerName: "Budget", 
+                field: "land", 
+                editable : true, 
+                type: "numberColumn",
+                valueFormatter : (data) => {
+                    return numeral(data.value).format("0,0.00")
+                }
+            },
+            { 
+                headerName: "Manpower", 
+                field: "land_manpower", 
+                editable : true, 
+                type: "numberColumn",
+                valueFormatter : (data) => {
+                    return numeral(data.value).format("0,0")
+                }
+            },
+        ]
     },
-    { 
-        headerName: "Biodiversity Sector", 
-        field: "biodiversity", 
-        editable : true, 
-        type: "numberColumn",
-        valueFormatter : (data) => {
-            return numeral(data.value).format("0,0.00")
-        } 
+    {
+        headerName: "Biodiversity Sector",
+        children : [
+            { 
+                headerName: "Budget", 
+                field: "biodiversity", 
+                editable : true, 
+                type: "numberColumn",
+                valueFormatter : (data) => {
+                    return numeral(data.value).format("0,0.00")
+                } 
+            },
+            {
+                headerName: "Manpower",
+                field : "biodiversity_manpower",
+                editable : true, 
+                type: "numberColumn",
+                valueFormatter : (data) => {
+                    return numeral(data.value).format("0,0")
+                }
+            }
+        ]
     },
-    { 
-        headerName: "Forestry Sector", 
-        field: "forestry", 
-        editable : true, 
-        type: "numberColumn",
-        valueFormatter : (data) => {
-            return numeral(data.value).format("0,0.00")
-        }
+    {
+        headerName: "Forestry Sector",
+        children : [
+            { 
+                headerName: "Budget", 
+                field: "forestry", 
+                editable : true, 
+                type: "numberColumn",
+                valueFormatter : (data) => {
+                    return numeral(data.value).format("0,0.00")
+                }
+            },
+            {
+                headerName: "Manpower",
+                field : "forestry_manpower",
+                editable : true, 
+                type: "numberColumn",
+                valueFormatter : (data) => {
+                    return numeral(data.value).format("0,0")
+                }
+            }
+        ]
     },
     { 
         headerName: "Total Budget", 
