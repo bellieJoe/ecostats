@@ -103,6 +103,7 @@ export const flattenFields = (fields) => {
    return _.flatMapDeep(fields, field => {
     // console.log("field", field);
       // Flatten the current field without `children`, so we only have primitive data in the output
+      // if(!field) return null;
       const flatField: any = {
         name: null,
         identifier: null,
@@ -127,15 +128,16 @@ export const flattenFields = (fields) => {
         flatField.computed_value = field.computed_value ?? false;
         flatField.computed_values = field.computed_values ?? null;
 
+
         // If the field has children, recursively flatten them with the updated identifier path
         if (Array.isArray(field.children) && field.children.length > 0) {
             // Pass unique identifier path to each child for correct flattening
             return [flatField, ...flattenFields(field.children)];
         }
       }
-
+      // console.log(flatField)
       return flatField;
-  });
+  }).filter(field => field && field.identifier && field.name);
 };
 
 export const convertReportFilters = (filters : any) => {

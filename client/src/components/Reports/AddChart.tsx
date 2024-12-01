@@ -170,6 +170,15 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
                     </>
                     )}
                 </Form.List>
+
+                <Form.Item
+                    // label="Include Other Years?"
+                    name={["chart_config", "include_other_years"]}
+                    rules={[{ required: true , message: "Color is required"}]}
+                    initialValue={false}
+                    valuePropName="checked">
+                    <Checkbox  >Include Other Years?</Checkbox>
+                </Form.Item>
                 
             </>
         )

@@ -1,7 +1,7 @@
 
 import Title from "antd/es/typography/Title";
 import { GenericFormFieldV3 } from "../../types/forms/GenericFormTypes";
-import { Alert, Button, Drawer, Flex, message, Popconfirm, Space, Tooltip } from "antd";
+import { Alert, Button, DatePicker, Drawer, Flex, Input, message, Popconfirm, Select, Space, Tooltip } from "antd";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { useEffect, useRef, useState } from "react";
 import { delRequestReport, formGetByQuery, getRequestReportByQuery, requestReport } from "../../services/api/formsApi";
@@ -15,11 +15,60 @@ import { ViewLogs } from "../Reports/ApprovalWorkflow/ApprovalComponents";
 import { getUserById } from "../../services/api/userApi";
 import { getFocalPersons, getUnitsByQuery } from "../../services/api/unitApi";
 import "../CustomReport/CustomReport.css";
-import { convertReportFilters, generateColDefs } from "../../services/helper";
-import { generateGenericFields } from "./DataEntry";
+import { convertReportFilters, flattenFields, generateColDefs } from "../../services/helper";
+// import { generateGenericFields } from "./DataEntry";
 import CustomReportGeneratorV2 from "./CustomReportGeneratorV2";
 import { reportDataGet, reportDataGetByQuery } from "../../services/api/reportDataApi";
 import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
+
+export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] => {
+    return flattenFields(fields).filter(field => field.identifier && field.name).map(field => {
+      const _field : GenericFormFieldV3 = {
+        label : field.name,
+        name : field.identifier,
+        required : true,
+        input :( <Input type="text" />),
+        type : field.is_nested ? "title" : "input",
+      }
+  
+    //   if(!field.is_nested && !field.editable ){
+    //     _field.initialValue = field.default;
+    //     if(field.input_type === "enum"){
+    //         _field.input = (<Select disabled options={field.values.map((v : any) => ({label : v, value : v}))} />)
+    //     }
+    //     if(field.input_type === "text"){
+    //     _field.input = (<Input readOnly type="text" />)
+    //     }
+    //     if(field.input_type === "number"){
+    //     _field.input = (<Input readOnly type="number" min={0} />)
+    //     }
+    //     if(field.input_type === "date"){
+    //     _field.input = (<DatePicker readOnly  />)
+    //     }
+    //   }
+
+    //   if(!field.is_nested && !field.editable && field.computed_value){
+    //     return null;
+    //   }
+  
+      if(!field.is_nested){
+        if(field.input_type === "enum"){
+          _field.input = (<Select options={field.values.map((v : any) => ({label : v, value : v}))} />)
+        }
+        if(field.input_type === "text"){
+          _field.input = (<Input type="text" />)
+        }
+        if(field.input_type === "number"){
+          _field.input = (<Input type="number" min={0} />)
+        }
+        if(field.input_type === "date"){
+          _field.input = (<DatePicker  />)
+        }
+      }
+      return _field;
+    })
+    .filter(field => field !== null);
+}
 
 interface RequestReportFormProps {
     config : any
@@ -293,7 +342,8 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
     useEffect(() => {
         if(config.fields && config.fields.length > 0){
             setColDefs(generateColDefs(config.fields));
-            setFields(generateGenericFields(config.fields));
+            console.log("FIELDS", generateGenericFields(config.fields).filter(field => field))
+            setFields(generateGenericFields(config.fields).filter(field => field));
         }
     }, [config])
 
@@ -305,12 +355,14 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
                 const custom = await getRequestReportByQuery({
                     requested_by : authStore.user?._id,
                     // form_name : formName,
+                    report_config_id : config._id,
                     isCustom : true
                 }, []);
                 setCustomRowData(custom.data)
                 const res = await getRequestReportByQuery({
                     requested_by : authStore.user?._id,
                     // form_name : formName,
+                    report_config_id : config._id,
                     isCustom : false
                 }, []);
                 setRowData(res.data);
@@ -321,7 +373,7 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
                 setLoading(false)
             }
         })();
-    }, [refresh]);
+    }, [refresh, config]);
     
 
     return (

@@ -123,7 +123,7 @@ const IsNestedComponent = ({fieldName, form}) => {
                                             >
                                                 <Select mode="multiple" options={
                                                     flattenFields((form.getFieldValue("fields")))
-                                                    .filter(field => field.identifier && (field.identifier !== fieldIdentifier) && !field.is_nested && field.computed_value != true && field.type == "number")
+                                                    .filter(field => field.identifier && (field.identifier !== fieldIdentifier) && !field.is_nested && field.computed_value == false && field.input_type == "number")
                                                     .map(field => ({label: field.identifier, value: field.identifier}))
                                                 } />
                                             </Form.Item>
@@ -259,6 +259,7 @@ const AddReportDrawer = () => {
     const handleFinish = async () => {
         console.log(flattenFields(form.getFieldValue("fields")));
         try {
+            console.log(form.getFieldsValue());
             await reportConfigCreate(form.getFieldsValue());
             message.success("Report Config created successfully.");
             AddReportConfigStore.setSector(null);

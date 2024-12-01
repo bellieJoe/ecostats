@@ -54,6 +54,7 @@ const Programs = () => {
     const fetchSectors = async () => {
         try {
             const _sectors = (await sectorGetByQuery({ calendar_year : year}, [])).data;
+            console.log(_sectors);
             setSectors(_sectors);
         } catch (error) {
             message.error(parseResError(error).msg);
