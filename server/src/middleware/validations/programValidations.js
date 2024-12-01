@@ -21,11 +21,11 @@ export const createProgramValidation = [
     body("name")
     .exists().withMessage("Name is required.")
     .notEmpty().withMessage("Name should not be empty")
-    .custom(async (value) => {
+    .custom(async (value, {req}) => {
         if(!value){
             return
         }
-        const exist = await ProgramModel.findOne({name : value, deletedAt : null});
+        const exist = await ProgramModel.findOne({name : value, deletedAt : null, sector_id : req.body.sector_id});
         if(exist){
             throw new Error("Duplicate name detected, this name is already used.");
         }
