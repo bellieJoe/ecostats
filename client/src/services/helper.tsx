@@ -57,7 +57,7 @@ export const generateColDefs = (fields : any[]) => {
       f.editable = field.editable;
       f.field = field.identifier;
       if(["number", "text"].includes(field.input_type)){
-        f.cellDataType = getColDefType(field.input_type);
+        f.type = getColDefType(field.input_type);
       }
       if(field.input_type === "number"){
         // f.valueFormatter = (params) => {
@@ -90,10 +90,10 @@ export const generateColDefs = (fields : any[]) => {
 
 const getColDefType = (type : string) => {
   if(type == "text"){
-    return "text";
+    return "textColumn";
   }
   if(type == "number"){
-    return "text"
+    return "numberColumn"
   }
 }
 

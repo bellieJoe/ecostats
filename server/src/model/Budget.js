@@ -21,6 +21,21 @@ const BudgetSchema = new mongoose.Schema({
         required : true,
         min : 0
     },
+    land_manpower : {
+        type: Number,
+        required : true,
+        min : 0
+    },
+    forestry_manpower : {
+        type: Number,
+        required : true,
+        min : 0
+    },
+    biodiversity_manpower : {
+        type: Number,
+        required : true,
+        min : 0
+    },
     total : {
         type: Number,
         required : true,

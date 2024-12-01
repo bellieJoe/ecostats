@@ -36,10 +36,10 @@ const BudgetAnalytics = () => {
         const sumY = _.sum(y);
         const sumXY = _.sum(x.map((xi, i) => xi * y[i]));
         const sumX2 = _.sum(x.map(xi => xi * xi));
-    
+
         const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
         const intercept = (sumY - slope * sumX) / n;
-    
+
         return { slope, intercept };
     };
 
@@ -49,27 +49,16 @@ const BudgetAnalytics = () => {
         const land = data.map(a => a.land);
         const biodiversity = data.map(a => a.biodiversity);
         const forestry = data.map(a => a.forestry);
-    
-        const landManpower = data.map(a => a.land_manpower);
-        const biodiversityManpower = data.map(a => a.biodiversity_manpower);
-        const forestryManpower = data.map(a => a.forestry_manpower);
-    
-        // Linear regression for each sector based on year
+
         const { slope: landSlope, intercept: landIntercept } = calculateLinearRegression(years, land);
         const { slope: biodiversitySlope, intercept: biodiversityIntercept } = calculateLinearRegression(years, biodiversity);
         const { slope: forestrySlope, intercept: forestryIntercept } = calculateLinearRegression(years, forestry);
-    
-        // Linear regression for each sector based on manpower
-        const { slope: landManpowerSlope, intercept: landManpowerIntercept } = calculateLinearRegression(years, landManpower);
-        const { slope: biodiversityManpowerSlope, intercept: biodiversityManpowerIntercept } = calculateLinearRegression(years, biodiversityManpower);
-        const { slope: forestryManpowerSlope, intercept: forestryManpowerIntercept } = calculateLinearRegression(years, forestryManpower);
-    
-        // Predicting next year's budget considering both year and manpower
-        const landPrediction = landSlope * year + landIntercept + landManpowerSlope * (year - currentYear);
-        const biodiversityPrediction = biodiversitySlope * year + biodiversityIntercept + biodiversityManpowerSlope * (year - currentYear);
-        const forestryPrediction = forestrySlope * year + forestryIntercept + forestryManpowerSlope * (year - currentYear);
+
+        const landPrediction = landSlope * year + landIntercept;
+        const biodiversityPrediction = biodiversitySlope * year + biodiversityIntercept;
+        const forestryPrediction = forestrySlope * year + forestryIntercept;
         const total = landPrediction + biodiversityPrediction + forestryPrediction;
-    
+
         setPredictedBudget({
             calendar_year: year,
             land: landPrediction,
@@ -77,7 +66,7 @@ const BudgetAnalytics = () => {
             forestry: forestryPrediction,
             total,
         });
-    
+
         setLoading(false);
     };
 

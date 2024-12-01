@@ -5,6 +5,7 @@ import { Card, Col, Flex, message, Result, Row, Statistic } from "antd";
 import _ from "lodash";
 import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+const DecisionTree = require('decision-tree');
 
 const BudgetAnalytics = () => {
     const [messageApi, contextHandler] = message.useMessage();
@@ -30,54 +31,27 @@ const BudgetAnalytics = () => {
         }
     };
 
-    const calculateLinearRegression = (x: number[], y: number[]) => {
-        const n = x.length;
-        const sumX = _.sum(x);
-        const sumY = _.sum(y);
-        const sumXY = _.sum(x.map((xi, i) => xi * y[i]));
-        const sumX2 = _.sum(x.map(xi => xi * xi));
-    
-        const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
-        const intercept = (sumY - slope * sumX) / n;
-    
-        return { slope, intercept };
-    };
-
-    const predictBudgets = (year: number) => {
+    const predictBudgets = (year) => {
         setLoading(true);
-        const years = data.map(a => a.calendar_year);
-        const land = data.map(a => a.land);
-        const biodiversity = data.map(a => a.biodiversity);
-        const forestry = data.map(a => a.forestry);
+
+        // Prepare the training data, where each entry is an object with features and a target (budget value)
+        const trainingData = data.map((budget) => ({
+            year: budget.calendar_year,
+            landManpower: budget.land_manpower,
+            biodiversityManpower: budget.biodiversity_manpower,
+            forestryManpower: budget.forestry_manpower,
+            land: budget.land,
+            biodiversity: budget.biodiversity,
+            forestry: budget.forestry
+        }));
     
-        const landManpower = data.map(a => a.land_manpower);
-        const biodiversityManpower = data.map(a => a.biodiversity_manpower);
-        const forestryManpower = data.map(a => a.forestry_manpower);
+        // Define the target data for predictions (i.e., the budget values for each sector)
+        const targetData = 'land'; // We will predict land budget first
     
-        // Linear regression for each sector based on year
-        const { slope: landSlope, intercept: landIntercept } = calculateLinearRegression(years, land);
-        const { slope: biodiversitySlope, intercept: biodiversityIntercept } = calculateLinearRegression(years, biodiversity);
-        const { slope: forestrySlope, intercept: forestryIntercept } = calculateLinearRegression(years, forestry);
-    
-        // Linear regression for each sector based on manpower
-        const { slope: landManpowerSlope, intercept: landManpowerIntercept } = calculateLinearRegression(years, landManpower);
-        const { slope: biodiversityManpowerSlope, intercept: biodiversityManpowerIntercept } = calculateLinearRegression(years, biodiversityManpower);
-        const { slope: forestryManpowerSlope, intercept: forestryManpowerIntercept } = calculateLinearRegression(years, forestryManpower);
-    
-        // Predicting next year's budget considering both year and manpower
-        const landPrediction = landSlope * year + landIntercept + landManpowerSlope * (year - currentYear);
-        const biodiversityPrediction = biodiversitySlope * year + biodiversityIntercept + biodiversityManpowerSlope * (year - currentYear);
-        const forestryPrediction = forestrySlope * year + forestryIntercept + forestryManpowerSlope * (year - currentYear);
-        const total = landPrediction + biodiversityPrediction + forestryPrediction;
-    
-        setPredictedBudget({
-            calendar_year: year,
-            land: landPrediction,
-            biodiversity: biodiversityPrediction,
-            forestry: forestryPrediction,
-            total,
-        });
-    
+        // Create and train the decision tree classifier for Land
+        const classifier = new DecisionTree();
+        ;
+
         setLoading(false);
     };
 

@@ -3,8 +3,8 @@ import { useEffect, useState } from "react";
 import { budgetGetByQuery } from "../../../services/api/budgetApi";
 import { Card, Col, Flex, message, Result, Row, Statistic } from "antd";
 import _ from "lodash";
-import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 import { CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { ArrowDownOutlined, ArrowUpOutlined } from '@ant-design/icons';
 
 const BudgetAnalytics = () => {
     const [messageApi, contextHandler] = message.useMessage();
@@ -24,7 +24,6 @@ const BudgetAnalytics = () => {
         try {
             const res = await budgetGetByQuery({});
             setData(_.sortBy(res.data, ["calendar_year"]));
-            console.log(res.data);
         } catch (error) {
             messageApi.error("Unexpected error occurred while initializing data");
         }
@@ -36,10 +35,10 @@ const BudgetAnalytics = () => {
         const sumY = _.sum(y);
         const sumXY = _.sum(x.map((xi, i) => xi * y[i]));
         const sumX2 = _.sum(x.map(xi => xi * xi));
-    
+
         const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
         const intercept = (sumY - slope * sumX) / n;
-    
+
         return { slope, intercept };
     };
 
@@ -49,27 +48,16 @@ const BudgetAnalytics = () => {
         const land = data.map(a => a.land);
         const biodiversity = data.map(a => a.biodiversity);
         const forestry = data.map(a => a.forestry);
-    
-        const landManpower = data.map(a => a.land_manpower);
-        const biodiversityManpower = data.map(a => a.biodiversity_manpower);
-        const forestryManpower = data.map(a => a.forestry_manpower);
-    
-        // Linear regression for each sector based on year
+
         const { slope: landSlope, intercept: landIntercept } = calculateLinearRegression(years, land);
         const { slope: biodiversitySlope, intercept: biodiversityIntercept } = calculateLinearRegression(years, biodiversity);
         const { slope: forestrySlope, intercept: forestryIntercept } = calculateLinearRegression(years, forestry);
-    
-        // Linear regression for each sector based on manpower
-        const { slope: landManpowerSlope, intercept: landManpowerIntercept } = calculateLinearRegression(years, landManpower);
-        const { slope: biodiversityManpowerSlope, intercept: biodiversityManpowerIntercept } = calculateLinearRegression(years, biodiversityManpower);
-        const { slope: forestryManpowerSlope, intercept: forestryManpowerIntercept } = calculateLinearRegression(years, forestryManpower);
-    
-        // Predicting next year's budget considering both year and manpower
-        const landPrediction = landSlope * year + landIntercept + landManpowerSlope * (year - currentYear);
-        const biodiversityPrediction = biodiversitySlope * year + biodiversityIntercept + biodiversityManpowerSlope * (year - currentYear);
-        const forestryPrediction = forestrySlope * year + forestryIntercept + forestryManpowerSlope * (year - currentYear);
+
+        const landPrediction = landSlope * year + landIntercept;
+        const biodiversityPrediction = biodiversitySlope * year + biodiversityIntercept;
+        const forestryPrediction = forestrySlope * year + forestryIntercept;
         const total = landPrediction + biodiversityPrediction + forestryPrediction;
-    
+
         setPredictedBudget({
             calendar_year: year,
             land: landPrediction,
@@ -77,7 +65,7 @@ const BudgetAnalytics = () => {
             forestry: forestryPrediction,
             total,
         });
-    
+
         setLoading(false);
     };
 
@@ -184,27 +172,53 @@ const BudgetAnalytics = () => {
                 <Title level={2}>Allocated Budget this {currentYear}</Title>
                 {RenderCurrentBudget()}
             </Flex>
-
-            <Flex>
-                <Card  className="w-full" > 
-                    <p className="text-center"></p>
-                    <ResponsiveContainer height={500}>
-                        <LineChart data={data}>
-                            <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis type="category" dataKey="calendar_year" />
-                            <YAxis type="number" />
-                            <Line name="Total" dataKey="total" strokeWidth={4} />
-                            <Line name="Land" dataKey="land" stroke="green" strokeWidth={2}/>
-                            <Line name="Biodiversity" dataKey="biodiversity" stroke="lightgreen" strokeWidth={2} />
-                            <Line name="Forestry" dataKey="forestry" stroke="springgreen" strokeWidth={2} />
-                            <Tooltip />
-                            <Legend />
-                        </LineChart>
-                    </ResponsiveContainer>
-                </Card>
-            </Flex>
         </div>
     );
 };
 
 export default BudgetAnalytics;
+
+const sampledata = [
+    {
+        "_id": "674c2b2d805afda704a7547d",
+        "calendar_year": 2024,
+        "land": 140000,
+        "land_manpower" : 20,
+        "biodiversity": 170600,
+        "biodiversity_manpower": 29,
+        "forestry": 160000,
+        "forestry_manpower": 18,
+        "total": 470600,
+        "createdAt": "2024-12-01T09:23:57.988Z",
+        "updatedAt": "2024-12-01T10:04:48.983Z",
+        "__v": 0
+    },
+    {
+        "_id": "674c2b70805afda704a75487",
+        "calendar_year": 2023,
+        "land": 140000,
+        "land_manpower" : 21,
+        "biodiversity": 160000,
+        "biodiversity_manpower": 28,
+        "forestry": 150000,
+        "forestry_manpower": 21,
+        "total": 450000,
+        "createdAt": "2024-12-01T09:25:04.648Z",
+        "updatedAt": "2024-12-01T09:25:04.648Z",
+        "__v": 0
+    },
+    {
+        "_id": "674c2b94805afda704a75491",
+        "calendar_year": 2022,
+        "land": 130000,
+        "land_manpower" : 22,
+        "biodiversity": 150000,
+        "biodiversity_manpower": 27,
+        "forestry": 140000,
+        "forestry_manpower": 22,
+        "total": 420000,
+        "createdAt": "2024-12-01T09:25:40.291Z",
+        "updatedAt": "2024-12-01T09:25:40.291Z",
+        "__v": 0
+    }
+]
