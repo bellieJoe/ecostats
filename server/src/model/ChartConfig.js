@@ -17,6 +17,10 @@ const ChartConfigSchema = new mongoose.Schema({
     chart_config: {
         type: Object,
         required: true
+    },
+    include_other_years : {
+        type : Boolean,
+        default : false
     }
 }, { 
     timestamps: true,

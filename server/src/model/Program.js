@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+
 const ProgramSchema = new Schema({
     name : {
         type : String,
@@ -44,7 +45,7 @@ ProgramSchema.virtual("units", {
 })
 
 // Create a compound index to enforce unique name where deletedAt is null
-ProgramSchema.index({ name: 1, deletedAt: 1 }, { unique: true, partialFilterExpression: { deletedAt: null } });
+ProgramSchema.index({ name: 1, deletedAt: 1, sector_id: 1 }, { unique: true, partialFilterExpression: { deletedAt: null } });
 
 
 const ProgramModel = model("programs", ProgramSchema);

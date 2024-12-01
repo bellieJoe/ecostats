@@ -14,7 +14,7 @@ import _ from "lodash";
 
 
 export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] => {
-    return flattenFields(fields).map(field => {
+    return flattenFields(fields).filter(field => field.identifier && field.name).map(field => {
       const _field : GenericFormFieldV3 = {
         label : field.name,
         name : field.identifier,
@@ -168,6 +168,7 @@ const DataEntry  = ({config} : {config:any}) => {
         
         if(Object.keys(config).length > 0 && config.fields && config.fields.length > 0){
             setGenericFields(generateGenericFields(config.fields));
+            console.log("generic fields v4 : ",generateGenericFields(config.fields));
             setColDefs([
                 ...generateColDefs(config.fields),
                 {

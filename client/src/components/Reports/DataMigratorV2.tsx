@@ -26,7 +26,7 @@ export enum DataMigratorColTypes {
 }
 
 const generateMigratorCol = (fields : any[]) : DataMigratorCol[] => {
-    return flattenFields(fields).filter(field => !field.is_nested).map(field => (
+    return flattenFields(fields).filter(field => !field.is_nested && field.identifier && field.name).map(field => (
         { 
             headerName: field.identifier, 
             field: field.identifier, 

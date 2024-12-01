@@ -8,7 +8,7 @@ const FieldSchema = new mongoose.Schema({
     identifier: {
         type: String,
         required: true,
-        unique: true
+        // unique: true
     },
     input_type: {
         type: String,
