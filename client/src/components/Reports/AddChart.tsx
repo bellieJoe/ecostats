@@ -45,16 +45,18 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
                     <Select
                         className="w-full" 
                         placeholder="Select field for Y Axis" 
-                        options={fields.filter(f => f.input_type && ["text", "enum"].includes(f.input_type)).map(f => ({label : f.identifier, value : f.identifier}))} />
+                        options={fields.filter(f => f.input_type && ["text", "enum"].includes(f.input_type)).map(f => ({label : f.identifier, value : f.identifier}))} 
+                    />
                 </Form.Item>
 
                 <Form.List 
                     name={["chart_config", "x_axis"]} 
+                    // initialValue={[""]}
                 >
                     {(_fields, { add, remove }) => (
                     <>
                         {_fields.map((field, index) => (
-                            <Flex className="w-full" justify="space-between">
+                            <Flex className="w-full" justify="space-between" key={index}>
                                 <Form.Item
                                     {...field}
                                     label="X Axis"
@@ -96,6 +98,16 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
                     </>
                     )}
                 </Form.List>
+
+                <Form.Item 
+                    rules={[{
+                        validator : async (_, value) => {
+                            const values = (await form.getFieldValue(["chart_config", "x_axis"])) || [];
+                            if(values.length == 0) return Promise.reject(new Error('X Axis is required'));
+                            return uniqueValuesValidator(_, values);
+                        }
+                    }]}
+                /> 
                 
             </>
         )
@@ -115,7 +127,9 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
                 <Form.Item 
                     label="X Axis" 
                     name={["chart_config", "x_axis"]} 
-                    rules={[{ required: true , message: "X Axis is required"}]}>
+                    rules={[{ required: true , message: "X Axis is required"}]}
+                    // initialValue={""}
+                >
                     <Select
                         className="w-full" 
                         placeholder="Select field for X Axis" 
@@ -124,11 +138,12 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
 
                 <Form.List 
                     name={["chart_config", "y_axis"]} 
+                    // initialValue={[""]}
                 >
                     {(_fields, { add, remove }) => (
                     <>
                         {_fields.map((field, index) => (
-                            <Flex className="w-full" justify="space-between">
+                            <Flex className="w-full" justify="space-between" key={index}>
                                 <Form.Item
                                     {...field}
                                     label="Y Axis"
@@ -137,7 +152,7 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
                                         { required: true , message: "Y Axis is required"},
                                         {
                                             validator : async (_, value) => {
-                                                const values = (await form.getFieldValue(["chart_config", "Y_axis"])) || [];
+                                                const values = (await form.getFieldValue(["chart_config", "y_axis"])) || [];
                                                 return uniqueValuesValidator(_, values);
                                             }
                                         }
@@ -221,11 +236,12 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
                 </Form.Item>
                 <Form.List 
                     name={["chart_config", "lines"]} 
+                    initialValue={[""]}
                 >
                     {(_fields, { add, remove }) => (
                     <>
                         {_fields.map((field, index) => (
-                            <Flex className="w-full" justify="space-between">
+                            <Flex className="w-full" justify="space-between" key={index}>
                                 <Form.Item
                                     {...field}
                                     label="Line"
@@ -259,7 +275,7 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
                                 onClick={() => add()}
                                 block
                             >
-                                <PlusOutlined /> Add Y axis
+                                <PlusOutlined /> Add Line
                             </Button>
                         </Form.Item>
                     </>
@@ -275,12 +291,12 @@ const ChartConfig = ({chartType, config, form} : {chartType : string, config : a
                 <Form.Item>
                     <Row>
                         {Object.keys(fields).map((field) => (
-                            <Col>
+                            <Col key={field}>
                                 <Form.Item
                                     key={field}
                                     name={["chart_config","fields", fields[field].identifier]}
                                     valuePropName="checked"
-                                    initialValue={false}>
+                                    initialValue={true}>
                                     <Checkbox>{fields[field].name}</Checkbox>
                                 </Form.Item>
                             </Col>
@@ -297,7 +313,7 @@ const AddChart = ({onSave}) => {
 
     const { config, setConfig } = useAddChartStore();
     const [form] = Form.useForm();
-    const [chartType, setChartType] = useState<string>("Horizontal Bar Chart");
+    const [chartType, setChartType] = useState<string>("");
     const [isSaving, setIsSaving] = useState<boolean>(false);
 
     useEffect(() => { 
@@ -309,8 +325,26 @@ const AddChart = ({onSave}) => {
         await form.validateFields();
         try {
             const data = form.getFieldsValue();
+            console.log(data.chart_config);
+            if(data.chart_config.type == "Vertical Bar Chart" && data.chart_config.y_axis.length == 0){
+                message.error("Y Axis is required.");
+                return;
+            }
+            if(data.chart_config.type == "Horizontal Bar Chart" && data.chart_config.x_axis.length == 0){
+                message.error("X Axis is required.");
+                return;
+            }
+            if(data.chart_config.type == "Line Chart" && data.chart_config.lines.length == 0){
+                message.error("Lines is required.");
+                return;
+            }
+            
+            console.log(data);
             await chartConfigCreate(data);
             onSave();
+            form.resetFields();
+            setChartType("");
+            setConfig({});
             message.success("Chart successfully added.");
         } catch (error) {
             message.error(parseResError(error).msg);
@@ -327,8 +361,16 @@ const AddChart = ({onSave}) => {
             onClose={() => {
                 setConfig({})
                 form.resetFields();
+                setChartType("")
             }}>
-            <Form form={form} onFinish={handleSave}>
+            <Form 
+                form={form} 
+                onFinish={handleSave}
+                // onLoad={() => form.setFieldsValue({
+                //     type : "",
+                //     chart_config : {stacked: false, x_axis : [""], y_axis : ""}
+                // })}
+            >
                 <Form.Item label="Report" name="report_name" initialValue={config.name}>
                     <Input type="text" readOnly />
                 </Form.Item>
@@ -351,31 +393,38 @@ const AddChart = ({onSave}) => {
                 <Form.Item 
                     label="Chart Type" 
                     name="type" 
-                    initialValue={chartType}
+                    // initialValue={chartType}
                     preserve={false}
                     rules={[{ required: true , message: "Chart Type is required"}]}>
-                    <Select placeholder="Select Chart Type" onChange={(e) => setChartType(e)} options={[
-                        { 
-                            label: "Vertical Bar Chart", 
-                            value: "Vertical Bar Chart" 
-                        }, 
-                        { 
-                            label: "Horizontal Bar Chart", 
-                            value: "Horizontal Bar Chart" 
-                        }, 
-                        { 
-                            label: "Pie Chart", 
-                            value: "Pie Chart" 
-                        }, 
-                        { 
-                            label: "Line Chart", 
-                            value: "Line Chart" 
-                        },
-                        { 
-                            label: "Tabular Presentation", 
-                            value: "Tabular Presentation" 
-                        }
-                    ]} />
+                    <Select placeholder="Select Chart Type" 
+                        onChange={(e) => {
+                            setChartType(e);
+                            if(e == "Vertical Bar Chart") form.setFieldValue("chart_config", {stacked: false, x_axis : "", y_axis : [""]});
+                            if(e == "Horizontal Bar Chart") form.setFieldValue("chart_config", {stacked: false, x_axis : [""], y_axis : ""});
+                        }} 
+                        options={[
+                            { 
+                                label: "Vertical Bar Chart", 
+                                value: "Vertical Bar Chart" 
+                            }, 
+                            { 
+                                label: "Horizontal Bar Chart", 
+                                value: "Horizontal Bar Chart" 
+                            }, 
+                            { 
+                                label: "Pie Chart", 
+                                value: "Pie Chart" 
+                            }, 
+                            { 
+                                label: "Line Chart", 
+                                value: "Line Chart" 
+                            },
+                            { 
+                                label: "Tabular Presentation", 
+                                value: "Tabular Presentation" 
+                            }
+                        ]} 
+                    />
                 </Form.Item>
 
 
