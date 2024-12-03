@@ -12,7 +12,9 @@ const seedDatabase = async () => {
 
         // write the seeder logic here
         // await SeedRoles();
-        await SeedUsers();
+
+        // temporarily remove
+        // await SeedUsers();
 
         console.log("Finish Seeding");
 
