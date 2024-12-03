@@ -1,7 +1,7 @@
 
 import Title from "antd/es/typography/Title";
 import { GenericFormFieldV3 } from "../../types/forms/GenericFormTypes";
-import { Alert, Button, DatePicker, Drawer, Flex, Input, message, Popconfirm, Select, Space, Tooltip } from "antd";
+import { Alert, Badge, Button, DatePicker, Drawer, Flex, Input, message, Popconfirm, Select, Space, Tooltip, Typography } from "antd";
 import { useAuthStore } from "../../stores/useAuthStore";
 import { useEffect, useRef, useState } from "react";
 import { delRequestReport, formGetByQuery, getRequestReportByQuery, requestReport } from "../../services/api/formsApi";
@@ -20,6 +20,8 @@ import { convertReportFilters, flattenFields, generateColDefs } from "../../serv
 import CustomReportGeneratorV2 from "./CustomReportGeneratorV2";
 import { reportDataGet, reportDataGetByQuery } from "../../services/api/reportDataApi";
 import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
+import { header } from "case";
+import { div } from "@tensorflow/tfjs";
 
 export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] => {
     return flattenFields(fields).filter(field => field.identifier && field.name).map(field => {
@@ -283,6 +285,22 @@ export const PreviewPrint = () => {
     )
 }
 
+const FilterCellRenderer = ({params}) => {
+
+    return (
+        <div>
+        {
+            Object.entries(params.data.filters).map(([key, value] : any) => {
+                return (
+                    <div>
+                        <p className="font-semibold">{key}: <Typography.Text code className="text-gray-700 font-normal">{value}</Typography.Text></p>
+                    </div>
+                )
+            })
+        }
+        </div>
+    );
+}
 
 const CustomReportV2 = ({ config } : {config:any} ) => {
 
@@ -298,16 +316,16 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
     const [colDefs, setColDefs] = useState<any[]>([]);
     const [fields, setFields] = useState<any[]>([]);
 
-    const handleDelete = (id:string) => {
-        // delRequestReport(id)
-        // .then(res => {
-        //     setRefresh(!refresh);
-        //     messageApi.success("Report Successfully Deleted")
-        // })
-        // .catch(err => {
-        //     messageApi.error(parseResError(err).msg)
-        // })
-        // .finally()
+    const handleDelete = async (id:string) => {
+        try {
+            const res = await delRequestReport(id);
+            setRefresh(!refresh);
+            messageApi.success("Report Successfully Deleted");
+        } catch (err) {
+            messageApi.error(parseResError(err).msg);
+        } finally {
+            setRefresh(!refresh);
+        }
     }
 
     const columnDefs : any = [
@@ -318,6 +336,32 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
         {
             headerName : "Description",
             field : "description"
+        },
+        {
+            headerName : "Filters",
+            field : "filters",
+            autoHeight : true,
+            cellRenderer : (params) => {
+                // console.log(params)
+                return <FilterCellRenderer params={params} />
+            }
+        },
+        {
+            headerName : "Status",
+            cellRenderer : (params) => {
+                return (
+                    <div>
+                        {!params.data.rejected_by ? (
+                            <>
+                                <Badge className="block" status={params.data.reviewed_at ? "success" : "default"} text={params.data.reviewed_at ? "Reviewed" : "Pending Review"} />
+                                <Badge className="block" status={params.data.approved_at ? "success" : "default"} text={params.data.approved_at ? "Approved" : "Pending Approval"} />
+                            </>
+                        ) : (
+                            <Badge className="block" status="error" text="Rejected" />
+                        )}
+                    </div>
+                )
+            }
         },
         {
             headerName: "Actions",
@@ -448,6 +492,9 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
                     columnDefs={columnDefs}
                     rowData={customRowData}
                     onGridReady={(ev) => ev.api.sizeColumnsToFit()}
+                    // frameworkComponents={{
+                    //     filtersRenderer: FilterCellRenderer // Register the React component
+                    // }}
                 />
             </div>
 
