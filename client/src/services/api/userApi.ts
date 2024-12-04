@@ -99,6 +99,10 @@ export const signup = async (data : {email : string, password : string, name : s
     await axios.post(`${apiUrl}/users/signup`, data);
 }
 
+export const registerUser = async (data : {email : string, password : string,password_confirmation : string, name : string, role : string}) : Promise<void> => {
+    await axios.post(`${apiUrl}/users/register-user`, data);
+}
+
 export const getUserById = async (id : string) : Promise<any> => {
     return await axios.get(`${apiUrl}/users/get-by-id/${id}`);
 }
@@ -144,4 +148,8 @@ export const resetPassword = async (password, token) : Promise<any> => {
 }
 export const resendEmailVerification = async (email) : Promise<any> => {
     return await axios.post(`${apiUrl}/users/resend-verification/${email}`);
+}
+
+export const isEmailUsed = async (email) : Promise<any> => {
+    return await axios.get(`${apiUrl}/users/is-email-used/${email}`);
 }

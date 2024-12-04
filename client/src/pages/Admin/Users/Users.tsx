@@ -4,9 +4,10 @@ import { Button, message, Popconfirm, Space, Switch, Table, Tooltip } from "antd
 import Title from "antd/es/typography/Title";
 import { useEditRoleStore } from "../../../stores/useRoleStore";
 import Search from "antd/es/input/Search";
-import { useEditUserStore, useViewUsersStore } from "../../../stores/useUserStore";
+import { useEditUserStore, useRegisterUserStore, useViewUsersStore } from "../../../stores/useUserStore";
 import EditUserDetails from "../../../components/Admin/Users/EditUserDetails";
 import RoleGuard from "../../../components/Guards/RoleGuard";
+import RegisterUser from "../../../components/Admin/Users/RegisterUser";
 
 interface DataSource {
     key: string
@@ -26,7 +27,9 @@ const Users = () => {
     const [ isSearching, setIsSearching ] = useState(false);
     const [ isUsersLoading, setIsUsersLoading ] = useState(false);
     const [ searchKeyword, setSearchKeyword ] = useState("");
-    const editUserStore = useEditUserStore()
+    const editUserStore = useEditUserStore();
+    const registerUserStore = useRegisterUserStore();
+    const [refresh, setRefresh] = useState<boolean>(false);
 
 
     const handleActivateUser = (id:string, toActivate : boolean) => {
@@ -140,7 +143,7 @@ const Users = () => {
             setIsUsersLoading(false)
         })
         
-    }, [page]);
+    }, [page, refresh]);
 
     useEffect(() => {
         const d : any[]  = viewUsersStore.users.map((val, i) => {
@@ -157,10 +160,16 @@ const Users = () => {
     }, [viewUsersStore.users])
 
     return (
-        <RoleGuard role={["admin"]} redirectTo="/error/401">
+        <RoleGuard role={["admin"]} >
             {contextHolder}
 
             <Title level={3} >User Accounts</Title>
+
+            <div className="float-right">
+                <Button type="primary" onClick={() => registerUserStore.setOpen(true)}>
+                    Register User
+                </Button>
+            </div>
 
             <div className="mb-2 max-w-96">
                 <Search 
@@ -171,8 +180,9 @@ const Users = () => {
                 onChange={(e) => setSearchKeyword(e.target.value)} 
                 onSearch={handleUserSearch}
                 value={searchKeyword} />
-            </div>
 
+            </div>
+       
             <Table 
             loading={isUsersLoading}
             dataSource={dataSource} 
@@ -185,6 +195,8 @@ const Users = () => {
             }} />
 
             {/* <EditUserRole /> */}
+
+            <RegisterUser onFinish={() => setRefresh(!refresh)} />
             <EditUserDetails />
         </RoleGuard>
     )

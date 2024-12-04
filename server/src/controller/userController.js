@@ -212,7 +212,7 @@ export const getUserById = async (req, res) => {
         const user = await UserModel.findOne({_id:id});
 
         if(!user){
-            return res.json(404).send({
+            return res.status(404).send({
                 error: "User not found"
             })
         }

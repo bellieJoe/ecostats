@@ -47,3 +47,14 @@ export const useViewUsersStore = create<ViewUsersState>((set) => ({
         set({users : []})
     }
 }));
+
+export const useRegisterUserStore = create<{
+    isOpen : boolean
+    setOpen : (isOpen : boolean) => void
+}>((set) => ({
+    isOpen : false,
+
+    setOpen : (isOpen : boolean) => {
+        set({isOpen})
+    }
+}));

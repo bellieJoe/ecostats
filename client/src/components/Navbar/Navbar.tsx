@@ -71,11 +71,11 @@ const Navbar = () => {
                         </Button>
                     </Link>
 
-                    <Link to="/signup">
+                    {/* <Link to="/signup">
                         <Button variant="contained" style={button} >
                                 Sign Up 
                         </Button>
-                    </Link>
+                    </Link> */}
                 </GuestGuard>
                 <IsAuth>
                     {/* <Button variant="contained" style={button} >

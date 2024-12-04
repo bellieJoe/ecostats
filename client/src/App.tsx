@@ -177,7 +177,7 @@ function App() {
                   <Route path="" element={<LandingPage />} />
                   <Route path="profile" element={<Profile />} />
                   <Route path="login" element={<Login />} />
-                  <Route path="signup" element={<SignUp />} />
+                  {/* <Route path="signup" element={<SignUp />} /> */}
                   <Route path="forgot-password" element={<ForgotPassword />} />
                   <Route path="reset-password/:token" element={<ResetPassword />} />
                   <Route path="email-verified" element={<EmailVerifiedResult />} />
