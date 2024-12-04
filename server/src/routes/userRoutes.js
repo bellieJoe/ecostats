@@ -22,13 +22,19 @@ import {
     forgotPassword,
     resetPassword,
     verifyAccount,
-    resendEmail
+    resendEmail,
+    isEmailUsed,
+    registerUser,
+    sendRegistrationEmail,
+    test
 } from "../controller/userController.js";
 import UserModel from "../model/User.js";
 
 router.post('/login', userLoginValidation, login);
 
 router.post('/signup', userSignupValidation, signup);
+
+router.post('/register-user', userSignupValidation, registerUser);
 
 router.put('/update/:id', updateuserValidation, update);
 
@@ -58,5 +64,10 @@ router.get("/query", async (req, res) => {
     const users = await UserModel.find(req.query.query);
     return res.json(users);
 });
+
+router.get('/is-email-used/:email', isEmailUsed);
+
+router.get('/test', test);
+
 
 export default router;

@@ -8,7 +8,15 @@ import mongoose from "mongoose";
 // import ProgramHeadModel from "../model/ProgramHead.js";
 // import UnitHeadModel from "../model/UnitHead.js";
 import ProgramModel from "../model/Program.js";
-import nodemailer from "nodemailer"
+import nodemailer from "nodemailer";
+import handlebars from "handlebars";
+import path from "path";
+import { fileURLToPath } from 'url';
+import fs from "fs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 dotenv.config()
 
@@ -522,6 +530,66 @@ export const verifyAccount = async (req, res) => {
     }
 }
 
+export const registerUser = async (req, res)  => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const errors = validationResult(req);
+        if(!errors.isEmpty())
+            return res.status(422).json({errors: errors.array()})
+
+        const { email, password, password_confirmation, role, name } = req.body;
+
+        if(password !== password_confirmation){
+            return res.status(401).json({
+                error: "Unauthorized",
+                msg: "User account is not active. Please contact your administrator to reactivate your account."
+            });
+        }
+        
+        const user = new UserModel({
+            email,
+            passwordHash : await bcrypt.hash(password, 10),
+            name,
+            isActive: true,
+            role
+        });
+
+        await user.save({session});
+
+        await sendRegistrationEmail(user, password);
+
+        await session.commitTransaction();
+
+        return res.json(user);
+
+    } catch (error) {
+        await session.abortTransaction();
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        );
+    } finally {
+        session.endSession();
+    }
+}
+
+export const isEmailUsed = async (req, res) => {
+    const { email } = req.params;
+    try {
+        const user = await UserModel.findOne({email : email});
+        return res.json(user ? true : false);
+    } catch (error) {
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        );
+    }
+}
 
 // helpers
 async function validatePassword(password, passwordHash ){
@@ -578,6 +646,7 @@ async function sendVerificationEmail(user){
         const link = `${process.env.URL}/users/verify-account/${token}`;
         await transporter.sendMail({
             to: user.email,
+            // to: user.email,
             subject: 'Account Verification',
             html: 
             `
@@ -641,5 +710,56 @@ async function sendVerificationEmail(user){
         });
     } catch (error) {
         console.log(error)
+    }
+}
+
+export const test = async (req, res) => {
+    try {
+        const user = await UserModel.findOne({email : 'admin_ecostats@gudri.com'});
+        await sendRegistrationEmail(user);
+        // await sendVerificationEmail(user);
+        return res.send("done");
+    } catch (error) {
+        console.log(error)
+    }
+}
+export async function sendRegistrationEmail(user, temporaryPassword) {
+    try {
+        // Generate a token
+        const token = await generateJWTToken(user._id);
+
+        // Create the transporter
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.MAIL_EMAIL,
+                pass: process.env.MAIL_PASS,
+            },
+        });
+
+        // Read the HTML template
+        const templatePath = path.join(__dirname, '../templates', 'UserRegisteredEmail.html');
+        const templateSource = fs.readFileSync(templatePath, 'utf-8');
+
+        // Compile the template with Handlebars
+        const template = handlebars.compile(templateSource);
+
+        // Replace placeholders with dynamic values
+        const htmlContent = template({
+            name: user.name,
+            link: `${process.env.URL}/users/verify-account/${token}`,
+            temporaryPassword: temporaryPassword,
+        });
+
+        // Send the email
+        await transporter.sendMail({
+            // to: "jandusayjoe14@gmail.com",
+            to: user.email,
+            subject: 'Account Verification',
+            html: htmlContent,
+        });
+
+    } catch (error) {
+        console.error('Error sending email:', error);
     }
 }
