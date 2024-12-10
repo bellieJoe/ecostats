@@ -113,13 +113,13 @@ const DataMigrator = ({ columns, onSave }: { columns: DataMigratorCol[], onSave:
           Save
         </Button>
       </Space>
-      <div className="ag-theme-alpine" style={{ height: 400, width: '100%', marginTop: '16px' }}>
+      {/* <div className="ag-theme-alpine" style={{ height: 400, width: '100%', marginTop: '16px' }}>
         <AgGridReact
           rowData={rowData}
           columnDefs={columnDefs}
           defaultColDef={{ sortable: true, filter: true, resizable: true }}
         />
-      </div>
+      </div> */}
       <Flex className="mt-4" justify='end'>
         <Button onClick={downloadTemplate} icon={<FontAwesomeIcon icon={faDownload} />}>
             Download Excel Template

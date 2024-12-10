@@ -281,7 +281,7 @@ export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void,
                     style={{width: "90%"}} 
                  >
                     <p className="mb-1">{ previewReportStore.report ?   previewReportStore.report.config.form_code : "" }</p>
-                    <AgGridReact
+                    {/* <AgGridReact
                         columnDefs={colDefs}
                         rowData={rowData}
                         key={gridKey}
@@ -325,7 +325,7 @@ export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void,
                             // Clean up event listener when grid is destroyed
                             window.removeEventListener("resize", () => {});
                         }}
-                    />
+                    /> */}
 
                 </div>
 

@@ -127,14 +127,14 @@ export const PreviewPrint = () => {
         if(previewReportStore.report) {
             setOpen(true);
             setGridKey(`grid-key-${Math.random()}`)
-            formGetByQuery(previewReportStore.formName!, previewReportStore.sector!, previewReportStore.report.filters)
-            .then(res => {
-                setRowData(res.data);
-            })
-            .catch(err => {
-                messageApi.error(parseResError(err).msg)
-            })
-            .finally();
+            // formGetByQuery(previewReportStore.formName!, previewReportStore.sector!, previewReportStore.report.filters)
+            // .then(res => {
+            //     setRowData(res.data);
+            // })
+            // .catch(err => {
+            //     messageApi.error(parseResError(err).msg)
+            // })
+            // .finally();
             getSignatories();
         }
         else {
@@ -165,7 +165,7 @@ export const PreviewPrint = () => {
                 <p className="text-center my-2">{previewReportStore.report && previewReportStore.report.description}</p>
 
                 <div className="report-table ag-theme-alpine w-fit mx-auto my-4" style={{width: 800}}  >
-                    <AgGridReact
+                    {/* <AgGridReact
                         columnDefs={previewReportStore.colDefs}
                         rowData={rowData}
                         key={gridKey}
@@ -198,7 +198,7 @@ export const PreviewPrint = () => {
                         onGridPreDestroyed = {() => {
                             console.log("destroyed")
                         }}
-                    />
+                    /> */}
                 </div>
                 
                 {/* Signatories */}
@@ -269,7 +269,7 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
                         <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this request?" onConfirm={() => handleDelete(params.data._id)}>
                             <Button size="small" color="danger" variant="text">Delete</Button>
                         </Popconfirm>
-                        <Button size="small" color="primary" variant="text" onClick={() => previewReportStore.setStore(colDefs, formName, sector, params.data)}>Preview & Print</Button>
+                        {/* <Button size="small" color="primary" variant="text" onClick={() => previewReportStore.setStore(colDefs, formName, sector, params.data)}>Preview & Print</Button> */}
                         <Button size="small" color="primary" variant="text" onClick={() => viewLogsStore.setReportId(params.data._id)}>Logs</Button>
                     </Space>
                 )
