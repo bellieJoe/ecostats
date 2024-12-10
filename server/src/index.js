@@ -75,9 +75,16 @@ app.use(session({
 }));
 
 // Start the server on the specified port
-app.listen(process.env.PORT, () => {
-    console.log(`Server is running on port ${process.env.PORT}`);
-});
+// app.listen(process.env.PORT, () => {
+//     console.log(`Server is running on port ${process.env.PORT}`);
+// });
+
+if (process.env.NODE_ENV !== 'production') {
+    // For local development, use app.listen to start the server
+    app.listen(process.env.PORT || 5000, () => {
+        console.log(`Server is running on port ${process.env.PORT || 5000}`);
+    });
+}
 
 app.use(cookieParser());
 
