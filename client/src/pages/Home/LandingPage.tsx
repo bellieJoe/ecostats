@@ -1,7 +1,7 @@
 import { Flex, Image, Layout } from "antd";
 import forestry_logo from "../../assets/forestry.png"
 import bio_logo from "../../assets/bio.png"
-import land_logo from "../../assets/Land.png"
+import land_logo from "../../assets/land.png"
 import logo from "../../assets/logo.png"
 import Title from "antd/es/typography/Title";
 import {PeopleAltOutlined, PeopleAltTwoTone, PhonelinkOutlined, PhonelinkTwoTone, SettingsSuggestTwoTone, SsidChartTwoTone} from '@mui/icons-material';
