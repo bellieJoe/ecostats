@@ -16,7 +16,9 @@ import sectorRoutes from "./routes/sectorRoutes.js"
 import reportConfigRoutes from "./routes/reportConfigRoutes.js"
 import reportDataRoutes from "./routes/reportDataRoutes.js"
 import chartConfigRoutes from "./routes/chartConfigRoutes.js"
-import colorSchemeRoutes from "./routes/colorSchemeRoutes.js"
+import colorSchemeRoutes from "./routes/colorSchemeRoutes.js";
+
+import serverless from "serverless-http";
 
 
 dotenv.config(); // Load environment variables from .env file
@@ -91,4 +93,6 @@ app.use("/report-configs", reportConfigRoutes);
 app.use("/report-data", reportDataRoutes);
 app.use("/chart-config", chartConfigRoutes);
 app.use("/color-scheme", colorSchemeRoutes);
+
+export const handler = serverless(app);
 
