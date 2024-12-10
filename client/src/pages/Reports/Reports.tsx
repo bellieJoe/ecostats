@@ -26,10 +26,10 @@ const Reports = () => {
     
     return (
         <RouteGuard>
-            <Layout className="h-full">
+            <Layout className="h-full" >
                 <ReportsSidebar open={collapsed} />
                 <Layout>
-                    <Content style={{padding: "1rem", overflow: "scroll"}}>
+                    <Content  style={{padding: "0.5rem", overflow: "scroll"}}>
                         <Button
                             type="text"
                             size="small"
@@ -40,7 +40,7 @@ const Reports = () => {
                                 padding: "1rem"
                             }}
                         />
-                        <Outlet />
+                        <Outlet  />
                     </Content>
                 </Layout>
             </Layout>

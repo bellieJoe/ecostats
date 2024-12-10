@@ -7,7 +7,7 @@ const DashboardIndex = () => {
     return (
     <>
         <Layout>
-            <Layout.Content style={{ padding: '0 50px' }}>
+            <Layout.Content style={{ padding: '0 0px' }}>
                 <div className="site-layout-content">
                     <Time />
                     <div className="flex flex-col md:flex-row items-center md:items-start p-6 bg-lime-700 rounded mb-4 shadow-lg">

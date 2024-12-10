@@ -8,7 +8,7 @@ const ReportsIndex = () => {
     return (
     <>
         <Layout>
-            <Layout.Content style={{ padding: '0 50px' }}>
+            <Layout.Content style={{ padding: '0 0px' }}>
                 <div className="site-layout-content">
 
                     <Time />
