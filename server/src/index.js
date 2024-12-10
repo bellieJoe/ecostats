@@ -26,10 +26,28 @@ const app = express();
 app.use(express.json());
 
 // CORS configuration to allow frontend requests
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://localhost:3000',
+    'https://ecostats.vercel.app/'
+];
+
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or CURL requests)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true // Allow credentials such as cookies to be sent
 }));
+
+// app.use(cors({
+//     origin: 'http://localhost:5173',
+//     credentials: true // Allow credentials such as cookies to be sent
+// }));
 
 
 // Connect to MongoDB using environment variables for URI
