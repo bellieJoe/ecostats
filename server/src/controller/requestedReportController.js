@@ -25,11 +25,22 @@ export const create = async (req, res) => {
                 msg: "Unable to create the report as this user is not a member of any unit."
             })
         }
+
+        console.log({
+            title,
+            description,
+            filters : filters || {},
+            fields,
+            requested_by,
+            isCustom,
+            unit_id : focal.unitId,
+            report_config_id : report_config_id
+        });
         
         const requestedReport = new RequestedReportModel({
             title,
             description,
-            filters,
+            filters : filters || {},
             fields,
             requested_by,
             isCustom,

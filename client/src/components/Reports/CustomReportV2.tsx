@@ -21,6 +21,7 @@ import CustomReportGeneratorV2 from "./CustomReportGeneratorV2";
 import { reportDataGet, reportDataGetByQuery } from "../../services/api/reportDataApi";
 import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
 import "./GeneratedReport.css";
+import { wrap } from "lodash";
 
 
 export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] => {
@@ -98,7 +99,7 @@ const RequestReportForm = ({ config,  fields, isCustom, title, btnLabel } : Requ
                 isCustom : isCustom,
                 requested_by : authStore.user?._id
             }
-            console.log(data)
+            console.log("V2", data)
             await requestReport(data);
             messageApi.success("New report request successfully submitted.")
         } catch (error) {
@@ -278,10 +279,10 @@ export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void,
                 <div 
                     id="report-table"
                     className="report-table ag-theme-alpine w-fit mx-auto my-4" 
-                    style={{width: "90%"}} 
+                    style={{width: "100%", maxWidth: "800px"}} 
                  >
-                    <p className="mb-1">{ previewReportStore.report ?   previewReportStore.report.config.form_code : "" }</p>
-                    {/* <AgGridReact
+                    <p className="mb-1">{ previewReportStore.report && previewReportStore.report.config ?   previewReportStore.report.config.form_code : "" }</p>
+                    <AgGridReact
                         columnDefs={colDefs}
                         rowData={rowData}
                         key={gridKey}
@@ -303,7 +304,7 @@ export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void,
                         }}
                         onGridReady={params => {
                             
-                            const columnsToHide = [];
+                            const columnsToHide : any[] = [];
                             previewReportStore.report.fields.forEach((e:any) => {
                             if (!e.included) {
                                 columnsToHide.push(e.name);
@@ -325,7 +326,7 @@ export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void,
                             // Clean up event listener when grid is destroyed
                             window.removeEventListener("resize", () => {});
                         }}
-                    /> */}
+                    />
 
                 </div>
 
@@ -362,6 +363,7 @@ const FilterCellRenderer = ({params}) => {
     return (
         <div>
         {
+            params.data.filters && Object.entries(params.data.filters).length > 0 ?
             Object.entries(params.data.filters).map(([key, value] : any) => {
                 return (
                     <div>
@@ -369,6 +371,11 @@ const FilterCellRenderer = ({params}) => {
                     </div>
                 )
             })
+            : (
+                <div>
+                    <p className="">N/A</p>
+                </div>
+            )
         }
         </div>
     );
@@ -414,7 +421,7 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
             field : "filters",
             autoHeight : true,
             cellRenderer : (params) => {
-                // console.log(params)
+                console.log("FilterCellRenderer", params)
                 return <FilterCellRenderer params={params} />
             }
         },
@@ -438,6 +445,7 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
         {
             headerName: "Actions",
             headerClass: "justify-center",
+            wrap: true,
             flex: 1,
             cellRenderer: (params) => {
                 return (
@@ -517,16 +525,20 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
                 <AgGridReact
                     defaultColDef={{
                         wrapText : true,
-                        filter : "agTextFilterColumn"
+                        filter : "agTextFilterColumn",
+                        autoHeight : true,
+                        cellStyle : {
+                            "lineHeight": "1.5rem",
+                        }
                     }}
-                    autoSizeStrategy={{
-                        type: "fitGridWidth"
-                    }}
+                    // autoSizeStrategy={{
+                    //     // type: "fitGridWidth"
+                    // }}
                     pagination={true}
                     loading={loading}
                     columnDefs={columnDefs}
                     rowData={rowData}
-                    onGridReady={(ev) => ev.api.sizeColumnsToFit()}
+                    // onGridReady={(ev) => ev.api.sizeColumnsToFit()}
                 />
             </div>
             
@@ -555,16 +567,20 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
                     defaultColDef={{
                         wrapText : true,
                         filter : "agTextFilterColumn",
+                        autoHeight : true,
+                        cellStyle : {
+                            "lineHeight": "1.5rem",
+                        }
                         
                     }}
-                    autoSizeStrategy={{
-                        type: "fitGridWidth"
-                    }}
+                    // autoSizeStrategy={{
+                    //     type: "fitGridWidth"
+                    // }}
                     pagination={true}
                     loading={loading}
                     columnDefs={columnDefs}
                     rowData={customRowData}
-                    onGridReady={(ev) => ev.api.sizeColumnsToFit()}
+                    // onGridReady={(ev) => ev.api.sizeColumnsToFit()}
                     // frameworkComponents={{
                     //     filtersRenderer: FilterCellRenderer // Register the React component
                     // }}

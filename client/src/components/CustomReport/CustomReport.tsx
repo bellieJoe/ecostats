@@ -44,7 +44,7 @@ const RequestReportForm = ({ formName,  fields, isCustom, title, btnLabel } : Re
                 isCustom : isCustom,
                 requested_by : authStore.user?._id
             }
-            console.log(data ,formName)
+            console.log("V1", data)
             await requestReport(data);
             messageApi.success("New report request successfully submitted.")
         } catch (error) {
