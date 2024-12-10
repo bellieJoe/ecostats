@@ -75,6 +75,10 @@ const ReportConfigSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    form_code : { 
+        type : String,
+        required : true
+    },
     sector : {
         type : Schema.Types.ObjectId,
         ref : "sectors",

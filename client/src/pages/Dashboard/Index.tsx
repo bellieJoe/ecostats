@@ -13,7 +13,7 @@ const DashboardIndex = () => {
                     <div className="flex flex-col md:flex-row items-center md:items-start p-6 bg-lime-700 rounded mb-4 shadow-lg">
                         <img src={penro} alt="Penro" className="w-20 h-20 rounded-full md:mr-4" />
                         <div className="md:mt-0 mt-4 ">
-                            <Title level={1} className="!text-white">DASHBOARDS</Title>
+                            <Title level={1} className="!text-white">VISUALIZATIONS</Title>
                             <p className="text-white text-center md:text-left">A collection of dashboards showcasing data from various sources, from different PENRO Programs.</p>
                         </div>
                     </div>

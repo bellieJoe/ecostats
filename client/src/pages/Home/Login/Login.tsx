@@ -31,7 +31,7 @@ const Login = () => {
         boxShadow: "0 0 15px rgba(0, 0, 0, 0.2)",
         textAlign: "center",
         width: "100%",
-        maxWidth: "400px",
+        maxWidth: "600px",
     };
     
     const heading : React.CSSProperties = {
@@ -126,8 +126,11 @@ const Login = () => {
         <GuestGuard redirectTo="/">
             {contextHolder}
             <div style={containerStyle}>
-                <Grid>
-                    <Paper style={paperStyle} sx={{ width: { xs: '80vw', sm: '50vw', md: '40vw', lg: '30vw', xl: '20vw' },  }}>
+                <Grid >
+                    <Paper 
+                    style={paperStyle} 
+                    sx={{ width: { xs: '80vw', sm: '50vw', md: '40vw', lg: '35vw', xl: '20vw' },  }}
+                    >
                         <Typography component="h1" variant="h5" style={heading}>Login</Typography>
                         <form onSubmit={handleLogin}>
                             <span style={row}>

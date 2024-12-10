@@ -29,7 +29,7 @@ const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, ref
 
     const fetchConfigs = async () => {
         try {
-            const _configs = (await reportConfigGetByQuery({sector : sectorId}, ["sector", "charts"])).data;
+            const _configs = (await reportConfigGetByQuery({sector : sectorId}, ["sector", { path: "charts", populate : { path: "color_scheme" }}])).data;
             setConfigs(_configs);
             console.log(_configs)
         } catch (error) {
@@ -65,6 +65,7 @@ const RenderConfigs = ({sectorId, refresh, setRefresh} : {sectorId : string, ref
                             <Button onClick={() => updateReportNameStore.setReportData(config)} size="small" type="link"><FontAwesomeIcon className="text-gray-500" icon={faEdit} /></Button>
                         </p>
                         <p><span className="font-semibold">Identifier :</span> <Typography.Text code>{config.identifier}</Typography.Text> </p> 
+                        <p><span className="font-semibold">Form Code :</span> <Typography.Text code>{config.form_code ? config.form_code : "N/A"}</Typography.Text> </p> 
                     </Flex>
                     <Flex gap={4} className="h-fit">
                         <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this Report Configuration?" onConfirm={() => handleDelete(config._id)}>

@@ -5,6 +5,7 @@ import ReportLogModel from "../model/ReportLogs.js";
 import UserModel from "../model/User.js"
 import FocalPerson from "../model/FocalPerson.js"
 import { getUserFromToken, getUserIdFromToken } from "./userController.js";
+import { populate } from "dotenv";
 
 export const create = async (req, res) => {
     const session = await mongoose.startSession();
@@ -271,5 +272,24 @@ export const rejectReport = async (req, res) => {
     } finally {
         await session.endSession();
     }
+}
+
+export const countToApproveReportByUserId = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        const user = UserModel.findById(userId).populate(["units", "programs"]);
+
+        // const units = 
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(
+            { 
+                error: 'Server error',
+                details : error
+            }   
+        );
+    } 
 }
 

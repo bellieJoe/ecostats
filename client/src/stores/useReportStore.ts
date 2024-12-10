@@ -18,11 +18,13 @@ export const usePreviewReportStore = create<PreviewReportState>((set) => ({
 
     setReport : (report) => 
     {
+        
         set({
             report: report
         })
     },
     setStore : (report) => {
+        console.log("prev report " , report)
         set({
             report
         })

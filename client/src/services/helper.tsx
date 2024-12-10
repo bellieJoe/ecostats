@@ -164,3 +164,7 @@ export function getRandomColor(index : number) {
   
   return colors[index];
 }
+export function getRandomColorByScheme(index : number, colors : string[]) {
+  if(index >= colors.length) index = 0;
+  return colors[index];
+}

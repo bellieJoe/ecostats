@@ -29,6 +29,7 @@ import {
     test
 } from "../controller/userController.js";
 import UserModel from "../model/User.js";
+import RequestedReportModel from "../model/RequestedReport.js"
 
 router.post('/login', userLoginValidation, login);
 
@@ -67,7 +68,71 @@ router.get("/query", async (req, res) => {
 
 router.get('/is-email-used/:email', isEmailUsed);
 
+router.get('/count-reports-for-approval/:userId', async (req, res) => {
+    try {
+        const userId = req.params.userId;
+
+        // return res.json(userId);
+
+        const user = await UserModel.findById(userId).populate(["units", {
+            path: "programs",
+            populate: {
+                path: "units"
+            }
+        }]);
+
+        const toReviewUnits = [
+            ...user.units.map(unit => unit._id),
+        ];
+        const toApproveUnits = [
+            ...user.programs.flatMap(program => program.units.map(unit => unit._id))
+        ]
+
+        const toReviewCount = await RequestedReportModel.find({
+            unit_id : {
+                $in : toReviewUnits
+            },
+            approved_at : null,
+            reviewed_at: null,
+            rejected_by: null
+        }).countDocuments();
+
+        const toApproveCount = await RequestedReportModel.find({
+            unit_id : {
+                $in : toApproveUnits
+            },
+            approved_at : null,
+            reviewed_at: {
+                $ne : null
+            },
+            rejected_by: null
+        }).countDocuments();
+
+
+        return res.json({
+            toReview : toReviewCount,
+            toApprove : toApproveCount
+        });
+
+        
+
+        // const units = 
+        return res.json(user);
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(
+            { 
+                error: 'Server error',
+                details : error
+            }   
+        );
+    } 
+});
+
 router.get('/test', test);
+
+
 
 
 export default router;

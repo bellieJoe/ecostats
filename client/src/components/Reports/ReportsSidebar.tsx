@@ -1,4 +1,4 @@
-import { ConfigProvider, Menu, message, Select, ThemeConfig } from "antd";
+import { Badge, ConfigProvider, Menu, message, Select, ThemeConfig } from "antd";
 import Sider from "antd/es/layout/Sider";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import { parseResError } from "../../services/errorHandler";
 import { sectorGetByQuery } from "../../services/api/sectorApi";
 import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
 import { generateYearOptionsFixed } from "../../services/helper";
+import { getReportCount } from "../../services/api/userApi";
 
 const ReportsSidebar = ({open}) => {
     const navigate = useNavigate();
@@ -71,6 +72,7 @@ const ReportsSidebar = ({open}) => {
         try {
             const it : any[] = [];
             if(["planning officer", "chief"].includes(authStore.user?.role!)){
+                const reportCount = (await getReportCount(authStore.user?._id!)).data;
                 it.push({
                     key: "reports",
                     label : "Reports",
@@ -80,20 +82,23 @@ const ReportsSidebar = ({open}) => {
                         {
                             key : "to-review",
                             label : "To Review",
-                            icon: <FontAwesomeIcon icon={faMagnifyingGlass} />,
+                            icon: <div><Badge status="success" count={reportCount ? reportCount.toReview : 0}/></div>,
                             style: menuStyle2,
-                            onClick : () => navigate(`/reports/to-review`)
+                            onClick : () => navigate(`/reports/to-review`),
+                            
                         },
                         {
                             key : "to-approve",
                             label : "To Approve",
-                            icon: <FontAwesomeIcon icon={faThumbsUp} />,
+                            icon: <div><Badge status="success"  count={reportCount ? reportCount.toApprove : 0}/></div>,
                             style: menuStyle2,
                             onClick : () => navigate(`/reports/to-approve`)
                         },
                     ]
                 });
             }
+
+   
     
             
             const programs : any[] = (await getProgramByQuery({programHead : authStore.user?._id!, deletedAt : null}, [])).data;

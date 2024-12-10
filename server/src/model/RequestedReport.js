@@ -54,6 +54,15 @@ const RequestedReportSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true, // Adds createdAt and updatedAt timestamps
+  virtuals : true,
+  toJSON : { virtuals : true }
+});
+
+RequestedReportSchema.virtual("config", {
+    ref : "report_configs",
+    localField : "report_config_id",
+    foreignField : "_id",
+    justOne : true
 });
 
 // Create a model

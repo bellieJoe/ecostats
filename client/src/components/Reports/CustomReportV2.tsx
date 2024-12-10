@@ -13,15 +13,15 @@ import { usePreviewReportStore, useViewLogsStore } from "../../stores/useReportS
 import { useReactToPrint } from "react-to-print"
 import { ViewLogs } from "../Reports/ApprovalWorkflow/ApprovalComponents";
 import { getUserById } from "../../services/api/userApi";
-import { getFocalPersons, getUnitsByQuery } from "../../services/api/unitApi";
+import { getUnitsByQuery } from "../../services/api/unitApi";
 import "../CustomReport/CustomReport.css";
 import { convertReportFilters, flattenFields, generateColDefs } from "../../services/helper";
 // import { generateGenericFields } from "./DataEntry";
 import CustomReportGeneratorV2 from "./CustomReportGeneratorV2";
 import { reportDataGet, reportDataGetByQuery } from "../../services/api/reportDataApi";
 import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
-import { header } from "case";
-import { div } from "@tensorflow/tfjs";
+import "./GeneratedReport.css";
+
 
 export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] => {
     return flattenFields(fields).filter(field => field.identifier && field.name).map(field => {
@@ -124,7 +124,7 @@ const RequestReportForm = ({ config,  fields, isCustom, title, btnLabel } : Requ
 }
 
 
-export const PreviewPrint = () => {
+export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void, onReject? : (id) => void}) => {
 
     const [gridKey, setGridKey] = useState<string>(`grid-key-${Math.random()}`);
     const [messageApi, contextHandler ] = message.useMessage();
@@ -203,12 +203,63 @@ export const PreviewPrint = () => {
         }
     }, [previewReportStore.report]);
 
+    function addPrintStyles() {
+        const style = document.createElement('style');
+        style.innerHTML = `
+          @media print {
+            /* Ensure the grid spans the entire width of the page */
+            .ag-theme-alpine {
+              width: 100% !important;
+              font-size: 10px; /* Adjust font size to make sure the grid fits */
+              table-layout: fixed;
+            }
+      
+            /* Adjust the print margins and page setup */
+            body {
+              margin: 0;
+              padding: 0;
+            }
+      
+            /* Optional: You can add more tweaks like hiding unnecessary elements for print */
+            .no-print {
+              display: none;
+            }
+      
+            /* Optionally reduce cell padding to make grid content fit */
+            .ag-cell {
+              padding: 2px 5px;
+            }
+      
+            /* If needed, force the grid container to stretch to the full width of the page */
+            .ag-root-wrapper {
+              width: 100% !important;
+            }
+          }
+        `;
+      
+        // Append the style to the head of the document
+        document.head.appendChild(style);
+      }
+
     return (
         <Drawer 
         footer={
              <Flex align="center" justify="end" gap={4}>
-                
-                <Button color="primary" variant="solid" onClick={() => reactToPrintFn()} disabled={previewReportStore.report?.reviewed_at && previewReportStore.report?.approved_at && !previewReportStore.report?.rejected_by ? false : true}>Print</Button>
+                { onApprove && 
+                    <Popconfirm title="Approve Report" description="Are you sure you want to approve this report?" onConfirm={() => onApprove(previewReportStore.report?._id)}>
+                        <Button color="primary" variant="solid">Approve</Button>
+                    </Popconfirm>
+                }
+                { onReject && <Button color="danger" variant="solid" onClick={() => onReject(previewReportStore.report?._id)}>Reject</Button> }
+                <Button 
+                    color="primary" 
+                    variant="solid" 
+                    onClick={() => {
+                        addPrintStyles()
+                        reactToPrintFn()
+                    }} 
+                    disabled={previewReportStore.report?.reviewed_at && previewReportStore.report?.approved_at && !previewReportStore.report?.rejected_by ? false : true}
+                >Print</Button>
             </Flex>
             }
         width={"100%"}
@@ -218,47 +269,68 @@ export const PreviewPrint = () => {
             {contextHandler}
             { renderStatus() }
             {/* Printable area  */}
-            <div className="" ref={printRef}> 
-
-                <Title className="text-center my-4" level={4}>{previewReportStore.report && previewReportStore.report.title}</Title>
+            <div className="" ref={printRef} > 
+                <p className="text-center mb-0">Republic of the Philippines</p>
+                <p className="text-center mb-0 font-bold text-[1rem]">DEPARTMENT OF ENVIRONMENT AND NATURAL RESOURCES</p>
+                <p className="text-center mb-4 font-bold texr-[1rem]" >{previewReportStore.report && previewReportStore.report.title}</p>
                 <p className="text-center my-2">{previewReportStore.report && previewReportStore.report.description}</p>
 
-                <div className="report-table ag-theme-alpine w-fit mx-auto my-4" style={{width: 800}}  >
+                <div 
+                    id="report-table"
+                    className="report-table ag-theme-alpine w-fit mx-auto my-4" 
+                    style={{width: "90%"}} 
+                 >
+                    <p className="mb-1">{ previewReportStore.report ?   previewReportStore.report.config.form_code : "" }</p>
                     <AgGridReact
                         columnDefs={colDefs}
                         rowData={rowData}
                         key={gridKey}
-                        autoSizeStrategy={{
-                            type : "fitProvidedWidth",
-                            width : 800
-                        }}
                         suppressClickEdit={true}
                         domLayout="autoHeight"
                         suppressHorizontalScroll={true}
+
                         defaultColDef={{
                             resizable: false,
-                            autoHeight : true,
-                            wrapText : true,
-                            editable : false,
-                            wrapHeaderText : true,
-                            // autoHeaderHeight: true
+                            suppressAutoSize: true,
+                            suppressMovable: true,
+                            autoHeight: true,
+                            wrapText: true,
+                            editable: false,
+                            wrapHeaderText: true,
+                            cellStyle: {
+                            "lineHeight": "1.3rem",
+                            }
                         }}
                         onGridReady={params => {
-                            params.api.sizeColumnsToFit();
-                            const colums : any[] = []
-                            previewReportStore.report.fields.forEach(e => {
-                                if(!e.included){
-                                    colums.push(e.name)
-                                }
+                            
+                            const columnsToHide = [];
+                            previewReportStore.report.fields.forEach((e:any) => {
+                            if (!e.included) {
+                                columnsToHide.push(e.name);
+                            }
                             });
-                            params.api.setColumnsVisible(colums, false);
-                            params.api.refreshHeader()
+                            params.api.setColumnsVisible(columnsToHide, false);
+                            params.api.refreshHeader();
+
+                            params.api.sizeColumnsToFit();
+
+                            // Resize columns again when the window resizes
+                            window.addEventListener("resize", () => {
+                                params.api.sizeColumnsToFit();
+                                params.api.refreshHeader();
+                            });
                         }}
-                        onGridPreDestroyed = {() => {
-                            console.log("destroyed")
+                        onGridPreDestroyed={() => {
+                            console.log("Grid destroyed");
+                            // Clean up event listener when grid is destroyed
+                            window.removeEventListener("resize", () => {});
                         }}
                     />
+
                 </div>
+
+
+
                 
                 {/* Signatories */}
                 <div className="mx-auto mt-28" style={{width: 800}}  >
@@ -482,7 +554,8 @@ const CustomReportV2 = ({ config } : {config:any} ) => {
                 <AgGridReact
                     defaultColDef={{
                         wrapText : true,
-                        filter : "agTextFilterColumn"
+                        filter : "agTextFilterColumn",
+                        
                     }}
                     autoSizeStrategy={{
                         type: "fitGridWidth"

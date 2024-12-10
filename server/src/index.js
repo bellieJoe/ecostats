@@ -16,6 +16,7 @@ import sectorRoutes from "./routes/sectorRoutes.js"
 import reportConfigRoutes from "./routes/reportConfigRoutes.js"
 import reportDataRoutes from "./routes/reportDataRoutes.js"
 import chartConfigRoutes from "./routes/chartConfigRoutes.js"
+import colorSchemeRoutes from "./routes/colorSchemeRoutes.js"
 
 
 dotenv.config(); // Load environment variables from .env file
@@ -32,6 +33,7 @@ app.use(cors({
 
 
 // Connect to MongoDB using environment variables for URI
+// mongoose.set("strictPopulate", false);
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('Connected to MongoDB'))
     .catch(err => console.error('Failed to connect to MongoDB', err));
@@ -70,4 +72,5 @@ app.use("/sectors", sectorRoutes);
 app.use("/report-configs", reportConfigRoutes);
 app.use("/report-data", reportDataRoutes);
 app.use("/chart-config", chartConfigRoutes);
+app.use("/color-scheme", colorSchemeRoutes);
 

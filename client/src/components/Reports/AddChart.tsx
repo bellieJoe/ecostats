@@ -5,6 +5,7 @@ import { flattenFields } from "../../services/helper";
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { parseResError } from "../../services/errorHandler";
 import { chartConfigCreate } from "../../services/api/chartConfigApi";
+import { colorSchemeGetByQuery } from "../../services/api/colorSchemeApi";
 
 const ChartConfig = ({chartType, config, form} : {chartType : string, config : any, form : FormInstance}) => {
 
@@ -315,9 +316,20 @@ const AddChart = ({onSave}) => {
     const [form] = Form.useForm();
     const [chartType, setChartType] = useState<string>("");
     const [isSaving, setIsSaving] = useState<boolean>(false);
+    const [colorSchemes, setColorSchemes] = useState<any[]>([]);
+
+    const init = async () => {
+        try {
+            setColorSchemes((await colorSchemeGetByQuery({}, [])).data);
+        } catch (error) {
+            message.error(parseResError(error).msg);
+        }
+    }
 
     useEffect(() => { 
-        
+        if(Object.keys(config).length > 0){
+            init();
+        }
     }, [config]);
 
     const handleSave = async () => {
@@ -353,7 +365,6 @@ const AddChart = ({onSave}) => {
         }
     }
     
-
     return (
         <Drawer 
             open={Object.keys(config).length > 0} 
@@ -431,6 +442,44 @@ const AddChart = ({onSave}) => {
                 <Card title="Chart Config" className="mb-4">
                     <ChartConfig chartType={chartType} config={config} form={form} />
                 </Card>
+
+                
+
+                <Form.Item 
+                    name={"color_scheme_id"}
+                    label="Color Scheme"
+                    rules={[{ required: true , message: "Color Scheme is required"}]}
+                >
+                    <Select
+                        options={colorSchemes.map((scheme) => ({
+                            label: (
+                                <div>
+                                    <div>{scheme.name}</div>
+                                    <div style={{ display: "flex", gap: "4px" }}>
+                                        {scheme.colors.map((color, index) => (
+                                            <div
+                                                key={index}
+                                                style={{
+                                                    width: "16px",
+                                                    height: "16px",
+                                                    backgroundColor: color,
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                            ),
+                            value: scheme._id,
+                            name : scheme.name
+                        }))}
+                        onChange={(value) => console.log(value)} // Handle value change
+                        style={{ width: "100%" }}
+                        placeholder="Select a color scheme"
+                        optionLabelProp="name"
+                    />
+
+                    
+                </Form.Item>
 
                 <Form.Item >
                     <Button loading={isSaving} className="block ms-auto me-0" htmlType="submit" color="primary" variant="solid">Save</Button>

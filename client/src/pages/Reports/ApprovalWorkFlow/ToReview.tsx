@@ -29,7 +29,7 @@ const ToReview = () => {
     const colDefs = [
         {
             headerName : "Title",
-            field : "title"
+            field : "title",
         },
         {
             headerName : "Description",
@@ -58,7 +58,7 @@ const ToReview = () => {
             cellRenderer : (params) => {
                 return (
                     <Space className="w-full"> 
-                        <Tooltip title="Approve"  >
+                        {/* <Tooltip title="Approve"  >
                             <Popconfirm title="Approve Report" description="Are you sure you want to approve this report?" onConfirm={() => handleApprove(params.data._id)}>
                                 <Button size="small" variant="text" color="primary" icon={<FontAwesomeIcon icon={faThumbsUp} />}></Button>
                             </Popconfirm>
@@ -67,7 +67,7 @@ const ToReview = () => {
                             <Popconfirm title="Reject Report" description="Are you sure you want to reject this report?" onConfirm={() => handleReject(params.data._id)}>
                                 <Button size="small" variant="text" color="danger" icon={<FontAwesomeIcon icon={faThumbsDown} />}></Button>
                             </Popconfirm>
-                        </Tooltip>
+                        </Tooltip> */}
                         <Tooltip title="Add Comment" >
                             <Button onClick={() => addCommentStore.setReportId(params.data._id)} size="small" variant="text" color="default" icon={<FontAwesomeIcon icon={faComment} />}></Button>
                         </Tooltip>
@@ -103,6 +103,7 @@ const ToReview = () => {
                 [
                     { path : "unit_id"},
                     { path : "requested_by"},
+                    { path : "config"},
                 ]
             )).data;
             setReports(_reports);
@@ -154,7 +155,8 @@ const ToReview = () => {
                     defaultColDef={{
                         wrapText : true,
                         filter : "agTextFilterColumn",
-                        autoHeight : true
+                        autoHeight : true,
+                        cellStyle : { "whiteSpace": "normal", "lineHeight": "1.5rem" }
                     }}
                     pagination={true}
                     columnDefs={colDefs}
@@ -165,7 +167,16 @@ const ToReview = () => {
 
             <AddComment />
             <ViewLogs />
-            <PreviewPrint />
+            <PreviewPrint 
+                onApprove={(e) => {
+                    handleApprove(e);
+                    previewReportStore.setStore(null);
+                }}
+                onReject={(e) => {
+                    handleReject(e);
+                    previewReportStore.setStore(null);
+                }} 
+            />
         </>
     )
 }

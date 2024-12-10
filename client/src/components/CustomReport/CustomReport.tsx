@@ -286,13 +286,17 @@ const CustomReport = ({ formName, sector, fields, colDefs } : CustomReportProps 
                     requested_by : authStore.user?._id,
                     form_name : formName,
                     isCustom : true
-                }, []);
+                }, [
+                    { path : "config"}
+                ]);
                 setCustomRowData(custom.data)
                 const res = await getRequestReportByQuery({
                     requested_by : authStore.user?._id,
                     form_name : formName,
                     isCustom : false
-                }, []);
+                }, [
+                    { path : "config"}
+                ]);
                 setRowData(res.data)
             } catch (error) {
                 

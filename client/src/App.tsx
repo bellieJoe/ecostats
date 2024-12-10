@@ -125,6 +125,7 @@ import ReportDashboard from './pages/Dashboard/ReportDashboard'
 import Index from './pages/Admin/Index'
 import ReportsIndex from './pages/Reports/ReportsIndex'
 import DashboardIndex from './pages/Dashboard/Index'
+import ColorSchemeConfiguration from './pages/Admin/Configurations/ColorSchemeConfig'
 
 axios.defaults.withCredentials = true;
 
@@ -190,6 +191,7 @@ function App() {
                   <Route path='programs' element={<Programs />} />
                   <Route path="configurations/sectors" element={<Sectors />} />
                   <Route path="configurations/reports" element={<ReportsConfiguration />} />
+                  <Route path="configurations/color-schemes" element={<ColorSchemeConfiguration />} />
                   <Route path='budgets'  > 
                     <Route path='data' element={<Data />} />
                     <Route path='' element={<BudgetAnalytics />} />

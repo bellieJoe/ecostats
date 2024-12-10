@@ -85,7 +85,7 @@ export const ViewLogs = () => {
                 direction="vertical"
                 items={
                     logs.map(l => {
-                        return {title: l.message, description: l.comment}
+                        return {title: l.message, description: l.comment, subTitle: new Intl.DateTimeFormat('en-US', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' }).format(new Date(l.createdAt))}
                     })
                 } />
             </Drawer>

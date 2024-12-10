@@ -92,6 +92,12 @@ const AdminSidebar = ({open}) => {
                         style: menuStyle2,
                         onClick: () => navigate("configurations/reports"),
                     },
+                    {
+                        key : "Chart Color Schemes",
+                        label : "Chart Color Schemes",
+                        style: menuStyle2,
+                        onClick: () => navigate("configurations/color-schemes"),
+                    },
                 ]
             },
             {

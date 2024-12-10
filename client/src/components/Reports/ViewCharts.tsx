@@ -154,6 +154,7 @@ const ViewCharts = ({onClose}) => {
                                 <Typography.Text><Typography.Text strong>Title:</Typography.Text> {chart.title}</Typography.Text>
                                 <Typography.Text><Typography.Text strong>Type:</Typography.Text> {chart.type}</Typography.Text>
                                 <RenderConfigs chart={chart} />
+                                <Typography.Text><Typography.Text strong>Color Scheme:</Typography.Text> {chart.color_scheme ? chart.color_scheme.name : "Default"}</Typography.Text>
                             </Flex>
                         </List.Item>
                     )

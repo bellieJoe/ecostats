@@ -66,6 +66,8 @@ const IsNestedComponent = ({fieldName, form}) => {
                 <Input onChange={(e) => setFieldIdentifier(e.target.value)} placeholder="Unique field identifier" />
             </Form.Item>
 
+            
+
             <Form.Item
                 preserve={false}
                 name={[fieldName, 'is_nested']}
@@ -346,6 +348,15 @@ const AddReportDrawer = () => {
                         ]}
                     >
                         <Input placeholder="Report name" />
+                    </Form.Item>
+
+                    <Form.Item
+                        preserve={false}
+                        label="Form Code"
+                        name="form_code"
+                        rules={[{ required: true, message: 'Please enter a form code' }]}
+                    >
+                        <Input placeholder="Form Code" />
                     </Form.Item>
                 </Flex>
 

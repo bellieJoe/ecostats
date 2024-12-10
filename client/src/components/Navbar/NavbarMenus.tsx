@@ -51,7 +51,7 @@ const NavbarMenus = () => {
             },
             {
                 key : "4",
-                label : "Dashboard",
+                label : "Visualizations",
                 onClick: () => navigate("/dashboard"),
                 role : ["admin", "planning officer", "chief", "focal"]
             },

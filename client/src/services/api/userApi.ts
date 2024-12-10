@@ -153,3 +153,7 @@ export const resendEmailVerification = async (email) : Promise<any> => {
 export const isEmailUsed = async (email) : Promise<any> => {
     return await axios.get(`${apiUrl}/users/is-email-used/${email}`);
 }
+
+export const getReportCount = async (_id) : Promise<any> => {
+    return await axios.get(`${apiUrl}/users/count-reports-for-approval/${_id}`);
+}

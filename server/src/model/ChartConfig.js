@@ -21,11 +21,22 @@ const ChartConfigSchema = new mongoose.Schema({
     include_other_years : {
         type : Boolean,
         default : false
+    },
+    color_scheme_id : {
+        type : Schema.Types.ObjectId,
+        required : true
     }
 }, { 
     timestamps: true,
     virtuals : true,
     toJSON : { virtuals : true }
+});
+
+ChartConfigSchema.virtual("color_scheme", {
+    ref : "color_schemes",
+    localField : "color_scheme_id",
+    foreignField : "_id",
+    justOne : true
 });
 
 

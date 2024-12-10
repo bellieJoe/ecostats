@@ -31,7 +31,22 @@ const UserSchema = new Schema({
     }
 }, {
     timestamps : true,
-})
+    toJSON : {
+        virtuals : true
+    }
+});
+
+UserSchema.virtual("programs", {
+    ref : "programs",
+    localField : "_id",
+    foreignField : "programHead"
+});
+
+UserSchema.virtual("units", {
+    ref : "units",
+    localField : "_id",
+    foreignField : "unitHead"
+});
 
 
 

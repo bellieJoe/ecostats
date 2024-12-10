@@ -5,7 +5,7 @@ import { Button, Card, Col, Flex, message, Result, Row, Select, Typography } fro
 import { parseResError } from "../../services/errorHandler";
 import Title from "antd/es/typography/Title";
 import _ from "lodash"
-import { flattenFields, generateColDefs, generateYearOptionsFixed, getRandomColor } from "../../services/helper";
+import { flattenFields, generateColDefs, generateYearOptionsFixed, getRandomColor, getRandomColorByScheme } from "../../services/helper";
 import { Bar, BarChart, Legend, ResponsiveContainer, XAxis, YAxis, Tooltip, PieChart, Pie, Cell, LineChart, Line, CartesianAxis, CartesianGrid } from "recharts";
 import { ReloadOutlined } from "@ant-design/icons"
 import { AgGridReact } from "ag-grid-react";
@@ -69,6 +69,7 @@ const HorizontalBarChart = ({config, chart, data} : {config : any, chart : any, 
                             data={chartData}
                             layout="vertical"
                         >
+                            <CartesianGrid strokeDasharray="3 3" />
                             <YAxis type="category" dataKey={fields.filter(f => f.identifier == chart.chart_config.y_axis)[0]?.name} />
                             <XAxis type="number"  />
                             <Tooltip />
@@ -76,11 +77,11 @@ const HorizontalBarChart = ({config, chart, data} : {config : any, chart : any, 
                                 chart.chart_config.x_axis.map((item : any, index : number) => {
                                     if(chart.chart_config.stacked)
                                         return (
-                                            <Bar fill={getRandomColor(index)} stackId="a"  key={item} dataKey={fields.filter(f => f.identifier == item)[0].name}  />
+                                            <Bar fill={chart.color_scheme_id ? getRandomColorByScheme(index, chart.color_scheme.colors) : getRandomColor(index)} stackId="a"  key={item} dataKey={fields.filter(f => f.identifier == item)[0].name}  />
                                         )
                                     else 
                                         return (
-                                            <Bar fill={getRandomColor(index)}  key={item} dataKey={fields.filter(f => f.identifier == item)[0]?.name}  />
+                                            <Bar fill={chart.color_scheme_id ? getRandomColorByScheme(index, chart.color_scheme.colors) : getRandomColor(index)}  key={item} dataKey={fields.filter(f => f.identifier == item)[0]?.name}  />
                                         )
                                 })
                             }
@@ -427,6 +428,7 @@ const VerticalBarChart = ({
                 chartData.length === 0 ?  <Result status="error" title="No data available" /> :
                 <ResponsiveContainer width="100%" height={500}>
                     <BarChart data={chart.chart_config.include_other_years ? filteredData : chartData}>
+                        <CartesianGrid strokeDasharray="3 3" />
                         <YAxis type="number" />
                         <XAxis
                             type="category"
@@ -436,14 +438,14 @@ const VerticalBarChart = ({
                         {chart.chart_config.include_other_years
                             ? years.map((year, index) => (
                                 <Bar
-                                    fill={getRandomColor(index)}
+                                    fill={chart.color_scheme_id ? getRandomColorByScheme(index, chart.color_scheme.colors) : getRandomColor(index)}
                                     key={year}
                                     dataKey={year}
                                 />
                             ))
                             : chart.chart_config.y_axis.map((item, index) => (
                                 <Bar
-                                    fill={getRandomColor(index)}
+                                    fill={chart.color_scheme_id ? getRandomColorByScheme(index, chart.color_scheme.colors) : getRandomColor(index)}
                                     key={item}
                                     dataKey={getFieldName(fields, item)}
                                     stackId={chart.chart_config.stacked ? "a" : undefined}
@@ -509,7 +511,7 @@ const C_PieChart = ({config, chart, data} : {config : any, chart : any, data : a
                             dataKey={fields.filter(f => f.identifier == chart.chart_config.value)[0].name}
                             >
                                 {chartData.map((entry, index) => (
-                                    <Cell name={entry[fields.filter(f => f.identifier == chart.chart_config.category)[0].name]} key={entry} fill={getRandomColor(index)} ></Cell>
+                                    <Cell name={entry[fields.filter(f => f.identifier == chart.chart_config.category)[0].name]} key={entry} fill={chart.color_scheme_id ? getRandomColorByScheme(index, chart.color_scheme.colors) : getRandomColor(index)} ></Cell>
                                 ))}
                             </Pie>
                             <Tooltip />
@@ -573,7 +575,7 @@ const C_LineChart = ({config, chart, data} : {config : any, chart : any, data : 
                             <Tooltip />
                             {
                                 chart.chart_config.lines.map((item : any, index) => {
-                                    return (<Line key={item} stroke={getRandomColor(index)}  dataKey={fields.filter(f => f.identifier == item)[0].name} />)
+                                    return (<Line key={item} stroke={chart.color_scheme_id ? getRandomColorByScheme(index, chart.color_scheme.colors) : getRandomColor(index)}  dataKey={fields.filter(f => f.identifier == item)[0].name} />)
                                 })
                             }
                             <Legend />
@@ -648,7 +650,12 @@ const ReportDashboard = () => {
 
     const init = async () => {
         try {
-            const config = (await reportConfigGetByQuery({_id : _id}, ["sector", "charts", ["data"]])).data[0];
+            const config = (await reportConfigGetByQuery({_id : _id}, 
+                [
+                    "sector", 
+                    { path : "charts", populate : { path : "color_scheme" }}, 
+                    ["data"]
+                ])).data[0];
             setConfig(config);
             setCharts(config.charts);
             setData(config.data.map(d => d.data));   
