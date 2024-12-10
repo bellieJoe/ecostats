@@ -28,7 +28,7 @@ app.use(express.json());
 const allowedOrigins = [
     'http://localhost:5173',
     'http://localhost:3000',
-    'https://ecostats.vercel.app/'
+    'https://ecostats.vercel.app'
 ];
 
 app.use(cors({
