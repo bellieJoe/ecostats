@@ -1,6 +1,8 @@
 import { create } from "zustand";
 import { User } from "../types/User";
 import Users from "../pages/Admin/Users/Users";
+import { set } from "lodash";
+import { report } from "process";
 
 interface EditUserState { 
     user : User | null,
@@ -56,5 +58,25 @@ export const useRegisterUserStore = create<{
 
     setOpen : (isOpen : boolean) => {
         set({isOpen})
+    }
+}));
+
+
+export const useReportCountStore = create<{
+    refresh : boolean
+    setRefresh : (refresh : boolean) => void
+    reportCount : {toReview : number, toApprove : number}
+    setReportCount : (reportCount : {toReview : number, toApprove : number}) => void
+}>((set) => ({
+    refresh : false,    
+    
+    setRefresh : (refresh : boolean) => {   
+        set({refresh})   
+    },
+
+    reportCount : {toReview : 0, toApprove : 0},
+    setReportCount : (reportCount : {toReview : number, toApprove : number}) => {
+        console.log("reportCount", reportCount)
+        set({reportCount})
     }
 }));

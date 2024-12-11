@@ -23,6 +23,34 @@ import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
 import "./GeneratedReport.css";
 import { wrap } from "lodash";
 
+import { themeQuartz } from "ag-grid-community";
+
+// to use myTheme in an application, pass it to the theme grid option
+const myTheme = themeQuartz
+	.withParams({
+        backgroundColor: "#FFFFFF",
+        borderColor: "#000000F2",
+        borderRadius: "0px",
+        browserColorScheme: "light",
+        chromeBackgroundColor: {
+            ref: "foregroundColor",
+            mix: 0.07,
+            onto: "backgroundColor"
+        },
+        columnBorder: true,
+        foregroundColor: "#000000",
+        headerBackgroundColor: "#FFFFFF",
+        headerColumnBorder: true,
+        headerFontSize: 14,
+        // headerVerticalPaddingScale: 0,
+        // rowVerticalPaddingScale: 1,
+        spacing: "7.5px",
+        wrapperBorder: true,
+        wrapperBorderRadius: "0px"
+    });
+
+
+
 
 export const generateGenericFields  = (fields : any[]) : GenericFormFieldV3[] => {
     return flattenFields(fields).filter(field => field.identifier && field.name).map(field => {
@@ -251,7 +279,11 @@ export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void,
                         <Button color="primary" variant="solid">Approve</Button>
                     </Popconfirm>
                 }
-                { onReject && <Button color="danger" variant="solid" onClick={() => onReject(previewReportStore.report?._id)}>Reject</Button> }
+                { onReject && 
+                    <Popconfirm title="Reject Report" description="Are you sure you want to reject this report?" onConfirm={() => onReject(previewReportStore.report?._id)}>
+                        <Button color="danger" variant="solid">Reject</Button>
+                    </Popconfirm>
+                }
                 <Button 
                     color="primary" 
                     variant="solid" 
@@ -283,6 +315,7 @@ export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void,
                  >
                     <p className="mb-1">{ previewReportStore.report && previewReportStore.report.config ?   previewReportStore.report.config.form_code : "" }</p>
                     <AgGridReact
+                        // theme={myTheme}
                         columnDefs={colDefs}
                         rowData={rowData}
                         key={gridKey}
@@ -299,7 +332,8 @@ export const PreviewPrint = ({onApprove, onReject} : {onApprove? : (id) => void,
                             editable: false,
                             wrapHeaderText: true,
                             cellStyle: {
-                            "lineHeight": "1.3rem",
+                                "lineHeight": "1.3rem",
+                                // "wordBreak": "keep"
                             }
                         }}
                         onGridReady={params => {

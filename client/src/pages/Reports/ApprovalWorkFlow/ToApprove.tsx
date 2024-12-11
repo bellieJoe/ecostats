@@ -13,6 +13,7 @@ import { useAddCommentStore, usePreviewReportStore, useViewLogsStore } from "../
 import { ColDefsMap, FormNameMap } from "../../../types/forms/formNameEnum";
 import { getProgramByQuery } from "../../../services/api/programApi";
 import { PreviewPrint } from "../../../components/Reports/CustomReportV2";
+import { useReportCountStore } from "../../../stores/useUserStore";
 
 
 
@@ -28,6 +29,8 @@ const ToApprove = () => {
     const [units, setUnits] = useState<any[]>([]);
     const [reports, setReports] = useState<any[]>([]);
     const [rowData, setRowData] = useState<any[]>([]);
+
+    const reportCountStore = useReportCountStore();
 
     const colDefs = [
         {
@@ -191,10 +194,12 @@ const ToApprove = () => {
             <PreviewPrint
                 onApprove={(e) => {
                     handleApprove(e);
+                    reportCountStore.setRefresh(!reportCountStore.refresh);
                     previewReportStore.setStore(null);
                 }}
                 onReject={(e) => {
                     handleReject(e);
+                    reportCountStore.setRefresh(!reportCountStore.refresh);
                     previewReportStore.setStore(null);
                 }} 
             />

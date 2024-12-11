@@ -11,6 +11,7 @@ import { faComment, faEye, faFilePen, faThumbsDown, faThumbsUp } from "@fortawes
 import { AddComment, ViewLogs } from "../../../components/Reports/ApprovalWorkflow/ApprovalComponents";
 import { useAddCommentStore, usePreviewReportStore, useViewLogsStore } from "../../../stores/useReportStore";
 import { PreviewPrint } from "../../../components/Reports/CustomReportV2";
+import { useReportCountStore } from "../../../stores/useUserStore";
 
 
 const ToReview = () => {
@@ -25,6 +26,8 @@ const ToReview = () => {
     const [units, setUnits] = useState<any[]>([]);
     const [reports, setReports] = useState<any[]>([]);
     const [rowData, setRowData] = useState<any[]>([]);
+
+    const reportCountStore = useReportCountStore();
 
     const colDefs = [
         {
@@ -170,10 +173,12 @@ const ToReview = () => {
             <PreviewPrint 
                 onApprove={(e) => {
                     handleApprove(e);
+                    reportCountStore.setRefresh(!reportCountStore.refresh);
                     previewReportStore.setStore(null);
                 }}
                 onReject={(e) => {
                     handleReject(e);
+                    reportCountStore.setRefresh(!reportCountStore.refresh);
                     previewReportStore.setStore(null);
                 }} 
             />

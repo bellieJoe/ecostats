@@ -16,11 +16,13 @@ import { sectorGetByQuery } from "../../services/api/sectorApi";
 import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
 import { generateYearOptionsFixed } from "../../services/helper";
 import { getReportCount } from "../../services/api/userApi";
+import { useReportCountStore } from "../../stores/useUserStore";
 
 const ReportsSidebar = ({open}) => {
     const navigate = useNavigate();
     const authStore = useAuthStore();
     const [year, setYear] = useState<number>(new Date().getFullYear());
+    const reportCountStore = useReportCountStore();
 
     const [collapsed, setCollapsed] = useState(true);
 
@@ -68,11 +70,23 @@ const ReportsSidebar = ({open}) => {
 
     useEffect(() => setCollapsed(open), [open]);
 
+    // const initReportCount = async () => {
+    //     if(["planning officer", "chief"].includes(authStore.user?.role!)){
+    //         const reportCount = (await getReportCount(authStore.user?._id!)).data;
+    //         reportCountStore.setReportCount(reportCount);
+    //     }
+    // }
+
+    // useEffect(() => {
+    //     initReportCount();
+    // }, [reportCountStore.refresh, authStore.user]);
+
     const initSidebar = async () => {
         try {
             const it : any[] = [];
             if(["planning officer", "chief"].includes(authStore.user?.role!)){
                 const reportCount = (await getReportCount(authStore.user?._id!)).data;
+                reportCountStore.setReportCount(reportCount);
                 it.push({
                     key: "reports",
                     label : "Reports",
@@ -82,7 +96,7 @@ const ReportsSidebar = ({open}) => {
                         {
                             key : "to-review",
                             label : "To Review",
-                            icon: <div><Badge status="success" count={reportCount ? reportCount.toReview : 0}/></div>,
+                            icon: <div><Badge status="success" count={reportCount?.toReview ? reportCount?.toReview : 0}/></div>,
                             style: menuStyle2,
                             onClick : () => navigate(`/reports/to-review`),
                             
@@ -90,7 +104,7 @@ const ReportsSidebar = ({open}) => {
                         {
                             key : "to-approve",
                             label : "To Approve",
-                            icon: <div><Badge status="success"  count={reportCount ? reportCount.toApprove : 0}/></div>,
+                            icon: <div><Badge status="success"  count={reportCount?.toApprove ? reportCount?.toApprove : 0}/></div>,
                             style: menuStyle2,
                             onClick : () => navigate(`/reports/to-approve`)
                         },
@@ -606,9 +620,8 @@ const ReportsSidebar = ({open}) => {
     }
 
     useEffect(()=>{
-        
         initSidebar();
-    }, [authStore.user, year]);
+    }, [authStore.user, year, reportCountStore.refresh]);
 
     return (
         <>
