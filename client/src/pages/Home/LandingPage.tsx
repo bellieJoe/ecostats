@@ -49,19 +49,21 @@ const LandingPage = () => {
                 
             </Row>
 
-            <Row className="mx-auto my-20" justify="center" gutter={[16, 16]} style={{maxWidth: 800,}}>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                    <div className="flex items-center h-full justify-center">
-                        <div>
-                            <Title level={4} className="text-center">About Us</Title>
-                            <p className="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit odio magni nesciunt harum amet aspernatur, fugit quidem consectetur! Recusandae magnam culpa tenetur quo beatae voluptatum, possimus suscipit officiis labore similique.</p>
+            <div className="mx-auto">
+                <Row className="mx-auto my-20" justify="center" gutter={[16, 16]} style={{maxWidth: 800,}}>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
+                        <div className="flex items-center h-full justify-center">
+                            <div>
+                                <Title level={4} className="text-center">About Us</Title>
+                                <p className="text-center">Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit odio magni nesciunt harum amet aspernatur, fugit quidem consectetur! Recusandae magnam culpa tenetur quo beatae voluptatum, possimus suscipit officiis labore similique.</p>
+                            </div>
                         </div>
-                    </div>
-                </Col>
-                <Col xs={24} sm={24} md={12} lg={12} xl={12} className="text-center">
-                    <Image width={250} src={logo} className="w-full max-w-lg mx-auto" />
-                </Col>
-            </Row>
+                    </Col>
+                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className="text-center">
+                        <Image width={250} src={logo} className="w-full max-w-lg mx-auto" />
+                    </Col>
+                </Row>
+            </div>
         </Layout>
     )
 }
