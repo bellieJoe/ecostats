@@ -163,6 +163,138 @@ router.post("/copy-all-sector-configs", async (req, res) => {
     }
 });
 
+router.get("/get-charts-count-by-sectors", async (req, res) => {
+    try {
+        const year = req.query.year;
+
+        // return res.json(year);
+
+        const result = await SectorModel.aggregate([
+            {
+              $match: {
+                calendar_year: parseInt(year),
+              },
+            },
+            {
+              $lookup: {
+                from: "report_configs", 
+                localField: "_id", 
+                foreignField: "sector", 
+                as: "report_configs",
+              },
+            },
+            {
+              $unwind: {
+                path: "$report_configs",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $lookup: {
+                from: "chart_configs", 
+                localField: "report_configs._id", 
+                foreignField: "report_config_id", 
+                as: "charts",
+              },
+            },
+            {
+              $group: {
+                _id: "$_id", 
+                sector_name: { $first: "$name" }, 
+                chartCount: { $sum: { $size: "$charts" } }, 
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+                sector_name: 1,
+                chartCount: 1,
+              },
+            },
+          ]);
+
+        return res.json(result);
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+});
+
+router.get("/get-top-reports-by-chart-count", async (req, res) => {
+    try {
+
+        const calendarYear = req.query.year; // Replace with the desired year
+
+
+        const topReports = await ReportConfigModel.aggregate([
+            // Lookup the associated sector for each report config
+            {
+                $lookup: {
+                    from: "sectors", // The sectors collection
+                    localField: "sector", // The sector reference in report_configs
+                    foreignField: "_id", // The _id in sectors
+                    as: "sectorDetails",
+                },
+            },
+            // Filter by calendar_year in the associated sector
+            {
+                $match: {
+                    "sectorDetails.calendar_year": parseInt(calendarYear),
+                },
+            },
+            // Lookup charts for each report config
+            {
+                $lookup: {
+                    from: "chart_configs", // The chart config collection
+                    localField: "_id", // The field in report configs
+                    foreignField: "report_config_id", // The field in chart configs
+                    as: "charts",
+                },
+            },
+            {
+                $match: {
+                    $expr: { $gt: [{ $size: "$charts" }, 0] },
+                },
+            },
+            // Project report details and the count of associated charts
+            {
+                $project: {
+                    _id: 1,
+                    name: 1, // Report name
+                    form_code: 1, // Additional info if needed
+                    sector: 1, // Sector reference
+                    chartCount: { $size: "$charts" }, // Count the number of charts
+                },
+            },
+            // Sort by chart count in descending order
+            {
+                $sort: { chartCount: -1 },
+            },
+            // Limit to the top 10
+            {
+                $limit: 10,
+            },
+        ]);
+
+        return res.json(topReports);
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+});
+
 
 
 export default router;

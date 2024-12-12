@@ -1,8 +1,92 @@
-import { Card, Col, Layout, Row } from "antd";
+import { Card, Col, Layout, message, Row, Select } from "antd";
 import Title from "antd/es/typography/Title";
 import penro from "../../../public/penro.jpg";
 import Time from "../../components/Time";
 import { Bar, BarChart, CartesianAxis, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { useEffect, useState } from "react";
+import { generateYearOptions } from "../../services/helper";
+import { getSectorChartCountsData, getSectorTopReportsByChartCount } from "../../services/api/sectorApi";
+import { useAsyncError } from "react-router-dom";
+import { parseResError } from "../../services/errorHandler";
+
+const truncateLabel = (label, maxLength) => {
+    if (label.length > maxLength) {
+        return `${label.substring(0, maxLength)}...`;
+    }
+    return label;
+};
+
+const RenderChart1 = () => {
+    const [year, setYear] = useState<number>(new Date().getFullYear());
+    const [data, setData] = useState([]);
+
+    const init = async () => {
+        try {
+            const res = await getSectorChartCountsData(year);
+            setData(res.data);
+        } catch (error) {
+            message.error(parseResError(error).msg);
+        }
+    }
+
+    useEffect(() => {  
+        init();
+    }, [year]);
+
+    return (
+        <Card className="mb-4" title="Data Visualization by Sector" bordered={false}>
+            <div style={{ textAlign: 'right' }}>
+                <Select placeholder="Select Year" className="w-20" value={year} onChange={(y) => setYear(y)} options={[...generateYearOptions(2000, new Date().getFullYear())]} />
+            </div>
+            <ResponsiveContainer width={"100%"} height={300} >
+                <BarChart layout="horizontal" data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }} >
+                    <CartesianGrid />
+                    <YAxis name="Count" type="number" dataKey={"chartCount"} label={{ value: 'Count',  angle: -90, dy: -10 }}  /> 
+                    <XAxis type="category" dataKey={"sector_name"} label={{ value: 'Sectors',  position: 'center', offset: 0, dy: 10 }} /> 
+                    <Legend  wrapperStyle={{ marginTop: '10px' }} verticalAlign="top" height={36}/> 
+                    <Tooltip />
+                    <Bar dataKey={"chartCount"} name={"Chart Count"}  fill="green" fillOpacity={0.8} />
+                </BarChart>
+            </ResponsiveContainer>
+        </Card>
+    )
+}
+
+const RenderChart2 = () => {
+    const [year, setYear] = useState<number>(new Date().getFullYear());
+    const [data, setData] = useState([]);
+
+    const init = async () => {
+        try {
+            const res = await getSectorTopReportsByChartCount(year);
+            setData(res.data);
+        } catch (error) {
+            message.error(parseResError(error).msg);
+        }
+    }
+
+    useEffect(() => {  
+        init();
+    }, [year]);
+
+    return (
+        <Card className="mb-4" title="Data Visualization by Sector" bordered={false}>
+            <div style={{ textAlign: 'right' }}>
+                <Select placeholder="Select Year" className="w-20" value={year} onChange={(y) => setYear(y)} options={[...generateYearOptions(2000, new Date().getFullYear())]} />
+            </div>
+            <ResponsiveContainer width={"100%"} height={300} >
+                <BarChart layout="vertical" data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }} >
+                    <CartesianGrid />
+                    <XAxis name="Count" type="number" dataKey={"chartCount"} label={{ value: 'Count', position: 'center', offset: 0, dy: 10 }}  /> 
+                    <YAxis width={150} type="category" dataKey={"name"} tickFormatter={(label) => truncateLabel(label, 15)} label={{ value: 'Reports' ,position:"left",  angle: -90, dy: -10 }} /> 
+                    <Legend wrapperStyle={{ marginTop: '10px' }} verticalAlign="top" height={36}/> 
+                    <Tooltip />
+                    <Bar dataKey={"chartCount"} name={"Chart Count"}  fill="green" fillOpacity={0.8} />
+                </BarChart>
+            </ResponsiveContainer>
+        </Card>
+    )
+}
 
 const DashboardIndex = () => {
     return (
@@ -39,49 +123,8 @@ const DashboardIndex = () => {
                     </Row>
 
                     <Title level={4}>Overview</Title>
-                    <Card className="mb-4" title="Data Visualization by Sector" bordered={false}>
-                        <ResponsiveContainer width={"100%"} height={300} >
-                            <BarChart layout="horizontal" data={[
-                                { name: 'Jan', uv: 1000 },
-                                { name: 'Feb', uv: 2000 },
-                                { name: 'Mar', uv: 3000 },
-                                { name: 'Apr', uv: 4000 },
-                                { name: 'May', uv: 5000 },
-                                { name: 'Jun', uv: 6000 },
-                                { name: 'Jul', uv: 7000 },
-                                { name: 'Aug', uv: 8000 },
-                                { name: 'Sep', uv: 9000 },
-                                { name: 'Oct', uv: 10000 },
-                                { name: 'Nov', uv: 11000 },
-                                { name: 'Dec', uv: 12000 }
-                            ]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }} >
-                                <CartesianGrid />
-                                <YAxis type="number" dataKey={"uv"} /> 
-                                <XAxis type="category" dataKey={"name"} /> 
-                                <Legend />
-                                <Tooltip />
-                                <Bar dataKey={"uv"} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </Card>
-                    <Card title="Reports with Most Visualizations" bordered={false}>
-                        <ResponsiveContainer width={"100%"} height={500} >
-                            <BarChart layout="vertical" data={[
-                                { name: 'Jan', uv: 1000 },
-                                { name: 'Feb', uv: 2000 },
-                                { name: 'Mar', uv: 3000 },
-                                { name: 'Apr', uv: 4000 },
-                                { name: 'May', uv: 5000 },
-                            ]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }} >
-                                <CartesianGrid />
-                                <YAxis type="category" dataKey={"name"} /> 
-                                <XAxis type="number" dataKey={"uv"} /> 
-                                <Legend />
-                                <Tooltip />
-                                <Bar dataKey={"uv"} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    </Card>
+                    <RenderChart1 />
+                    <RenderChart2 />
                 </div>
             </Layout.Content>
         </Layout>

@@ -58,6 +58,24 @@ export const sectorGetByQuery = async ( query : any, populate : any) : Promise<a
 }
 
 
+export const getSectorChartCountsData = async ( year : number) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/sectors/get-charts-count-by-sectors`, {
+        params : {
+            year  : year
+        }
+    });
+    return res;
+}
+
+export const getSectorTopReportsByChartCount = async ( year : number) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/sectors/get-top-reports-by-chart-count`, {
+        params : {
+            year  : year
+        }
+    });
+    return res;
+}
+
 // tensor prediction
 
 
