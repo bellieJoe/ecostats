@@ -70,7 +70,7 @@ const RenderChart2 = () => {
     }, [year]);
 
     return (
-        <Card className="mb-4" title="Data Visualization by Sector" bordered={false}>
+        <Card className="mb-4" title="Top Reports by Chart Count" bordered={false}>
             <div style={{ textAlign: 'right' }}>
                 <Select placeholder="Select Year" className="w-20" value={year} onChange={(y) => setYear(y)} options={[...generateYearOptions(2000, new Date().getFullYear())]} />
             </div>
