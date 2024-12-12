@@ -60,10 +60,10 @@ export const generateColDefs = (fields : any[]) => {
         f.type = getColDefType(field.input_type);
       }
       if(field.input_type === "number"){
-        // f.valueFormatter = (params) => {
-        //   console.log("paramvalue" , params)
-        //   return parseInt(params.value);
-        // }
+        f.valueFormatter = (params) => {
+          console.log("paramvalue" , params)
+          return parseInt(params.value);
+        }
       }
       if(field.input_type === "enum"){
         f.cellEditor = "agSelectCellEditor";
