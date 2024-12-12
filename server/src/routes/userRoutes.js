@@ -29,7 +29,10 @@ import {
     test
 } from "../controller/userController.js";
 import UserModel from "../model/User.js";
-import RequestedReportModel from "../model/RequestedReport.js"
+import RequestedReportModel from "../model/RequestedReport.js";
+import SectorModel from "../model/Sector.js";
+import ProgramModel from "../model/Program.js";
+import UnitModel from "../model/Unit.js";
 
 router.post('/login', userLoginValidation, login);
 
@@ -130,9 +133,116 @@ router.get('/count-reports-for-approval/:userId', async (req, res) => {
     } 
 });
 
+router.get("/admin-overview-data", async (req, res) => {
+    try {
+        const year = parseInt(req.query.year);
+        if (isNaN(year)) {
+            return res.status(400).json({ error: "Valid year is required" });
+        }
+
+        // Filter sectors by the given year
+        const sectors = await SectorModel.find({ calendar_year: year, deletedAt: null });
+        const sectorIds = sectors.map((sector) => sector._id);
+        const programs = await ProgramModel.find({ sector_id: { $in: sectorIds }, deletedAt: null });
+        const programIds = programs.map((program) => program._id);
+
+        // Count total users
+        const totalUsers = await UserModel.countDocuments();
+
+        // Count total programs under the sectors for the year
+        const totalPrograms = await ProgramModel.countDocuments({ sector_id: { $in: sectorIds }, deletedAt: null });
+
+        // Count total units under the programs for the sectors in the year
+        const totalUnits = await UnitModel.countDocuments({ programId: { $in: programIds }, deletedAt: null });
+
+        // Unit chart data (units and their focal person count)
+        // Unit chart data (units and their focal person count)
+        const unitChartData = await UnitModel.aggregate([
+            { $match: { programId: { $in: programIds }, deletedAt: null } }, // Match units under the programs for the given year
+            {
+                $lookup: {
+                    from: "focal_people", // Focal persons collection
+                    let: { unitId: "$_id" },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ["$unitId", "$$unitId"] }, deletedAt: null } }, // Match focal persons by unitId
+                    ],
+                    as: "focals", // Attach matching focal persons
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    focalCount: { $size: "$focals" }, // Count focal persons for the unit
+                },
+            },
+            {
+                $sort: { focalCount: -1 } // Sort by focal person count in descending order
+            }
+        ]);
+
+
+        // Division chart data (programs and their focal person count)
+        const divisionChartData = await ProgramModel.aggregate([
+            { $match: { sector_id: { $in: sectorIds }, deletedAt: null } },
+            {
+                $lookup: {
+                    from: "units",
+                    localField: "_id",
+                    foreignField: "programId",
+                    as: "units",
+                },
+            },
+            { $unwind: { path: "$units", preserveNullAndEmptyArrays: true } },
+            {
+                $lookup: {
+                    from: "focal_people",
+                    let: { unitId: "$units._id" },
+                    pipeline: [
+                        { $match: { $expr: { $eq: ["$unitId", "$$unitId"] }, deletedAt: null } },
+                    ],
+                    as: "focals",
+                },
+            },
+            {
+                $group: {
+                    _id: "$_id",
+                    name: { $first: "$name" },
+                    focalCount: { $sum: { $size: "$focals" } },
+                },
+            },
+            {
+                $sort: { focalCount: -1 } // Sort by focal person count in descending order
+            }
+        ]);
+
+
+
+        // Construct the final response object
+        const dashboardData = {
+            total_users: totalUsers,
+            total_programs: totalPrograms,
+            total_units: totalUnits,
+            unitChartData,
+            divisionChartData,
+        };
+
+        return res.json(dashboardData);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            error: "Server error",
+            details: error.message,
+        });
+    }
+});
+
+
 router.get('/test', test);
 
 
 
 
 export default router;
+
+
