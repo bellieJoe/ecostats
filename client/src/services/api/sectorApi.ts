@@ -76,6 +76,24 @@ export const getSectorTopReportsByChartCount = async ( year : number) : Promise<
     return res;
 }
 
+export const getReportOverviewData = async ( year : number) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/sectors/get-reports-overview-data`, {
+        params : {
+            year  : year
+        }
+    });
+    return res;
+}
+
+export const getHomeOverviewData = async ( year : number) : Promise<any> => {
+    const res = await axios.get(`${apiUrl}/sectors/get-home-overview-data`, {
+        params : {
+            year  : year
+        }
+    });
+    return res;
+}
+
 // tensor prediction
 
 

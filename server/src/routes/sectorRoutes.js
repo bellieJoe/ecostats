@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 
 import SectorModel from "../model/Sector.js";
 import ChartConfigModel from "../model/ChartConfig.js";
+import RequestedReportModel from "../model/RequestedReport.js";
 
 const sector = createCRUDController(SectorModel);
 
@@ -283,6 +284,189 @@ router.get("/get-top-reports-by-chart-count", async (req, res) => {
         ]);
 
         return res.json(topReports);
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+});
+
+router.get("/get-reports-overview-data", async (req, res) => {
+    try {
+        const year = req.query.year;
+
+        const sectors = await SectorModel.find({ calendar_year: year });
+        const sectorIds = sectors.map((sector) => sector._id);
+
+        const totalForms = await ReportConfigModel.countDocuments({ sector: { $in: sectorIds } });
+        const reportIds = await ReportConfigModel.distinct("_id", { sector: { $in: sectorIds } });
+        const approvedReports = await RequestedReportModel.countDocuments({ report_config_id: { $in: reportIds }, approved_at: { $ne: null }, rejected_by: null });
+        const pendingReports = await RequestedReportModel.countDocuments({ report_config_id: { $in: reportIds }, approved_at: null, rejected_by: null });
+
+        const reportsBySectorData = await SectorModel.aggregate([
+            // Lookup report configs for each sector
+            {
+                $lookup: {
+                    from: "report_configs", // The report_configs collection
+                    localField: "_id", // The _id field in sectors
+                    foreignField: "sector", // The sector reference in report_configs
+                    as: "reportDetails",
+                },
+            },
+            // Filter by calendar_year in the sectors collection
+            {
+                $match: {
+                    calendar_year: parseInt(year), // Ensure sectors match the specified year
+                },
+            },
+            // Project the report count
+            {
+                $project: {
+                    _id: 1,
+                    sector_name: "$name", // Include the sector name
+                    report_count: { $size: "$reportDetails" }, // Count the number of associated report configs
+                },
+            },
+            // Sort by report count (if needed)
+            {
+                $sort: { report_count: -1 },
+            },
+        ]);
+
+        
+
+        return res.json({
+            totalForms,
+            approvedReports,
+            pendingReports,
+            reportsBySectorData
+        })
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json(
+            { 
+                error: 'Server error.',
+                details : error
+            }   
+        ); 
+    }
+});
+
+router.get("/get-home-overview-data", async (req, res) => {
+    try {
+        const year = req.query.year;
+
+        const sectors = await SectorModel.find({ calendar_year: year });
+        const sectorIds = sectors.map((sector) => sector._id);
+
+        const totalForms = await ReportConfigModel.countDocuments({ sector: { $in: sectorIds } });
+        const reportIds = await ReportConfigModel.distinct("_id", { sector: { $in: sectorIds } });
+        const approvedReports = await RequestedReportModel.countDocuments({ report_config_id: { $in: reportIds }, approved_at: { $ne: null }, rejected_by: null });
+        const pendingReports = await RequestedReportModel.countDocuments({ report_config_id: { $in: reportIds }, approved_at: null, rejected_by: null });
+
+        const reportsBySectorData = await SectorModel.aggregate([
+            // Lookup report configs for each sector
+            {
+                $lookup: {
+                    from: "report_configs", // The report_configs collection
+                    localField: "_id", // The _id field in sectors
+                    foreignField: "sector", // The sector reference in report_configs
+                    as: "reportDetails",
+                },
+            },
+            // Filter by calendar_year in the sectors collection
+            {
+                $match: {
+                    calendar_year: parseInt(year), // Ensure sectors match the specified year
+                },
+            },
+            // Project the report count
+            {
+                $project: {
+                    _id: 1,
+                    sector_name: "$name", // Include the sector name
+                    report_count: { $size: "$reportDetails" }, // Count the number of associated report configs
+                },
+            },
+            // Sort by report count (if needed)
+            {
+                $sort: { report_count: -1 },
+            },
+        ]);
+
+        const chartsBySectorData = await SectorModel.aggregate([
+            {
+              $match: {
+                calendar_year: parseInt(year),
+              },
+            },
+            {
+              $lookup: {
+                from: "report_configs", 
+                localField: "_id", 
+                foreignField: "sector", 
+                as: "report_configs",
+              },
+            },
+            {
+              $unwind: {
+                path: "$report_configs",
+                preserveNullAndEmptyArrays: true,
+              },
+            },
+            {
+              $lookup: {
+                from: "chart_configs", 
+                localField: "report_configs._id", 
+                foreignField: "report_config_id", 
+                as: "charts",
+              },
+            },
+            {
+              $group: {
+                _id: "$_id", 
+                sector_name: { $first: "$name" }, 
+                chartCount: { $sum: { $size: "$charts" } }, 
+              },
+            },
+            {
+              $project: {
+                _id: 1,
+                sector_name: 1,
+                chartCount: 1,
+              },
+            },
+            {
+              $sort: {
+                chartCount: -1,
+              },
+            }
+          ]);
+
+          const chartsCount = await ChartConfigModel.countDocuments({
+            report_config_id: {
+              $in: reportIds,
+            },
+          });
+
+        
+
+        return res.json({
+            totalForms,
+            approvedReports,
+            pendingReports,
+            reportsBySectorData,
+            chartsBySectorData,
+            chartsCount
+        });
+
 
     } catch (error) {
         console.log(error)
