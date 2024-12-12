@@ -62,7 +62,7 @@ export const generateColDefs = (fields : any[]) => {
       if(field.input_type === "number"){
         f.valueFormatter = (params) => {
           console.log("paramvalue" , params)
-          return parseInt(params.value);
+          return parseFloat(params.value);
         }
       }
       if(field.input_type === "enum"){
