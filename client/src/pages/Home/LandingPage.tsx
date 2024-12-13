@@ -10,6 +10,7 @@ import { generateYearOptions } from "../../services/helper";
 import { useEffect, useState } from "react";
 import { parseResError } from "../../services/errorHandler";
 import { getHomeOverviewData, getReportOverviewData } from "../../services/api/sectorApi";
+import { useAuthStore } from "../../stores/useAuthStore";
 
 
 export const RenderReportOverview = () => {
@@ -98,10 +99,9 @@ export const RenderReportOverview = () => {
     )
 }
 
-const LandingPage = () => {
+export const RenderGraphics = () => {
     return (
-        <Layout className="h-full overflow-scroll">
-            <br />
+        <>
             <div className="w-full max-w-[1000px] mx-auto mb-4">
                 <Card 
                     title="Sectors"
@@ -151,26 +151,30 @@ const LandingPage = () => {
                     </Row>
                 </Card>
             </div>
+        </>
+    )
+}
 
-            <div className="w-full max-w-[1000px] mx-auto mb-4" >
-                <RenderReportOverview />
-            </div>
+const LandingPage = () => {
+    const authStore = useAuthStore();
+    return (
+        <Layout className="h-full overflow-scroll">
+            <br />
+            {
+                !authStore.user && 
+                (<RenderGraphics />)
+            }
 
-            {/* <div className="mx-auto">
-                <Row className="mx-auto my-20" justify="center" gutter={[16, 16]} style={{maxWidth: 800,}}>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12}>
-                        <div className="flex items-center h-full justify-center">
-                            <div>
-                                <Title level={4} className="text-center">About Us</Title>
-                                <p className="text-center font-semibold">The Department of Environment and Natural Resources (DENR) is committed to ensuring the sustainable management and development of the country's natural resources, promoting environmental protection, and enhancing the quality of life for present and future generations.</p>
-                            </div>
-                        </div>
-                    </Col>
-                    <Col xs={24} sm={24} md={12} lg={12} xl={12} className="text-center">
-                        <Image width={250} src={logo} className="w-full max-w-lg mx-auto" />
-                    </Col>
-                </Row>
-            </div> */}
+
+            {
+                authStore.user && 
+                (
+                    <div className="w-full max-w-[1000px] mx-auto mb-4" >
+                        <RenderReportOverview />
+                    </div>
+                )
+            }
+
             <Card className="w-full max-w-[1000px] mx-auto mb-4" title="About Us">
                 <Row className="mx-auto my-20 w-full" justify="center" gutter={[16, 16]} >
                     <Col xs={24} sm={24} md={12} lg={12} xl={12}>
