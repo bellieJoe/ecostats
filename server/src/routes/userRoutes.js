@@ -1,5 +1,6 @@
 import express from "express"
-const router = express.Router()
+const router = express.Router();
+import mongoose from "mongoose";
 import { 
     refreshTokenValidation, 
     userLoginValidation, 
@@ -33,6 +34,7 @@ import RequestedReportModel from "../model/RequestedReport.js";
 import SectorModel from "../model/Sector.js";
 import ProgramModel from "../model/Program.js";
 import UnitModel from "../model/Unit.js";
+import FocalPersonModel from "../model/FocalPerson.js";
 
 router.post('/login', userLoginValidation, login);
 
@@ -234,6 +236,53 @@ router.get("/admin-overview-data", async (req, res) => {
             error: "Server error",
             details: error.message,
         });
+    }
+});
+
+router.delete("/delete/:id", async (req, res) => {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    try {
+        const id = req.params.id;
+
+        if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+            return res.status(400).json({
+                error: "Invalid Parameters",
+                msg: "Something went wrong while processing the request. Invalid Id"
+            });
+        }
+
+        if ((await ProgramModel.find({ programHead: id })).length > 0) {
+            return res.status(400).json({ error: "Invalid Parameters", msg: "Program Head cannot be deleted." });
+        }
+
+        if ((await UnitModel.find({ unitHead: id })).length > 0) {
+            return res.status(400).json({ error: "Invalid Parameters", msg: "Unit Head cannot be deleted." });
+        }
+
+        if ((await FocalPersonModel.find({ userId: id })).length > 0) {
+            return res.status(400).json({ error: "Invalid Parameters", msg: "This user is assigned as a focal person to a unit." });
+        }
+
+        if ((await RequestedReportModel.find({ requested_by: id })).length > 0) {
+            return res.status(400).json({ error: "Invalid Parameters", msg: "This user has requested reports." });
+        }
+
+        await UserModel.updateOne({ _id: id }, { deletedAt: Date.now() }).session(session);
+
+        await session.commitTransaction();
+        return res.json();
+    } catch (error) {
+        await session.abortTransaction();
+        console.log(error);
+        res.status(500).json(
+            {
+                error: 'Server error',
+                details: error
+            }
+        );
+    } finally {
+        session.endSession();
     }
 });
 

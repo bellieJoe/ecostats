@@ -158,6 +158,10 @@ export const getReportCount = async (_id) : Promise<any> => {
     return await axios.get(`${apiUrl}/users/count-reports-for-approval/${_id}`);
 }
 
+export const deleteUser = async (_id) : Promise<any> => {
+    return await axios.delete(`${apiUrl}/users/delete/${_id}`);
+}
+
 export const getAdminOverviewData = async (year : number) : Promise<any> => {
     return await axios.get(`${apiUrl}/users/admin-overview-data`, {
         params : {

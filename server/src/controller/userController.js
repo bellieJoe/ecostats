@@ -140,7 +140,7 @@ export const all = async (req, res) => {
 
         const total = await UserModel.countDocuments();
 
-        const q = name ? { name : { $regex : name, $options: "i" }} : {}
+        const q = name ? { name : { $regex : name, $options: "i" }, deletedAt : null } : {deletedAt  : null};
 
         const users = await UserModel.find(q)
                             .sort({ createdAt: -1 })

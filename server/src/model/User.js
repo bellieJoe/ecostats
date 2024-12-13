@@ -28,6 +28,10 @@ const UserSchema = new Schema({
     role : {
         type : String,
         enum : ["admin", "planning officer", "chief", "focal"]
+    },
+    deletedAt : {
+        type : Date,
+        default : null
     }
 }, {
     timestamps : true,

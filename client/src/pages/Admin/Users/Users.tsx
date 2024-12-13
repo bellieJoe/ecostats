@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { activateUser, deactivateUser, getAllUsers } from "../../../services/api/userApi";
+import { activateUser, deactivateUser, deleteUser, getAllUsers } from "../../../services/api/userApi";
 import { Button, message, Popconfirm, Space, Switch, Table, Tooltip } from "antd";
 import Title from "antd/es/typography/Title";
 import { useEditRoleStore } from "../../../stores/useRoleStore";
@@ -64,6 +64,17 @@ const Users = () => {
         
     }
 
+    const handleDelete = async (id:string) => {
+        try {
+            await deleteUser(id)
+            setDataSource(dataSource.filter(val => val.key != id))
+            message.success("User deleted successfully.");
+            setRefresh(!refresh);
+        } catch (error) {
+            message.error("Error deleting user.");
+        }    
+    }
+
     const handleUserSearch = () => {
         setIsSearching(true)
         setIsUsersLoading(true)
@@ -106,6 +117,9 @@ const Users = () => {
             render : (record : DataSource) => {
                 return (
                     <Space>
+                        <Popconfirm title="Confirm Delete" description="Are you sure you want to delete this user? This action is irreversible." onConfirm={() => handleDelete(record.key)}>
+                            <Button variant="text" color="danger" size="small" >Delete</Button>
+                        </Popconfirm>
                         <Button variant="text" color="primary" size="small" onClick={() => editUserStore.setUserId(record.key)}>Update</Button>
                     </Space>
                 )
