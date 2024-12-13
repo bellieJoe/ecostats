@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import SectorModel from "../model/Sector.js";
 import ChartConfigModel from "../model/ChartConfig.js";
 import RequestedReportModel from "../model/RequestedReport.js";
+import UserModel from "../model/User.js";
 
 const sector = createCRUDController(SectorModel);
 
@@ -370,6 +371,10 @@ router.get("/get-home-overview-data", async (req, res) => {
         const reportIds = await ReportConfigModel.distinct("_id", { sector: { $in: sectorIds } });
         const approvedReports = await RequestedReportModel.countDocuments({ report_config_id: { $in: reportIds }, approved_at: { $ne: null }, rejected_by: null });
         const pendingReports = await RequestedReportModel.countDocuments({ report_config_id: { $in: reportIds }, approved_at: null, rejected_by: null });
+        const totalUsers = await UserModel.countDocuments({deletedAt: null});
+        const activeUsers = await UserModel.countDocuments({isActive: true});
+        const inactiveUsers = await UserModel.countDocuments({isActive: false});
+        const recentUsers = await UserModel.find({deletedAt: null}).sort({createdAt: -1}).limit(5);
 
         const reportsBySectorData = await SectorModel.aggregate([
             // Lookup report configs for each sector
@@ -448,7 +453,7 @@ router.get("/get-home-overview-data", async (req, res) => {
                 chartCount: -1,
               },
             }
-          ]);
+        ]);
 
           const chartsCount = await ChartConfigModel.countDocuments({
             report_config_id: {
@@ -464,7 +469,11 @@ router.get("/get-home-overview-data", async (req, res) => {
             pendingReports,
             reportsBySectorData,
             chartsBySectorData,
-            chartsCount
+            chartsCount,
+            totalUsers,
+            activeUsers,
+            inactiveUsers,
+            recentUsers
         });
 
 

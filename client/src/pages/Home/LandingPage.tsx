@@ -1,11 +1,11 @@
-import { Card, Col, Flex, Image, Layout, message, Row, Select } from "antd";
+import { Card, Col, Flex, Image, Layout, List, message, Row, Select } from "antd";
 import forestry_logo from "../../assets/forestry.png"
 import bio_logo from "../../assets/bio.png"
 import land_logo from "../../assets/land.png"
 import logo from "../../assets/logo.png"
 import Title from "antd/es/typography/Title";
 import {PeopleAltOutlined, PeopleAltTwoTone, PhonelinkOutlined, PhonelinkTwoTone, SettingsSuggestTwoTone, SsidChartTwoTone} from '@mui/icons-material';
-import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { generateYearOptions } from "../../services/helper";
 import { useEffect, useState } from "react";
 import { parseResError } from "../../services/errorHandler";
@@ -17,11 +17,19 @@ export const RenderReportOverview = () => {
 
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [data, setData] = useState<any>({});
+    const [d, setD] = useState<any[]>([
+        { name: 'Active', value:  0},
+        { name: 'Inactive', value: 0 },
+    ]);
 
     const init = async () => {
         try {
             const res = await getHomeOverviewData(year);  
             setData(res.data);
+            setD([
+                { name: 'Active', value:  res.data.activeUsers },
+                { name: 'Inactive', value: res.data.inactiveUsers },
+            ])
         } catch (error) {
             message.error(parseResError(error).msg);
         }
@@ -31,71 +39,135 @@ export const RenderReportOverview = () => {
         init(); 
     }, [year]);
 
+
     return (
-      <Card
-        className="w-full"
-        title="Sectors Overview"
-      >
-        <Row justify="end" className="mb-4">
-          <Col>
-            <Select
-              placeholder="Select Year"
-              value={year}
-              style={{ width: "100%" }}
-              options={generateYearOptions(2020, new Date().getFullYear())}
-              onChange={(y) => setYear(y)}
-            />
-          </Col>
-        </Row>
-
-        <Row gutter={16} className="mb-4" justify={"center"}>
-          <Col span={8} >
-            <Card className="rounded-lg" >
-              <Title level={4} className="text-xl font-bold mb-2 text-center">Available Report Templates</Title>
-              <p className="text-3xl font-semibold text-center">{data.totalForms}</p>
+        <>
+            <Row justify="end" className="mb-4">
+                <Col>
+                    <Select
+                    placeholder="Select Year"
+                    value={year}
+                    style={{ width: "100%" }}
+                    options={generateYearOptions(2020, new Date().getFullYear())}
+                    onChange={(y) => setYear(y)}
+                    />
+                </Col>
+            </Row>
+            <Card className="mb-4" title="Users Overview">
+                <Row gutter={16}  justify={"center"} >
+                    <Col xs={24} sm={24} md={16} lg={16} xl={16} >
+                        <Row gutter={16} className="h-full" align={"stretch"}>
+                            <Col span={12} className="mb-2">
+                                <Card className="rounded-lg" >
+                                    <Title level={4} className="text-xl font-bold mb-2 text-center">Total Users</Title>
+                                    <p className="text-3xl font-semibold text-center">{data.totalUsers}</p>
+                                </Card>
+                            </Col>
+                            <Col span={12} className="mb-2">
+                                <Card className="rounded-lg" >
+                                    <Title level={4} className="text-xl font-bold mb-2 text-center">Active Users</Title>
+                                    <p className="text-3xl font-semibold text-center">{data.activeUsers}</p>
+                                </Card>
+                            </Col>
+                            <Col span={24} >
+                                <List
+                                    className="h-full border-gray-100 rounded-lg"
+                                    bordered
+                                    dataSource={data.recentUsers}
+                                    header={<div className="font-bold">Recently Added</div>}
+                                    renderItem={(item : any) => (
+                                        <List.Item>
+                                            {item.name}
+                                        </List.Item>
+                                    )}
+                                />
+                            </Col>
+                        </Row>
+                        {/* <Row gutter={16} className="">
+                        </Row> */}
+                    </Col>
+                    <Col xs={24} sm={24} md={8} lg={8} xl={8}>
+                        <Card className="rounded-lg h-full" >
+                            <Title level={4} className="text-xl font-bold mb-2 text-center">Active and Inactive Users</Title>
+                            <ResponsiveContainer width="100%" height={300}>
+                                <PieChart data={d}>
+                                    <Pie
+                                        dataKey={'value'}
+                                        cx="50%"
+                                        cy="50%"
+                                        data={d}
+                                        innerRadius={60}
+                                        outerRadius={80}
+                                        fill="#8884d8"
+                                        paddingAngle={5}
+                                    >
+                                        {d.map((entry, index) => (
+                                            <Cell key={index} fill={entry.name === 'Active' ? 'green' : '#99CC99'} opacity={0.8} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                    <Legend />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </Card>
+                    </Col>
+                </Row>
             </Card>
-          </Col>
-          <Col span={8} >
-            <Card className="rounded-lg" >
-              <Title level={4} className="text-xl font-bold mb-2 text-center">Total Configured Charts</Title>
-              <p className="text-3xl font-semibold text-center">{data.chartsCount}</p>
+            <Card
+                className="w-full"
+                title="Sectors Overview"
+            >
+                
+
+                <Row gutter={16} className="mb-4" justify={"center"}>
+                    <Col span={8} >
+                        <Card className="rounded-lg" >
+                        <Title level={4} className="text-xl font-bold mb-2 text-center">Available Report Templates</Title>
+                        <p className="text-3xl font-semibold text-center">{data.totalForms}</p>
+                        </Card>
+                    </Col>
+                    <Col span={8} >
+                        <Card className="rounded-lg" >
+                        <Title level={4} className="text-xl font-bold mb-2 text-center">Total Configured Charts</Title>
+                        <p className="text-3xl font-semibold text-center">{data.chartsCount}</p>
+                        </Card>
+                    </Col>
+                </Row>
+                
+                <Title className="text-center" level={5}>Templates by Sector</Title>
+                <ResponsiveContainer width="100%" height={400}>
+                    <BarChart
+                        layout="vertical"
+                        data={data.reportsBySectorData}
+                    >
+                        <CartesianGrid />
+                        <YAxis width={200} type="category" dataKey="sector_name" label={{ value: 'Sectors',  angle: -90, dy: -10, position: 'insideLeft' }} />
+                        <XAxis type="number" dataKey={"report_count"} label={{ value: 'Count', position: 'center', offset: 0, dy: 10 }}  />
+                        <Legend verticalAlign="top" height={36} />
+                        <Tooltip />
+                        <Bar fillOpacity={0.8} dataKey="report_count" name={"Count"} label={{ position: "insideRight", fill: "#fff" }}  fill="green" />
+                    </BarChart>
+                </ResponsiveContainer>
+
+                <br />
+
+                <Title className="text-center" level={5}>Charts by Sector</Title>
+                <ResponsiveContainer width="100%" height={400}>
+                    <BarChart
+                        layout="vertical"
+                        data={data.chartsBySectorData}
+                    >
+                        <CartesianGrid />
+                        <YAxis width={200} type="category" dataKey="sector_name" label={{ value: 'Sectors',  angle: -90, dy: -10, position: 'insideLeft' }} />
+                        <XAxis type="number" dataKey={"chartCount"} label={{ value: 'Count', position: 'center', offset: 0, dy: 10 }}  />
+                        <Legend verticalAlign="top" height={36} />
+                        <Tooltip />
+                        <Bar fillOpacity={0.8} dataKey="chartCount" name={"Count"} label={{ position: "insideRight", fill: "#fff" }}  fill="green" />
+                    </BarChart>
+                </ResponsiveContainer>
+                
             </Card>
-          </Col>
-        </Row>
-        
-        <Title className="text-center" level={5}>Templates by Sector</Title>
-        <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-                layout="vertical"
-                data={data.reportsBySectorData}
-            >
-                <CartesianGrid />
-                <YAxis width={200} type="category" dataKey="sector_name" label={{ value: 'Sectors',  angle: -90, dy: -10, position: 'insideLeft' }} />
-                <XAxis type="number" dataKey={"report_count"} label={{ value: 'Count', position: 'center', offset: 0, dy: 10 }}  />
-                <Legend verticalAlign="top" height={36} />
-                <Tooltip />
-                <Bar fillOpacity={0.8} dataKey="report_count" name={"Count"} label={{ position: "insideRight", fill: "#fff" }}  fill="green" />
-            </BarChart>
-        </ResponsiveContainer>
-
-        <br />
-
-        <Title className="text-center" level={5}>Charts by Sector</Title>
-        <ResponsiveContainer width="100%" height={400}>
-            <BarChart
-                layout="vertical"
-                data={data.chartsBySectorData}
-            >
-                <CartesianGrid />
-                <YAxis width={200} type="category" dataKey="sector_name" label={{ value: 'Sectors',  angle: -90, dy: -10, position: 'insideLeft' }} />
-                <XAxis type="number" dataKey={"chartCount"} label={{ value: 'Count', position: 'center', offset: 0, dy: 10 }}  />
-                <Legend verticalAlign="top" height={36} />
-                <Tooltip />
-                <Bar fillOpacity={0.8} dataKey="chartCount" name={"Count"} label={{ position: "insideRight", fill: "#fff" }}  fill="green" />
-            </BarChart>
-        </ResponsiveContainer>
-        
-      </Card>
+        </>
     )
 }
 
