@@ -14,6 +14,7 @@ import { getUnitsByQuery } from "../../services/api/unitApi";
 import { focalPersonGetByQuery } from "../../services/api/focalPersonApi";
 import { sectorGetByQuery } from "../../services/api/sectorApi";
 import { generateYearOptionsFixed } from "../../services/helper";
+import { generateMenu } from "../Reports/ReportsSidebar";
 
 const DashboardSidebar = ({open}) => {
     const navigate = useNavigate();
@@ -81,7 +82,7 @@ const DashboardSidebar = ({open}) => {
                     }
                 ]
             )).data;
-            const sectors = (await sectorGetByQuery({calendar_year : year}, ["configs"])).data;
+            const sectors = (await sectorGetByQuery({calendar_year : year}, ["configs", "classification"])).data;
             
             sectors.forEach( (sector) => {
                 if(["planning officer", "admin"].includes(authStore.user?.role!) || [...programs.map(a => a.sector_id), ...units.map(a => a.programId.sector_id), ...fp.map(a => a.unitId.programId.sector_id)].includes(sector._id)){
@@ -90,7 +91,7 @@ const DashboardSidebar = ({open}) => {
                         label : sector.name,
                         icon : <FontAwesomeIcon icon={faChartSimple} />,
                         style: menuStyle1,
-                        children : sector.configs?.map((config : any) => {
+                        children : sector.classification ? generateMenu(sector, navigate, menuStyle2, "/dashboard/report")  : sector.configs?.map((config : any) => {
                             return {
                                 key : config._id,
                                 label : config.name,
