@@ -37,6 +37,13 @@ SectorSchema.virtual("programs", {
     justOne : false
 });
 
+SectorSchema.virtual("classification", {
+    ref : "classifications",
+    localField : "_id",
+    foreignField : "sector_id",
+    justOne : true
+});
+
 const SectorModel = mongoose.model('sectors', SectorSchema);
 
 export default SectorModel;

@@ -17,6 +17,7 @@ import reportConfigRoutes from "./routes/reportConfigRoutes.js"
 import reportDataRoutes from "./routes/reportDataRoutes.js"
 import chartConfigRoutes from "./routes/chartConfigRoutes.js"
 import colorSchemeRoutes from "./routes/colorSchemeRoutes.js";
+import classificationRoutes from "./routes/classificationRoutes.js";
 
 import serverless from "serverless-http";
 
@@ -100,6 +101,7 @@ app.use("/report-configs", reportConfigRoutes);
 app.use("/report-data", reportDataRoutes);
 app.use("/chart-config", chartConfigRoutes);
 app.use("/color-scheme", colorSchemeRoutes);
+app.use("/classification", classificationRoutes);
 
 export const handler = serverless(app);
 

@@ -7,6 +7,7 @@ import { parseResError } from "../../../services/errorHandler";
 import { set } from "lodash";
 import Generate from "../../../components/Admin/Configurations/Generate";
 import { useGenerateStore } from "../../../stores/useReportStore";
+import EditClassification from "../../../components/Admin/Configurations/EditClassification";
 
 const AddSectorDrawer = ({
     visible,
@@ -198,6 +199,7 @@ const Sectors = () => {
     const [toEdit, SetToEdit] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false);
     const [refresh, setRefresh] = useState<boolean>(false);
+    const [sectorToClassify, setSectorToClassify] = useState<string | null>(null);
 
     const generateStore = useGenerateStore();
 
@@ -275,6 +277,7 @@ const Sectors = () => {
                                     <Button color="danger" variant="filled">Delete</Button>
                                 </Popconfirm>
                                 <Button color="primary" variant="filled" onClick={() => SetToEdit(sectors._id)}>Edit</Button>
+                                <Button color="primary" variant="filled" onClick={() => setSectorToClassify(sectors._id)}>Edit Classification</Button>
                             </Flex>
                         </Flex>
                     </List.Item>
@@ -286,6 +289,7 @@ const Sectors = () => {
                 SetToEdit(null)
                 onClose()
                 }} _id={toEdit} />
+            <EditClassification sector={sectorToClassify} onClose={() => setSectorToClassify(null)} />
         </div> 
     );
 };

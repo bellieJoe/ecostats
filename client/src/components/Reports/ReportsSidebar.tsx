@@ -17,6 +17,56 @@ import { reportConfigGetByQuery } from "../../services/api/reportConfigApi";
 import { generateYearOptionsFixed } from "../../services/helper";
 import { getReportCount } from "../../services/api/userApi";
 import { useReportCountStore } from "../../stores/useUserStore";
+import { flattenReports } from "../Admin/Configurations/EditClassification";
+
+
+
+export const generateMenu = (data, navigate, menuStyle, url) => {
+    const configs : any[] = data.configs;
+    const flatConfigs = flattenReports(data.classification);
+    // Helper function to recursively process classifications
+    const processClassifications = (classifications) => {
+        return classifications.map((classification) => {
+            const hasReports = classification.reports && classification.reports.length > 0;
+            const hasSubClassifications = classification.classifications && classification.classifications.length > 0;
+
+            // If classification has reports, create menu items for each report
+            const reportItems = hasReports
+                ? classification.reports.map((report) => ({
+                      key: report, // Assuming 'name' array has IDs
+                      label: configs.find(c => c._id == report).name, // Replace with the report name if available
+                      style: menuStyle,
+                      onClick: () => navigate(`${url}/${report}`)
+                  }))
+                : [];
+
+            // If classification has sub-classifications, recursively process them
+            const subClassificationItems = hasSubClassifications
+                ? processClassifications(classification.classifications)
+                : [];
+
+            // Create a parent menu item for the classification, including its children
+            return {
+                key: classification.name,
+                label: classification.name,
+                children: [...reportItems, ...subClassificationItems],
+                style: menuStyle
+            };
+        });
+    };
+
+    // Start processing from the root data
+    console.log(data.classification.classifications);
+    const items = processClassifications(data.classification.classifications || []);
+    return [...items, ...configs.filter(c => !flatConfigs.includes(c._id)).map(c => ({
+        key: c._id,
+        label: c.name,
+        style: menuStyle,
+        onClick: () => navigate(`${url}/${c._id}`)  
+    }))];
+
+};
+
 
 const ReportsSidebar = ({open}) => {
     const navigate = useNavigate();
@@ -80,6 +130,7 @@ const ReportsSidebar = ({open}) => {
     // useEffect(() => {
     //     initReportCount();
     // }, [reportCountStore.refresh, authStore.user]);
+    
 
     const initSidebar = async () => {
         try {
@@ -99,7 +150,6 @@ const ReportsSidebar = ({open}) => {
                             icon: <div><Badge status="success" count={reportCount?.toReview ? reportCount?.toReview : 0}/></div>,
                             style: menuStyle2,
                             onClick : () => navigate(`/reports/to-review`),
-                            
                         },
                         {
                             key : "to-approve",
@@ -134,8 +184,8 @@ const ReportsSidebar = ({open}) => {
                 ]
             )).data;
 
-            const sectors = (await sectorGetByQuery({calendar_year : year}, ["configs"])).data;
-            
+            const sectors = (await sectorGetByQuery({calendar_year : year}, ["configs", "classification"])).data;
+            console.log("sectors", sectors);
             sectors.forEach( (sector) => {
                 if(["planning officer", "admin"].includes(authStore.user?.role!) || [...programs.map(a => a.sector_id), ...units.map(a => a.programId.sector_id), ...fp.map(a => a.unitId.programId.sector_id)].includes(sector._id)){
                     it.push({
@@ -143,7 +193,7 @@ const ReportsSidebar = ({open}) => {
                         label : sector.name,
                         icon : <FontAwesomeIcon icon={faFile} />,
                         style: menuStyle1,
-                        children : sector.configs?.map((config : any) => {
+                        children : sector.classification ? generateMenu(sector, navigate, menuStyle2, "/reports/report")  : sector.configs?.map((config : any) => {
                             return {
                                 key : config._id,
                                 label : config.name,
